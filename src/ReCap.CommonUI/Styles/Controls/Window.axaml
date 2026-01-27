@@ -1,0 +1,200 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:rc="using:ReCap.CommonUI"
+                    xmlns:rchax="using:ReCap.CommonUI.Controls.AppearanceHacks"
+                    xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators">
+    <ControlTheme x:Key="{x:Type Window}" TargetType="{x:Type Window}">
+        <Setter Property="TopLevel.SystemBarColor" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+		<Setter Property="Background" Value="{DynamicResource Window.Body.Background}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource Window.Body.BorderBrush}" />
+		<Setter Property="Foreground" Value="{DynamicResource StrongForegroundBrush}" />
+		
+		<Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
+		<Setter Property="FontSize" Value="12" />
+        
+		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+		<!--
+		<Setter Property="Background" Value="#00FF00FF" />
+		<Setter Property="TransparencyBackgroundFallback" Value="#00FF00FF" />
+		-->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
+					<rcdec:AngledBorder x:Name="HoloShadow"
+					                Background="{DynamicResource Window.HoloShadow.Background.Opaque.Inactive}"
+									IsHitTestVisible="False" />
+					<Panel x:Name="MainContent">
+                        <Panel Background="Transparent" Margin="{TemplateBinding WindowDecorationMargin}" />
+                        <VisualLayerManager>
+                            <VisualLayerManager.ChromeOverlayLayer>
+                                <TitleBar />
+                            </VisualLayerManager.ChromeOverlayLayer>
+                            <DockPanel x:Name="Frame">
+							    <rchax:TitleBarUnderlay DockPanel.Dock="Top" />
+                                <rcdec:AngledBorderEx x:Name="BottomEdgeTrim"
+                                                    Classes="activateColoration"
+                                                    BorderBrush="{DynamicResource Window.BottomEdgeTrim.BorderBrush}"
+                                                    Height="14"
+                                                    InvertSide="Top"
+                                            
+                                                    TopLeftCut="6"
+                                                    TopRightCut="6"
+                                            
+                                                    TopLeftInset="18"
+                                                    TopRightInset="18"
+                                            
+                                                    DockPanel.Dock="Bottom"
+												    Margin="0,-5,0,0" />
+                                <rcdec:AngledBorderEx x:Name="TopEdgeTrim"
+                                                    Classes="activateColoration"
+                                                    BorderBrush="{DynamicResource Window.BottomEdgeTrim.BorderBrush}"
+                                                    InvertSide="Bottom"
+                                            
+                                                    BottomLeftCut="6"
+                                                    BottomRightCut="6"
+                                            
+                                                    BottomLeftInset="18"
+                                                    BottomRightInset="18"
+                                            
+                                                    DockPanel.Dock="Top"
+                                                    IsVisible="False" />
+                                <Panel>
+                                    <rcdec:AngledBorderEx x:Name="BgElement"
+                                                        TopLeftCut="6"
+                                                        TopRightCut="6"
+                                                        BottomRightCut="6"
+                                                        BottomLeftCut="6"
+                                                        TopLeftInset="18"
+                                                        TopRightInset="18"
+                                                        BottomRightInset="18"
+                                                        BottomLeftInset="18"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        StrokeThickness="1"
+                                                        InnerGlowColor="#20FFFFFF" />
+								    <!--
+													    Padding="{Binding Padding, ElementName=PART_ContentPresenter, Mode=OneWay}"
+													    Margin="{Binding Margin, ElementName=PART_ContentPresenter, Mode=OneWay}"
+													    Height="{Binding Bounds.Height, ElementName=PART_ContentPresenter, Mode=OneWay}"
+													    VerticalAlignment="Bottom"
+                                    -->
+								    <ContentPresenter x:Name="PART_ContentPresenter"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    Content="{TemplateBinding Content}"
+                                                    Margin="{TemplateBinding Padding}"
+                                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Panel>
+                            </DockPanel>
+                        </VisualLayerManager>
+					</Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+
+
+        <Style Selector="^ /template/ rcdec|AngledBorderEx.activateColoration">
+			<Setter Property="StrokeThickness" Value="1" />
+		</Style>
+
+		<Style Selector="^ /template/ rcdec|AngledBorderEx.activateColoration">
+			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
+		</Style>
+
+		<Style Selector="^[IsActive=True]">
+			<Style Selector="^ /template/ rcdec|AngledBorderEx.activateColoration">
+			    <Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
+		    </Style>
+		    <Style Selector="^ /template/ rcdec|AngledBorder#HoloShadow">
+			    <Setter Property="Background" Value="{DynamicResource Window.HoloShadow.Background.Opaque.Active}" />
+		    </Style>
+		</Style>
+        
+        <Style Selector="^ /template/ rcdec|AngledBorderEx#TopEdgeTrim">
+            <Setter Property="Height" Value="14" />
+		</Style>
+
+
+
+
+        <!-- System decorations -->
+		<Style Selector="^[IsExtendedIntoWindowDecorations=False]">
+            <Style Selector="^ /template/ rcdec|AngledBorderEx#TopEdgeTrim">
+                <Setter Property="IsVisible" Value="True" />
+				<Setter Property="Margin" Value="0,0,0,-5" />
+			</Style>
+            <Style Selector="^ /template/ :is(Panel)#Frame">
+                <Setter Property="Margin" Value="-2,-6" />
+            </Style>
+            <!--
+            <Style Selector="^ /template/ rcdec|AngledBorderEx#BottomEdgeTrim">
+                <Setter Property="StrokeThickness" Value="1" />
+            </Style>
+            -->
+		</Style>
+
+
+
+
+        <!-- Managed decorations -->
+        <Style Selector="^[IsExtendedIntoWindowDecorations=True]">
+            <Setter Property="ExtendClientAreaChromeHints" Value="PreferSystemChrome" />
+            <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="32" />
+            <Setter Property="TransparencyLevelHint" Value="Transparent" />
+            <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
+            <Setter Property="rc:WindowChromeAddon.UseTransparencyHackHint" Value="True" />
+
+
+			<Style Selector="^ /template/ :is(Panel)#Frame">
+                <Setter Property="Margin" Value="{Binding OffScreenMargin, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+            </Style>
+
+            <Style Selector="^[(rc|WindowChromeAddon.ActualUseTransparencyHack)=True] /template/ Border#PART_TransparencyFallback">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+
+
+			<Style Selector="^[WindowState=Maximized], ^[WindowState=FullScreen]">
+				<Style Selector="^ /template/ rcdec|AngledBorder#HoloShadow">
+					<Setter Property="Margin" Value="{Binding OffScreenMargin, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+				</Style>
+			</Style>
+            
+            <!-- Transparent -->
+            <Style Selector="^[(rc|WindowChromeAddon.ActualUseTransparencyHack)=True], ^[ActualTransparencyLevel=Transparent]">
+				<Style Selector="^[WindowState=Normal]">
+				    <Style Selector="^ /template/ rcdec|AngledBorder#HoloShadow">
+                        <Setter Property="Background" Value="{DynamicResource Window.HoloShadow.Background.Translucent}" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource Window.HoloShadow.BorderBrush.Translucent}" />
+                        <Setter Property="StrokeThickness" Value="2" />
+                        <Setter Property="CornerRadius" Value="9" />
+                        <Setter Property="Margin" Value="0,2,4,0" />
+                    </Style>
+                    <Style Selector="^[IsActive=False] /template/ rcdec|AngledBorder#HoloShadow">
+                        <Setter Property="Opacity" Value="0.5" />
+                    </Style>
+                    <Style Selector="^ /template/ Panel#MainContent">
+                        <Setter Property="Margin" Value="4,0,0,6" />
+                    </Style>
+                    <!--
+                    <Style Selector="^ /template/ rcdec|AngledBorderEx#TopEdgeTrim">
+                        <Setter Property="TopLeftCut" Value="6" />
+                        <Setter Property="TopRightCut" Value="6" />
+                    </Style>
+                    -->
+                    <Style Selector="^ /template/ rcdec|AngledBorderEx#BottomEdgeTrim">
+                        <Setter Property="BottomLeftCut" Value="6" />
+                        <Setter Property="BottomRightCut" Value="6" />
+                    </Style>
+				</Style>
+			</Style>
+			
+			
+			<!-- Opaque -->
+            <Style Selector="^[(rc|WindowChromeAddon.ActualUseTransparencyHack)=False], ^:not(^[ActualTransparencyLevel=Transparent])">
+            </Style>
+		</Style>
+    </ControlTheme>
+</ResourceDictionary>
