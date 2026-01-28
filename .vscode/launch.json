@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/ReCap.UITest/bin/Debug/net5.0/ReCap.UITest.dll",
+            "program": "${workspaceFolder}/samples/ReCap.CommonUI.Demo/bin/Debug/net5.0/ReCap.CommonUI.Demo.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/ReCap.UITest",
+            "cwd": "${workspaceFolder}/samples/ReCap.CommonUI.Demo",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

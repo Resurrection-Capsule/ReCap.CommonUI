@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReCap.CommonUI", "src\ReCap.CommonUI\ReCap.CommonUI.csproj", "{76E43A29-981C-4CA9-B295-176CC5E6944C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReCap.UITest", "src\ReCap.UITest\ReCap.UITest.csproj", "{BCDB611E-A72B-4F41-8BF9-8BC68CE3B193}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReCap.CommonUI.Demo", "samples\ReCap.CommonUI.Demo\ReCap.CommonUI.Demo.csproj", "{BCDB611E-A72B-4F41-8BF9-8BC68CE3B193}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
