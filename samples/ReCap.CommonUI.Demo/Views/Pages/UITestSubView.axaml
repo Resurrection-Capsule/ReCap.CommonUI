@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.UITestSubView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels"
+			xmlns:v="using:ReCap.CommonUI.Demo.Views">
+	<TabControl x:Name="Tabs"
+			ItemsSource="{Binding Tabs, Mode=OneWay}"
+			SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+			>
+	<!--
+			TabStripPlacement="Left"
+	-->
+		<TabControl.ItemTemplate>
+			<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+				<TextBlock Text="{Binding Title, Mode=OneWay}" />
+			</DataTemplate>
+		</TabControl.ItemTemplate>
+		<TabControl.ContentTemplate>
+			<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+				<ScrollViewer
+							HorizontalScrollBarVisibility="{Binding Path=Child.(ScrollViewer.HorizontalScrollBarVisibility), ElementName=TabContentPresenter, Mode=OneWay, FallbackValue=Disabled}"
+							VerticalScrollBarVisibility="{Binding Path=Child.(ScrollViewer.VerticalScrollBarVisibility), ElementName=TabContentPresenter, Mode=OneWay, FallbackValue=Auto}"
+						>
+					<LayoutTransformControl>
+						<LayoutTransformControl.LayoutTransform>
+							<ScaleTransform ScaleX="{Binding DataContext.ScaleFactor, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type v:UITestView}}, Mode=OneWay}"
+											ScaleY="{Binding $self.ScaleX, Mode=OneWay}" />
+						</LayoutTransformControl.LayoutTransform>
+						<ContentPresenter x:Name="TabContentPresenter"
+										DataContext="{Binding ContentVM, Mode=OneWay}"
+										Content="{Binding Mode=OneWay}" />
+					</LayoutTransformControl>
+				</ScrollViewer>
+			</DataTemplate>
+		</TabControl.ContentTemplate>
+	</TabControl>
+</UserControl>

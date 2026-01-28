@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using ReCap.CommonUI.Demo.ViewModels;
@@ -19,23 +16,54 @@ namespace ReCap.CommonUI.Demo.Views
         {
             get => DataContext as UITestViewModel;
         }
-        
+
+
+
+
         public UITestView()
         {
             InitializeComponent();
-            Dispatcher.UIThread.Post(() => {
+            Dispatcher.UIThread.Post(() =>
+            {
                 var topLevel = TopLevel.GetTopLevel(this);
-                //topLevel.KeyDown += This_KeyDown;
                 
                 topLevel.AddHandler(
                     KeyDownEvent
                     , This_KeyDown
-                    //, routes: RoutingStrategies.Direct | RoutingStrategies.Bubble | RoutingStrategies.Tunnel
                     , handledEventsToo: true
                 );
                 topLevel.PointerWheelChanged += This_PointerWheelChanged;
             }, DispatcherPriority.ApplicationIdle);
         }
+
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+
+
+
+
+        TabsViewModelBase GetVM(bool subTab)
+        {
+            var mainVM = VM;
+
+            if (subTab)
+            {
+                int tabIdx = mainVM.SelectedIndex;
+                var tab = mainVM.Tabs[tabIdx];
+
+                if (tab.ContentVM is TabsViewModelBase tabVM)
+                {
+                    return tabVM;
+                }
+            }
+
+            return mainVM;
+        }
+        TabsViewModelBase GetVM(KeyModifiers modifiers)
+            => GetVM(!modifiers.HasFlag(KeyModifiers.Alt));
 
 
 
@@ -103,25 +131,21 @@ namespace ReCap.CommonUI.Demo.Views
             keyNumber = -1;
             return false;
         }
-        /*
-        static readonly IReadOnlyDictionary<Key, int> _TAB_INDEX_KEYS = new Dictionary<Key, int>()
-        {
-            { Key.D1, 0 },
-            Key.NumPad0,
-        }.AsReadOnly();
-        */
+
+
         void This_KeyDown(object sender, KeyEventArgs e)
         {
             if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
                 return;
-            
+
+            var tabsVM = GetVM(e.KeyModifiers);
             var key = e.Key;
             if (key == Key.Tab)
             {
                 if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-                    VM.PreviousTabCommand();
+                    tabsVM.PreviousTabCommand();
                 else
-                    VM.NextTabCommand();
+                    tabsVM.NextTabCommand();
             }
             else if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
             {
@@ -129,16 +153,16 @@ namespace ReCap.CommonUI.Demo.Views
             }
             else if (key == Key.PageUp)
             {
-                VM.PreviousTabCommand();
+                tabsVM.PreviousTabCommand();
             }
             else if (key == Key.PageDown)
             {
-                VM.NextTabCommand();
+                tabsVM.NextTabCommand();
             }
-            else if (IsNumericalKey(key, out int keyNumber) && VM.JumpToTab(keyNumber - 1))
-#pragma warning disable CS0642
-                ; //Do nothing - VM.JumpToTab call is in condition instead of body to ensure CTRL+0 is still handled elsewhere
-#pragma warning restore CS0642
+            else if (IsNumericalKey(key, out int keyNumber) && tabsVM.JumpToTab(keyNumber - 1))
+            {
+                //Do nothing - tabsVM.JumpToTab call is in condition instead of body to ensure CTRL+0 is still handled elsewhere
+            }
             else if (_ZOOM_IN_KEYS.Contains(key))
             {
                 VM.AdjustScaleFactor(true);
@@ -157,11 +181,6 @@ namespace ReCap.CommonUI.Demo.Views
             }
             
             e.Handled = true;
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

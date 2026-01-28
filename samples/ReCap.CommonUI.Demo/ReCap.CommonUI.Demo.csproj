@@ -9,4 +9,8 @@
 	<ItemGroup>
 		<ProjectReference Include="../../src/ReCap.CommonUI/ReCap.CommonUI.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Res/UI/**/*.ttf" />
+	</ItemGroup>
 </Project>

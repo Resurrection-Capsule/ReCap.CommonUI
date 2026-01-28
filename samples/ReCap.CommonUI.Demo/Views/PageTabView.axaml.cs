@@ -3,10 +3,10 @@ using Avalonia.Markup.Xaml;
 
 namespace ReCap.CommonUI.Demo.Views
 {
-    public partial class ScrollViewerInnerView
+    public partial class PageTabView
         : UserControl
     {
-        public ScrollViewerInnerView()
+        public PageTabView()
         {
             InitializeComponent();
         }

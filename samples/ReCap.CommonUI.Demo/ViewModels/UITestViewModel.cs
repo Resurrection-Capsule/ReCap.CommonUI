@@ -76,48 +76,5 @@ namespace ReCap.CommonUI.Demo.ViewModels
 
             AdjustScaleFactor(increment);
         }
-
-        public void NextTabCommand(object _ = null)
-            => SelectedIndex = WrapTabIndex(SelectedIndex + 1);
-        public void PreviousTabCommand(object _ = null)
-            => SelectedIndex = WrapTabIndex(SelectedIndex - 1);
-        public bool JumpToTab(int index)
-        {
-            if (!IsTabIndexvalid(index))
-                return false;
-            
-            SelectedIndex = index;
-            return true;
-        }
-
-        
-        public void JumpToTabCommand(object parameter)
-        {
-            if (parameter == null)
-                return;
-            int index;
-            
-            if (parameter is int pBool)
-            {
-                index = pBool;
-            }
-            else
-            {
-                string prmStr = (parameter is string sPrm)
-                        ? sPrm
-                        : parameter.ToString()
-                ;
-                
-                if (!int.TryParse(prmStr, out index))
-                    return;
-            }
-
-            JumpToTab(index);
-        }
-
-
-        public UITestViewModel()
-        {
-        }
     }
 }

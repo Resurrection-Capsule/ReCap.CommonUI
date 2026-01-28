@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Controls.AlignableWrapPanelView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:rctr="using:ReCap.CommonUI.Controls">
+	<UserControl.Styles>
+		<Style Selector="rctr|AlignableWrapPanel > Rectangle">
+			<Setter Property="Height" Value="50" />
+			<Setter Property="Margin" Value="1" />
+			<Setter Property="Stroke" Value="#FF404040" />
+			<Setter Property="StrokeThickness" Value="1" />
+		</Style>
+	</UserControl.Styles>
+
+	<StackPanel Orientation="Vertical"
+				Spacing="4">
+		<HeaderedContentControl Header="Options">
+			<StackPanel Orientation="Vertical"
+						Spacing="4">
+				<ComboBox ItemsSource="{Binding Alignments, Mode=OneWay}"
+						SelectedItem="{Binding CurrentAlignment, Mode=TwoWay}" />
+			</StackPanel>
+		</HeaderedContentControl>
+		<rctr:AlignableWrapPanel x:Name="Panel"
+								HorizontalContentAlignment="{Binding CurrentAlignment, Mode=OneWay}">
+		</rctr:AlignableWrapPanel>
+	</StackPanel>
+</UserControl>

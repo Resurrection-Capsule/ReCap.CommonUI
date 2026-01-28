@@ -4,7 +4,7 @@
         xmlns:v="using:ReCap.CommonUI.Demo.Views"
         xmlns:rctr="using:ReCap.CommonUI"
         Title="ReCap Common UI Tests"
-        Width="1020" Height="532"
+        Width="1020" Height="572"
         Padding="12,8">
     <v:UITestView />
 </Window>

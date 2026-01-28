@@ -2,7 +2,7 @@
             xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:rc="using:ReCap.CommonUI"
-            xmlns:rctr="using:ReCap.CommonUI.Controls"
+            xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators"
             xmlns:v="using:ReCap.CommonUI.Demo.Views"
             RequestedThemeVariant="Dark">
     <Application.DataTemplates>
@@ -14,5 +14,64 @@
         <Style Selector="HeaderedContentControl">
             <Setter Property="Theme" Value="{DynamicResource GroupBox}" />
         </Style>
+
+        <Style Selector=":is(Control).untouchable">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
     </Application.Styles>
+    <Application.Resources>
+        <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Res/UI/Font/Monospace#Ubuntu Mono</FontFamily>
+
+
+        <ControlTheme x:Key="ResourceKeyDisplay"
+                    TargetType="{x:Type HeaderedContentControl}">
+            <Setter Property="Background" Value="#40000000" />
+            <Setter Property="BorderBrush" Value="#40FFFFFF" />
+            <Setter Property="CornerRadius" Value="0,4,0,4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="4">
+                        <ContentPresenter x:Name="PART_HeaderPresenter"
+                                        Content="{TemplateBinding Header}"
+                                        ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                        <rcdec:AngledBorder
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="{TemplateBinding CornerRadius}"
+                                        StrokeThickness="2"
+                                        Padding="8">
+                            <ContentPresenter x:Name="PART_ContentPresenter"
+                                            TextElement.FontFamily="{DynamicResource MonospaceFont}"
+                                            TextElement.FontSize="16"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </rcdec:AngledBorder>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter>
+
+
+            <Style Selector="^ /template/ ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+
+                <Setter Property="VerticalAlignment" Value="Center" />
+
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            </Style>
+        </ControlTheme>
+
+
+        <ControlTheme x:Key="ThemeKeyDisplay"
+                    TargetType="{x:Type HeaderedContentControl}"
+                    BasedOn="{StaticResource ResourceKeyDisplay}">
+            <Setter Property="Header" Value="Theme key:" />
+        </ControlTheme>
+    </Application.Resources>
 </Application>

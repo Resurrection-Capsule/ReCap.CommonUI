@@ -1,12 +1,12 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace ReCap.CommonUI.Demo.Views
+namespace ReCap.CommonUI.Demo.Views.Pages.Controls
 {
-    public partial class ScrollViewerInnerView
+    public partial class AngledBordersView
         : UserControl
     {
-        public ScrollViewerInnerView()
+        public AngledBordersView()
         {
             InitializeComponent();
         }

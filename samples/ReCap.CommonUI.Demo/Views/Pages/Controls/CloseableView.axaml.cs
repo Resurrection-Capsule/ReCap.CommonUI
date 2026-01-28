@@ -1,12 +1,12 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace ReCap.CommonUI.Demo.Views
+namespace ReCap.CommonUI.Demo.Views.Pages.Controls
 {
-    public partial class ScrollViewerInnerView
+    public partial class CloseableView
         : UserControl
     {
-        public ScrollViewerInnerView()
+        public CloseableView()
         {
             InitializeComponent();
         }

@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.TabControlView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:rctr="using:ReCap.CommonUI"
+			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels"
+			xmlns:vps="using:ReCap.CommonUI.Demo.Views.Pages.Styles">
+	<UserControl.Styles>
+		<Style Selector="TabControl">
+			<Setter Property="ItemsSource" Value="{Binding Tabs, Mode=OneWay}" />
+			<Setter Property="SelectedIndex" Value="{Binding SelectedIndex, Mode=TwoWay}" />
+		</Style>
+	</UserControl.Styles>
+
+
+
+
+	<StackPanel Orientation="Vertical"
+				Spacing="20">
+		<HeaderedContentControl Header="Standard"
+								Grid.Column="0"
+								Grid.Row="0"
+								Grid.ColumnSpan="2">
+			<HeaderedContentControl.Styles>
+				<Style Selector="TabControl">
+					<Setter Property="ItemTemplate">
+						<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+							<TextBlock Text="{Binding Title, Mode=OneWay}" />
+						</DataTemplate>
+					</Setter>
+					<Setter Property="ContentTemplate">
+						<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+							<StackPanel Orientation="Vertical">
+								<TextBlock Classes="h1" Text="{Binding $parent[TabControl].TabStripPlacement, Mode=OneWay}" />
+								<TextBlock Classes="h2" Text="{Binding Title, Mode=OneWay}" />
+							</StackPanel>
+						</DataTemplate>
+					</Setter>
+				</Style>
+			</HeaderedContentControl.Styles>
+			<UniformGrid Rows="1">
+				<TabControl TabStripPlacement="Top" />
+				
+				<TabControl TabStripPlacement="Bottom" />
+
+				<TabControl TabStripPlacement="Left" />
+				
+				<TabControl TabStripPlacement="Right" />
+			</UniformGrid>
+		</HeaderedContentControl>
+
+
+		<StackPanel Orientation="Vertical"
+					Spacing="20">
+			<StackPanel.Styles>
+				<Style Selector="TabControl.supplementaryStyle">
+					<Setter Property="ItemTemplate">
+						<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+							<TextBlock Text="{Binding Title, Mode=OneWay}" />
+						</DataTemplate>
+					</Setter>
+					<Setter Property="ContentTemplate">
+						<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+							<StackPanel Orientation="Vertical"
+										Spacing="8">
+								<ContentControl Classes="demoBelowTabs" />
+								<HeaderedContentControl Theme="{DynamicResource ThemeKeyDisplay}"
+														Content="{DynamicResource ThemeKey}" />
+							</StackPanel>
+						</DataTemplate>
+					</Setter>
+				</Style>
+
+				<Style Selector="ContentControl.demoBelowTabs">
+					<Setter Property="Theme" Value="{DynamicResource RowBelowTabs}" />
+					<Setter Property="DockPanel.Dock" Value="Top" />
+					<Setter Property="ContentTemplate">
+						<DataTemplate>
+							<DockPanel IsHitTestVisible="False"
+									LastChildFill="False">
+								<Button Content="Sample content"
+										Focusable="False"
+										IsTabStop="False"
+										Classes="right"
+										DockPanel.Dock="Left" />
+								<Button Content="Sample content"
+										Focusable="False"
+										IsTabStop="False"
+										Classes="left"
+										DockPanel.Dock="Right" />
+							</DockPanel>
+						</DataTemplate>
+					</Setter>
+				</Style>
+			</StackPanel.Styles>
+
+
+			<HeaderedContentControl Header="Helix-style tabs">
+				<TabControl Theme="{DynamicResource HelixTabControl}"
+							Classes="supplementaryStyle">
+					<TabControl.Resources>
+						<x:String x:Key="ThemeKey">HelixTabControl</x:String>
+					</TabControl.Resources>
+				</TabControl>
+			</HeaderedContentControl>
+
+			<HeaderedContentControl Header="Inventory-style tabs">
+				<TabControl Theme="{DynamicResource InventoryTabControl}"
+							Classes="supplementaryStyle">
+					<TabControl.Resources>
+						<x:String x:Key="ThemeKey">InventoryTabControl</x:String>
+					</TabControl.Resources>
+				</TabControl>
+			</HeaderedContentControl>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

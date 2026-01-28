@@ -1,0 +1,6 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.PageTabView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ContentPresenter DataContext="{Binding ContentVM, Mode=OneWay}"
+					Content="{Binding Mode=OneWay}" />
+</UserControl>
