@@ -22,7 +22,7 @@
         </Style>
     </Application.Styles>
     <Application.Resources>
-        <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Res/UI/Font/Monospace#Ubuntu Mono</FontFamily>
+        <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Assets/Font/Monospace#Ubuntu Mono</FontFamily>
 
 
         <ControlTheme x:Key="ResourceKeyDisplay"

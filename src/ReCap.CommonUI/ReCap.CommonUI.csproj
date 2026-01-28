@@ -13,8 +13,8 @@
 	
 	<ItemGroup>
 		<AvaloniaResource Include="Styles/**/*.axaml" />
-		<AvaloniaResource Include="Res/UI/**/*.png" />
-		<AvaloniaResource Include="Res/UI/**/*.ttf" />
+		<AvaloniaResource Include="Assets/**/*.png" />
+		<AvaloniaResource Include="Assets/**/*.ttf" />
 	</ItemGroup>
 	
 	<Import Project="../../build/editorconfig.props" />

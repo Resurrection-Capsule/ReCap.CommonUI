@@ -28,6 +28,6 @@
 					Color="{DynamicResource Weak2ForegroundColor}"/>
 
 
-	<FontFamily x:Key="HeaderFont">avares://ReCap.CommonUI/Res/UI/Font/Header#Pirulen</FontFamily>
-	<FontFamily x:Key="BodyFont">avares://ReCap.CommonUI/Res/UI/Font/Body#RobotoCondensed</FontFamily>
+	<FontFamily x:Key="HeaderFont">avares://ReCap.CommonUI/Assets/Font/Header#Pirulen</FontFamily>
+	<FontFamily x:Key="BodyFont">avares://ReCap.CommonUI/Assets/Font/Body#RobotoCondensed</FontFamily>
 </ResourceDictionary>

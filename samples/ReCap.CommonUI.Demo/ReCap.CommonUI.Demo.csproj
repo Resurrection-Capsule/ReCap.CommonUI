@@ -11,6 +11,6 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<AvaloniaResource Include="Res/UI/**/*.ttf" />
+		<AvaloniaResource Include="Assets/**/*.ttf" />
 	</ItemGroup>
 </Project>
