@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
 	<PropertyGroup>
 		<AvVer>11.3.2</AvVer>
 	</PropertyGroup>
