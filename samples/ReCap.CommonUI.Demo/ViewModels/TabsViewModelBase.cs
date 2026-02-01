@@ -20,7 +20,7 @@ namespace ReCap.CommonUI.Demo.ViewModels
             set => RASIC(ref _selectedIndex, value);
         }
 
-        public bool IsTabIndexvalid(int index)
+        public bool IsTabIndexValid(int index)
         {
             int tabCount = Tabs.Count;
             if (tabCount <= 0)
@@ -66,7 +66,7 @@ namespace ReCap.CommonUI.Demo.ViewModels
             => SelectedIndex = WrapTabIndex(SelectedIndex - 1);
         public bool JumpToTab(int index)
         {
-            if (!IsTabIndexvalid(index))
+            if (!IsTabIndexValid(index))
                 return false;
             
             SelectedIndex = index;
