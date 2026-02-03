@@ -1,3 +1,4 @@
+#if REFLECTION_HELPERS
 using System.Reflection;
 
 namespace ReCap.CommonUI.Demo.Reflection
@@ -9,3 +10,4 @@ namespace ReCap.CommonUI.Demo.Reflection
         public static readonly Assembly DEMO_ASSEMBLY = typeof(Assemblies).Assembly;
     }
 }
+#endif

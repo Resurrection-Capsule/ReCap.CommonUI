@@ -1,3 +1,4 @@
+#if REFLECTION_HELPERS
 using System;
 
 namespace ReCap.CommonUI.Demo.Reflection
@@ -38,3 +39,4 @@ namespace ReCap.CommonUI.Demo.Reflection
         public static readonly TypeFilterOptions DEFAULT = new();
     }
 }
+#endif

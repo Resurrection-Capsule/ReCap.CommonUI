@@ -12,14 +12,6 @@ namespace ReCap.CommonUI.Demo.Views
     public partial class UITestView
         : UserControl
     {
-        public UITestViewModel VM
-        {
-            get => DataContext as UITestViewModel;
-        }
-
-
-
-
         public UITestView()
         {
             InitializeComponent();
@@ -45,25 +37,82 @@ namespace ReCap.CommonUI.Demo.Views
 
 
 
-        TabsViewModelBase GetVM(bool subTab)
+        bool TryGetMainVM(out UITestViewModel mainVM)
         {
-            var mainVM = VM;
-
-            if (subTab)
+            var dataCtx = DataContext;
+            if (dataCtx == null)
+                goto fail;
+            else if (dataCtx is not UITestViewModel uiTestVM)
+                goto fail;
+            else
             {
-                int tabIdx = mainVM.SelectedIndex;
-                var tab = mainVM.Tabs[tabIdx];
-
-                if (tab.ContentVM is TabsViewModelBase tabVM)
-                {
-                    return tabVM;
-                }
+                mainVM = uiTestVM;
+                return true;
             }
 
-            return mainVM;
+            fail:
+            mainVM = default;
+            return false;
         }
-        TabsViewModelBase GetVM(KeyModifiers modifiers)
-            => GetVM(!modifiers.HasFlag(KeyModifiers.Alt));
+
+
+        bool TryGetAutoVM(KeyModifiers modifiers, out TabsViewModelBase tabsVM)
+            => TryGetVMs(modifiers, out _, out tabsVM);
+        bool TryGetAutoVM(bool subTab, out TabsViewModelBase tabsVM)
+            => TryGetVMs(subTab, out _, out tabsVM);
+
+
+        bool TryGetVMs(bool subTab, out UITestViewModel mainVM, out TabsViewModelBase tabsVM)
+        {
+            if (!TryGetMainVM(out mainVM))
+            {
+                tabsVM = default;
+                return false;
+            }
+
+
+            if (!subTab)
+                goto noTab;
+
+            int tabIdx = mainVM.SelectedIndex;
+            if (tabIdx < 0)
+                goto noTab;
+
+            var tabs = mainVM.Tabs;
+            if (tabs == null)
+                goto noTab;
+
+            if (tabs.Count <= tabIdx)
+                goto noTab;
+
+            var tab = tabs[tabIdx];
+            /*
+            var tab = mainVM.Tabs[mainVM.SelectedIndex];
+            */
+
+            if (tab == null)
+                goto noTab;
+
+            var tabContent = tab.ContentVM;
+            /*
+            if (tabContent == null)
+                goto noTab;
+            else if (tabContent is not TabsViewModelBase tabVM)
+                goto noTab;
+            else
+            */
+            if ((tabContent != null) && (tabContent is TabsViewModelBase tabVM))
+            {
+                tabsVM = tabVM;
+                return true;
+            }
+
+            noTab:
+            tabsVM = mainVM;
+            return true;
+        }
+        bool TryGetVMs(KeyModifiers modifiers, out UITestViewModel mainVM, out TabsViewModelBase tabsVM)
+            => TryGetVMs(!modifiers.HasFlag(KeyModifiers.Alt), out mainVM, out tabsVM);
 
 
 
@@ -72,13 +121,15 @@ namespace ReCap.CommonUI.Demo.Views
         {
             if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
                 return;
-            
+            if (!TryGetMainVM(out UITestViewModel mainVM))
+                return;
+
             var deltaY = e.Delta.Y;
             
             if (deltaY > 0)
-                VM.AdjustScaleFactor(true);
+                mainVM.AdjustScaleFactor(true);
             else if (deltaY < 0)
-                VM.AdjustScaleFactor(false);
+                mainVM.AdjustScaleFactor(false);
             else
                 return;
             
@@ -137,8 +188,9 @@ namespace ReCap.CommonUI.Demo.Views
         {
             if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
                 return;
+            if (!TryGetVMs(e.KeyModifiers, out UITestViewModel mainVM, out TabsViewModelBase tabsVM))
+                return;
 
-            var tabsVM = GetVM(e.KeyModifiers);
             var key = e.Key;
             if (key == Key.Tab)
             {
@@ -165,15 +217,15 @@ namespace ReCap.CommonUI.Demo.Views
             }
             else if (_ZOOM_IN_KEYS.Contains(key))
             {
-                VM.AdjustScaleFactor(true);
+                mainVM.AdjustScaleFactor(true);
             }
             else if (_ZOOM_OUT_KEYS.Contains(key))
             {
-                VM.AdjustScaleFactor(false);
+                mainVM.AdjustScaleFactor(false);
             }
             else if (_ZOOM_RESET_KEYS.Contains(key))
             {
-                VM.ResetScaleFactor();
+                mainVM.ResetScaleFactor();
             }
             else
             {

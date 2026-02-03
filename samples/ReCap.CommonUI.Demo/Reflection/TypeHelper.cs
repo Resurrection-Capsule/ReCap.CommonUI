@@ -1,3 +1,4 @@
+#if REFLECTION_HELPERS
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -134,3 +135,4 @@ namespace ReCap.CommonUI.Demo.Reflection
         }
     }
 }
+#endif

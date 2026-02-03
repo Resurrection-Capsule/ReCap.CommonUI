@@ -1,3 +1,4 @@
+#if REFLECTION_HELPERS
 using System;
 
 namespace ReCap.CommonUI.Demo.Reflection
@@ -23,3 +24,4 @@ namespace ReCap.CommonUI.Demo.Reflection
         Abstract    = 0b00000100,
     }
 }
+#endif
