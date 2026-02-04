@@ -1,15 +1,14 @@
 <Application x:Class="ReCap.CommonUI.Demo.App"
             xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:rc="using:ReCap.CommonUI"
-            xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators"
+            xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
             xmlns:v="using:ReCap.CommonUI.Demo.Views"
             RequestedThemeVariant="Dark">
     <Application.DataTemplates>
         <v:ViewLocator />
     </Application.DataTemplates>
     <Application.Styles>
-        <rc:ReCapTheme />
+        <rcui:ReCapTheme />
 
         <Style Selector="HeaderedContentControl">
             <Setter Property="Theme" Value="{DynamicResource GroupBox}" />
@@ -38,7 +37,7 @@
                         <ContentPresenter x:Name="PART_HeaderPresenter"
                                         Content="{TemplateBinding Header}"
                                         ContentTemplate="{TemplateBinding HeaderTemplate}" />
-                        <rcdec:AngledBorder
+                        <rcui:AngledBorder
                                         Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         CornerRadius="{TemplateBinding CornerRadius}"
@@ -49,7 +48,7 @@
                                             TextElement.FontSize="16"
                                             Content="{TemplateBinding Content}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}" />
-                        </rcdec:AngledBorder>
+                        </rcui:AngledBorder>
                     </StackPanel>
                 </ControlTemplate>
             </Setter>

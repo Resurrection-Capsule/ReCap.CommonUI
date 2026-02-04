@@ -1,12 +1,10 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:rctr="using:ReCap.CommonUI.Controls"
-                    xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators"
-                    xmlns:rceas="using:ReCap.CommonUI.Easings"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
                     xmlns:sys="using:System">
     <sys:TimeSpan x:Key="Closeable.AnimationDuration">0:0:0.375</sys:TimeSpan>
 
-    <rceas:HybridEaseInOut x:Key="Closeable.Animation.ScaleXEasing" />
+    <rcui:HybridEaseInOut x:Key="Closeable.Animation.ScaleXEasing" />
     <QuinticEaseIn x:Key="Closeable.Animation.ScaleYEasing" />
     
     
@@ -28,8 +26,8 @@
 
 
 
-    <ControlTheme x:Key="{x:Type rctr:Closeable}"
-                TargetType="{x:Type rctr:Closeable}">
+    <ControlTheme x:Key="{x:Type rcui:Closeable}"
+                TargetType="{x:Type rcui:Closeable}">
         <Setter Property="Background" Value="#9D0D0F12" />
         <Setter Property="BorderBrush" Value="#6F5D5F62" />
         <Setter Property="CornerRadius" Value="5" />
@@ -44,7 +42,7 @@
             <ControlTemplate>
                 <Panel x:Name="DialogRoot"
                     ClipToBounds="False">
-                    <rcdec:AngledBorder x:Name="NormalHoloShadow"
+                    <rcui:AngledBorder x:Name="NormalHoloShadow"
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     StrokeThickness="2"
@@ -60,7 +58,7 @@
                                     Padding="{TemplateBinding Padding}"
                                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
-                    <rcdec:AngledBorder x:Name="FlashHoloShadow"
+                    <rcui:AngledBorder x:Name="FlashHoloShadow"
                                     Background="#FFFFFFFF"
                                     CornerRadius="{Binding #NormalHoloShadow.CornerRadius, Mode=OneWay}"
                                     Margin="{Binding #NormalHoloShadow.Margin, Mode=OneWay}" />
@@ -97,7 +95,7 @@
                 </Animation>
             </Style.Animations>
 
-            <Style Selector="^ /template/ rcdec|AngledBorder#FlashHoloShadow">
+            <Style Selector="^ /template/ rcui|AngledBorder#FlashHoloShadow">
                 <Style.Animations>
                     <Animation Duration="{StaticResource Closeable.AnimationDuration}"
                             FillMode="Both">

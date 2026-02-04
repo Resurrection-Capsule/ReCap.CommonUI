@@ -1,13 +1,13 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Controls.AngledBordersView"
             xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators">
+            xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
 	<UserControl.Styles>
-		<Style Selector="UniformGrid > :is(rcdec|AngledBorderBase)">
+		<Style Selector="UniformGrid > :is(rcui|AngledBorderBase)">
 			<Setter Property="Margin" Value="20" />
 		</Style>
 		
-		<Style Selector=":is(rcdec|AngledBorderBase)">
+		<Style Selector=":is(rcui|AngledBorderBase)">
 			<Setter Property="StrokeThickness" Value="1" />
 			<Setter Property="InnerGlowSize" Value="1" />
 
@@ -22,54 +22,54 @@
 			<Setter Property="InnerGlowColor" Value="#FFFF0000" />
 		</Style>
 
-		<Style Selector="rcdec|AngledBorderEx.tl">
+		<Style Selector="rcui|AngledBorderEx.tl">
 			<Setter Property="TopLeftCut" Value="6" />
 		</Style>
 
-		<Style Selector="rcdec|AngledBorderEx.tr">
+		<Style Selector="rcui|AngledBorderEx.tr">
 			<Setter Property="TopRightCut" Value="6" />
 		</Style>
 
-		<Style Selector="rcdec|AngledBorderEx.br">
+		<Style Selector="rcui|AngledBorderEx.br">
 			<Setter Property="BottomRightCut" Value="6" />
 		</Style>
 
-		<Style Selector="rcdec|AngledBorderEx.bl">
+		<Style Selector="rcui|AngledBorderEx.bl">
 			<Setter Property="BottomLeftCut" Value="6" />
 		</Style>
 		
-		<Style Selector="rcdec|AngledBorderEx.li">
+		<Style Selector="rcui|AngledBorderEx.li">
 			<Setter Property="TopLeftInset" Value="18" />
 			<Setter Property="BottomLeftInset" Value="18" />
 		</Style>
 
-		<Style Selector="rcdec|AngledBorderEx.ri">
+		<Style Selector="rcui|AngledBorderEx.ri">
 			<Setter Property="TopRightInset" Value="18" />
 			<Setter Property="BottomRightInset" Value="18" />
 		</Style>
 	</UserControl.Styles>
 	<UniformGrid Columns="4">
-		<rcdec:AngledBorderEx Classes="tl tr br bl li ri"
+		<rcui:AngledBorderEx Classes="tl tr br bl li ri"
 						InvertSide="Top" />
-		<rcdec:AngledBorderEx Classes="tl tr br bl li ri"
+		<rcui:AngledBorderEx Classes="tl tr br bl li ri"
 						InvertSide="Bottom" />
-		<rcdec:AngledBorderEx Classes="tl tr br bl ri"
+		<rcui:AngledBorderEx Classes="tl tr br bl ri"
 						InvertSide="Left" />
-		<rcdec:AngledBorderEx Classes="tl tr br bl li"
+		<rcui:AngledBorderEx Classes="tl tr br bl li"
 						InvertSide="Right" />
 		
-		<rcdec:AngledBorderEx Classes="tl tr br bl"
+		<rcui:AngledBorderEx Classes="tl tr br bl"
 						InvertSide="Top" />
-		<rcdec:AngledBorderEx Classes="tl tr br bl"
+		<rcui:AngledBorderEx Classes="tl tr br bl"
 						InvertSide="Bottom" />
-		<rcdec:AngledBorderEx Classes="tl tr br bl"
+		<rcui:AngledBorderEx Classes="tl tr br bl"
 						InvertSide="Left" />
-		<rcdec:AngledBorderEx Classes="tl tr br bl"
+		<rcui:AngledBorderEx Classes="tl tr br bl"
 						InvertSide="Right" />
 		
-		<rcdec:AngledBorderEx Classes="tl br" />
-		<rcdec:AngledBorderEx Classes="tl tr" />
-		<rcdec:AngledBorderEx Classes="bl br" />
-		<rcdec:AngledBorderEx Classes="bl tr" />
+		<rcui:AngledBorderEx Classes="tl br" />
+		<rcui:AngledBorderEx Classes="tl tr" />
+		<rcui:AngledBorderEx Classes="bl br" />
+		<rcui:AngledBorderEx Classes="bl tr" />
 	</UniformGrid>
 </UserControl>

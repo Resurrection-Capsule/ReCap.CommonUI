@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.TextBoxView"
             xmlns="https://github.com/avaloniaui"
-			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			xmlns:rctr="using:ReCap.CommonUI">
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<UserControl.Styles>
 		<Style Selector="HeaderedContentControl > StackPanel,
 						HeaderedContentControl > StackPanel > StackPanel">

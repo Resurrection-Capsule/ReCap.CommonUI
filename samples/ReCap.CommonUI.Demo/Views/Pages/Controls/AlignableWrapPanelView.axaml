@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Controls.AlignableWrapPanelView"
             xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			xmlns:rctr="using:ReCap.CommonUI.Controls">
+			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
 	<UserControl.Styles>
-		<Style Selector="rctr|AlignableWrapPanel > Rectangle">
+		<Style Selector="rcui|AlignableWrapPanel > Rectangle">
 			<Setter Property="Height" Value="50" />
 			<Setter Property="Margin" Value="1" />
 			<Setter Property="Stroke" Value="#FF404040" />
@@ -20,8 +20,8 @@
 						SelectedItem="{Binding CurrentAlignment, Mode=TwoWay}" />
 			</StackPanel>
 		</HeaderedContentControl>
-		<rctr:AlignableWrapPanel x:Name="Panel"
+		<rcui:AlignableWrapPanel x:Name="Panel"
 								HorizontalContentAlignment="{Binding CurrentAlignment, Mode=OneWay}">
-		</rctr:AlignableWrapPanel>
+		</rcui:AlignableWrapPanel>
 	</StackPanel>
 </UserControl>

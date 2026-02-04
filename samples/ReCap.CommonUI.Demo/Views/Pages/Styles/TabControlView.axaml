@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.TabControlView"
             xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			xmlns:rctr="using:ReCap.CommonUI"
 			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels"
 			xmlns:vps="using:ReCap.CommonUI.Demo.Views.Pages.Styles">
 	<UserControl.Styles>

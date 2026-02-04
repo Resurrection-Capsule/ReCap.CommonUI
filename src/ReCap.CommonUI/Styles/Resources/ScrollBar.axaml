@@ -1,8 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="using:ReCap.CommonUI"
-        xmlns:rctr="using:ReCap.CommonUI"
-        xmlns:sys="using:System">
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:sys="using:System">
 	<GradientStops x:Key="ScrollBar.Thumb.Background.OverlayMask.Stops">
 		<GradientStop Offset="0" Color="#00FFFFFF" />
 		<GradientStop Offset="1" Color="#FFFFFFFF" />

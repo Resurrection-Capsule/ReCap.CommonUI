@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Controls.CloseableView"
             xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			xmlns:rctr="using:ReCap.CommonUI.Controls">
+			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
 	<UserControl.Styles>
-		<Style Selector="rctr|Closeable">
+		<Style Selector="rcui|Closeable">
 			<Setter Property="IsCloseButtonVisible" Value="{Binding ShowCloseButton}" />
 		</Style>
 	</UserControl.Styles>
@@ -63,18 +63,18 @@
 		</DockPanel>
 
 
-		<rctr:Closeable IsOpen="{Binding IsCTemplatedCloseableOpen, Mode=TwoWay}"
+		<rcui:Closeable IsOpen="{Binding IsCTemplatedCloseableOpen, Mode=TwoWay}"
 						Content="{Binding CTemplatedCloseableContent, Mode=OneWay}">
-			<rctr:Closeable.ContentTemplate>
+			<rcui:Closeable.ContentTemplate>
 				<DataTemplate>
 					<TextBlock FontFamily="Ubuntu Mono"
 							Foreground="#FFFF00FF"
 							FontSize="32"
 							Text="{Binding}" />
 				</DataTemplate>
-			</rctr:Closeable.ContentTemplate>
-		</rctr:Closeable>
-		<rctr:Closeable IsOpen="{Binding IsDContentCloseableOpen, Mode=TwoWay}"
+			</rcui:Closeable.ContentTemplate>
+		</rcui:Closeable>
+		<rcui:Closeable IsOpen="{Binding IsDContentCloseableOpen, Mode=TwoWay}"
 						Content="{Binding DContentCloseableContent, Mode=OneWay}" />
 	</Panel>
 </UserControl>

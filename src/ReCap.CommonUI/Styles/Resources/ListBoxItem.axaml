@@ -1,8 +1,5 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="using:ReCap.CommonUI"
-        xmlns:rctr="using:ReCap.CommonUI"
-        xmlns:sys="using:System">
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Color x:Key="ListBoxItem.Background.Idle">#FF0A121D</Color>
 	<Color x:Key="ListBoxItem.Glow.Idle">#9038566B</Color>
 	<Color x:Key="ListBoxItem.BorderBrush.Idle">#40FFFFFF</Color>

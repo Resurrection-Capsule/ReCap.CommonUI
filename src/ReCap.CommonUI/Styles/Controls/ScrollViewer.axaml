@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:rctr="clr-namespace:ReCap.CommonUI"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
                     xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
     <ControlTheme x:Key="{x:Type ScrollViewer}"
                 TargetType="ScrollViewer">
@@ -12,8 +12,8 @@
                     <Control Opacity="0"
 						Focusable="False"
                         IsHitTestVisible="False"
-                        Width="{Binding (rctr:ScrollBarInset.Horizontal), RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
-                        Height="{Binding (rctr:ScrollBarInset.Vertical), RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                        Width="{Binding (rcui:ScrollBarInset.Horizontal), RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                        Height="{Binding (rcui:ScrollBarInset.Vertical), RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
                         Grid.Row="0"
                         Grid.Column="0" />
                     <ScrollContentPresenter x:Name="PART_ContentPresenter"

@@ -1,10 +1,9 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:rctr="using:ReCap.CommonUI.Controls"
-                    xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
                     x:CompileBindings="True">
     <ControlTheme x:Key="GroupBoxHeaderBackground"
-                TargetType="{x:Type rcdec:AngledBorderEx}">
+                TargetType="{x:Type rcui:AngledBorderEx}">
         <Setter Property="InvertSide" Value="Bottom" />
         <Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Window.BottomEdgeTrim.BorderBrush}" />
@@ -22,7 +21,7 @@
     </ControlTheme>
 
     <ControlTheme x:Key="GroupBoxBodyBackground"
-                TargetType="{x:Type rcdec:AngledBorderEx}">
+                TargetType="{x:Type rcui:AngledBorderEx}">
         <Setter Property="Background" Value="{ReflectionBinding Background, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
         <Setter Property="BorderBrush" Value="{ReflectionBinding BorderBrush, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
         <Setter Property="StrokeThickness" Value="1" />
@@ -47,7 +46,7 @@
                 <DockPanel>
                     <Panel DockPanel.Dock="Top"
                         Margin="0,0,0,1">
-                        <rcdec:AngledBorderEx Theme="{DynamicResource GroupBoxHeaderBackground}" />
+                        <rcui:AngledBorderEx Theme="{DynamicResource GroupBoxHeaderBackground}" />
                         <ContentPresenter x:Name="PART_HeaderPresenter"
                                         Classes="h4"
                                         Background="Transparent"
@@ -68,7 +67,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">
                     -->
-                        <rcdec:AngledBorderEx Theme="{DynamicResource GroupBoxBodyBackground}" />
+                        <rcui:AngledBorderEx Theme="{DynamicResource GroupBoxBodyBackground}" />
                         <ContentPresenter x:Name="PART_ContentPresenter"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
