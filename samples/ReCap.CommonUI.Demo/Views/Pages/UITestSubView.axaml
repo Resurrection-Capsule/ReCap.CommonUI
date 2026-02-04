@@ -1,15 +1,13 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.UITestSubView"
             xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:v="using:ReCap.CommonUI.Demo.Views"
 			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels"
-			xmlns:v="using:ReCap.CommonUI.Demo.Views">
+			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
 	<TabControl x:Name="Tabs"
-			ItemsSource="{Binding Tabs, Mode=OneWay}"
-			SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
-			>
-	<!--
-			TabStripPlacement="Left"
-	-->
+				ItemsSource="{Binding Tabs, Mode=OneWay}"
+				SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+				Padding="0">
 		<TabControl.ItemTemplate>
 			<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
 				<TextBlock Text="{Binding Title, Mode=OneWay}" />
@@ -17,18 +15,27 @@
 		</TabControl.ItemTemplate>
 		<TabControl.ContentTemplate>
 			<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
-				<ScrollViewer
+				<ScrollViewer rcui:ScrollBarInset.Vertical="6"
 							HorizontalScrollBarVisibility="{Binding Path=Child.(ScrollViewer.HorizontalScrollBarVisibility), ElementName=TabContentPresenter, Mode=OneWay, FallbackValue=Disabled}"
 							VerticalScrollBarVisibility="{Binding Path=Child.(ScrollViewer.VerticalScrollBarVisibility), ElementName=TabContentPresenter, Mode=OneWay, FallbackValue=Auto}"
-						>
-					<LayoutTransformControl>
+							HorizontalContentAlignment="Stretch"
+							VerticalContentAlignment="Stretch">
+					<LayoutTransformControl Margin="24,12">
 						<LayoutTransformControl.LayoutTransform>
 							<ScaleTransform ScaleX="{Binding DataContext.ScaleFactor, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type v:UITestView}}, Mode=OneWay}"
 											ScaleY="{Binding $self.ScaleX, Mode=OneWay}" />
 						</LayoutTransformControl.LayoutTransform>
 						<ContentPresenter x:Name="TabContentPresenter"
 										DataContext="{Binding ContentVM, Mode=OneWay}"
-										Content="{Binding Mode=OneWay}" />
+										Content="{Binding Mode=OneWay}"
+										Focusable="False"
+										IsTabStop="False"
+										Margin="0"
+										Padding="0"
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										HorizontalContentAlignment="Stretch"
+										VerticalContentAlignment="Stretch" />
 					</LayoutTransformControl>
 				</ScrollViewer>
 			</DataTemplate>
