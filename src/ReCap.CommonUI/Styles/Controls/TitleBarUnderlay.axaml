@@ -1,11 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:rc="using:ReCap.CommonUI"
-                    xmlns:rchax="using:ReCap.CommonUI.Controls.AppearanceHacks"
-                    xmlns:rcdec="using:ReCap.CommonUI.Controls.Decorators"
-					xmlns:rccnv="using:ReCap.CommonUI.Converters">
-	<ControlTheme x:Key="{x:Type rchax:TitleBarUnderlay}"
-				  TargetType="{x:Type rchax:TitleBarUnderlay}">
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="{x:Type rcui:TitleBarUnderlay}"
+				  TargetType="{x:Type rcui:TitleBarUnderlay}">
 		<Setter Property="VerticalAlignment" Value="Top" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="Background" Value="Transparent" />
@@ -18,21 +15,21 @@
 					Background="#01000000">
 					<DockPanel>
 						<Rectangle x:Name="PART_CaptionButtonsProxy"
-								   Width="{Binding $parent[Window].(rchax:CaptionButtonsSizeBridge.CaptionButtonsWidth), Mode=OneWay}"
+								   Width="{Binding $parent[Window].(rcui:CaptionButtonsSizeBridge.CaptionButtonsWidth), Mode=OneWay}"
 								   IsHitTestVisible="False"
 								   IsTabStop="False"
 								   Focusable="False"
 								   DockPanel.Dock="Right" />
 						<Panel x:Name="TitleBarBackgroundMainContainer">
-							<rcdec:AngledBorderEx x:Name="TitleBarBackgroundMain"
-												Classes="activateColoration"
-												BorderBrush="{DynamicResource Window.TitleBar.BorderBrush}"
-												IsHitTestVisible="False"
-												TopRightCut="31"
-												BottomLeftInset="18"
-												BottomLeftCut="6"
-												InvertSide="Bottom"
-												Margin="0,0,0,-5" />
+							<rcui:AngledBorderEx x:Name="TitleBarBackgroundMain"
+											Classes="activateColoration"
+											BorderBrush="{DynamicResource Window.TitleBar.BorderBrush}"
+											IsHitTestVisible="False"
+											TopRightCut="31"
+											BottomLeftInset="18"
+											BottomLeftCut="6"
+											InvertSide="Bottom"
+											Margin="0,0,0,-5" />
 						</Panel>
 					</DockPanel>
 				</Panel>
@@ -40,28 +37,28 @@
 		</Setter>
 
 		<Style Selector="^[IsTitleBarVisible=False][IsVisible=True]">
-			<Setter Property="Margin" Value="{Binding $self.DefaultTitleBarHeight, Converter={x:Static rccnv:TitleBarHeightToUpwardMarginConverter.Instance}, ConverterParameter=14, Mode=OneWay}" />
+			<Setter Property="Margin" Value="{Binding $self.DefaultTitleBarHeight, Converter={x:Static rcui:TitleBarHeightToUpwardMarginConverter.Instance}, ConverterParameter=14, Mode=OneWay}" />
 		</Style>
 		<Style Selector="^[IsTitleBarVisible=True][IsTitleBarHeightValid=True]">
 			<Setter Property="Height" Value="{Binding $self.TitleBarHeight, Mode=OneWay}" />
 		</Style>
 
 
-		<Style Selector="^ /template/ :is(rcdec|AngledBorderBase).activateColoration">
+		<Style Selector="^ /template/ :is(rcui|AngledBorderBase).activateColoration">
 			<Setter Property="StrokeThickness" Value="1" />
 			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
 		</Style>
 
 		<Style Selector="^[IsWindowActive=True]">
-			<Style Selector="^ /template/ :is(rcdec|AngledBorderBase).activateColoration">
+			<Style Selector="^ /template/ :is(rcui|AngledBorderBase).activateColoration">
 				<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
 			</Style>
 		</Style>
 
 
-		<Style Selector=":is(Window)[(rc|WindowChromeAddon.ActualUseTransparencyHack)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
+		<Style Selector=":is(Window)[(rcui|WindowChromeAddon.ActualUseTransparencyHack)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
 			<Style Selector="^:not(:fills_screen)">
-				<Style Selector="^ /template/ rcdec|AngledBorderEx#TitleBarBackgroundMain">
+				<Style Selector="^ /template/ rcui|AngledBorderEx#TitleBarBackgroundMain">
 					<Setter Property="TopLeftCut" Value="6" />
 				</Style>
 			</Style>
