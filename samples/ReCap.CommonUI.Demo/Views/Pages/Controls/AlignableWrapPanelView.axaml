@@ -14,10 +14,17 @@
 	<StackPanel Orientation="Vertical"
 				Spacing="4">
 		<HeaderedContentControl Header="Options">
-			<StackPanel Orientation="Vertical"
-						Spacing="4">
-				<ComboBox ItemsSource="{Binding Alignments, Mode=OneWay}"
-						SelectedItem="{Binding CurrentAlignment, Mode=TwoWay}" />
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text="Horizontal content alignment"
+						Classes="h4" />
+				<StackPanel Classes="leftButtons">
+					<ToggleButton Content="Left"
+								IsChecked="{Binding CurrentAlignment, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static HorizontalAlignment.Left}, Mode=TwoWay}" />
+					<ToggleButton Content="Center"
+								IsChecked="{Binding CurrentAlignment, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static HorizontalAlignment.Center}, Mode=TwoWay}" />
+					<ToggleButton Content="Right"
+								IsChecked="{Binding CurrentAlignment, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static HorizontalAlignment.Right}, Mode=TwoWay}" />
+				</StackPanel>
 			</StackPanel>
 		</HeaderedContentControl>
 		<rcui:AlignableWrapPanel x:Name="Panel"

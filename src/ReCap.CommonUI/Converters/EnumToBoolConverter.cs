@@ -1,28 +1,9 @@
-﻿using System;
-using System.Globalization;
-using Avalonia.Data.Converters;
+using System;
 
 namespace ReCap.CommonUI.Converters
 {
-    public class EnumToBoolConverter
-        : IValueConverter
+    public static class EnumToBoolConverter
     {
-        bool _trueIfMatch = true;
-        public bool TrueIfMatch
-        {
-            get => _trueIfMatch;
-            set => _trueIfMatch = value;
-        }
-        
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (_trueIfMatch)
-                return value == parameter;
-            else
-                return value != parameter;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            => throw new NotSupportedException();
+        public static readonly Avalonia.Controls.Converters.EnumToBoolConverter Instance = new();
     }
 }

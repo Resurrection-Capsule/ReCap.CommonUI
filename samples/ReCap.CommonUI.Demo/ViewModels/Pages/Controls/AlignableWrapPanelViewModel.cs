@@ -9,19 +9,6 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Controls
     public partial class AlignableWrapPanelViewModel
         : ViewModelBase
     {
-        static IEnumerable<HorizontalAlignment> GetAlignments()
-        {
-            List<HorizontalAlignment> list = Enum.GetValues<HorizontalAlignment>().ToList();
-            list.Remove(HorizontalAlignment.Stretch);
-            return list;
-        }
-        static readonly IEnumerable<HorizontalAlignment> _alignments = GetAlignments();
-        public IEnumerable<HorizontalAlignment> Alignments
-        {
-            get => _alignments;
-        }
-
-
         HorizontalAlignment _currentAlignment = HorizontalAlignment.Left;
         public HorizontalAlignment CurrentAlignment
         {

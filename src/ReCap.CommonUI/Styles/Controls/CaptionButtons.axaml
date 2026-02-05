@@ -7,7 +7,6 @@
 		L 7 9 L 5 7 L 3 9 L 0 9
 		L 0 8.5 L 3 4.5 L 0 0.5 Z
 	</PathGeometry>
-	<rcui:EnumToBoolConverter x:Key="EnumToBoolConverter" />
 	<WindowState x:Key="MaxState">Maximized</WindowState>
 	<rcui:CompareToConverter x:Key="IsMaxStateConverter">
 		<rcui:CompareToConverter.CompareTo>
