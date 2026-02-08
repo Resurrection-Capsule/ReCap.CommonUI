@@ -11,6 +11,10 @@ namespace ReCap.CommonUI.Util
 
         public static readonly Version Version;
         public static readonly bool IsVersionDefinitelyAccurate;
+
+
+        public static readonly bool LinuxIsUsingX11 = false;
+        public static readonly bool LinuxIsUsingGnome = false;
         static OSInfo()
         {
             if (IsWindows)
@@ -29,6 +33,12 @@ namespace ReCap.CommonUI.Util
             {
                 Version = Environment.OSVersion.Version;
                 IsVersionDefinitelyAccurate = true;
+
+                if (IsLinux)
+                {
+                    LinuxIsUsingX11 = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11";
+                    LinuxIsUsingGnome = IsDesktopEnvironment("Gnome"); //[TODO: confirm]
+                }
             }
         }
 
@@ -50,10 +60,50 @@ namespace ReCap.CommonUI.Util
                 return false;
             }
         }
+
+
         static bool SafeRtlGetVersion(out WinUnmanagedMethods.RTL_OSVERSIONINFOEX osVersionInfoEx)
         {
             osVersionInfoEx = new WinUnmanagedMethods.RTL_OSVERSIONINFOEX();
             return WinUnmanagedMethods.RtlGetVersion(ref osVersionInfoEx) == 0;
+        }
+
+
+        // https://superuser.com/questions/1074068/what-is-the-difference-between-desktop-session-xdg-session-desktop-and-xdg-cur
+        // https://unix.stackexchange.com/questions/116539/how-to-detect-the-desktop-environment-in-a-bash-script/645761#645761
+        static bool IsDesktopEnvironment(string desktopEnvironment)
+        {
+            if (!IsLinux)
+                return false;
+
+
+            string desktopEnv = desktopEnvironment;
+            string xdgCurrDesktop = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP");
+
+            //Shortcut: If desktopEnv is empty, check if empty xdgCurrDesktop
+            if (string.IsNullOrEmpty(desktopEnv))
+            {
+                if (string.IsNullOrEmpty(xdgCurrDesktop))
+                    return true;
+                else
+                    return false;
+            }
+
+            //Lowercase both
+            desktopEnv = desktopEnv.ToLowerInvariant();
+            xdgCurrDesktop = xdgCurrDesktop.ToLowerInvariant(); //${de,,}; DEs=${DEs,,}
+
+            //Check de against each DEs component
+            //IFS=:; for DE in $DEs; do if [[ "$de" == "$DE" ]]; then return; fi; done
+            string[] xdgCurrDesktops = xdgCurrDesktop.Split(':');
+            foreach (string xdgDesk in xdgCurrDesktops)
+            {
+                if (xdgDesk == desktopEnv)
+                    return true;
+            }
+
+            //Not found
+            return false;
         }
     }
 }

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
-	<ControlTheme x:Key="{x:Type TitleBar}" TargetType="TitleBar">
+	<ControlTheme x:Key="{x:Type TitleBar}"
+				TargetType="{x:Type TitleBar}">
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Top" />
 		
@@ -11,6 +12,7 @@
 		<Setter Property="FontFamily" Value="{DynamicResource HeaderFont}" />
 		<Setter Property="FontSize" Value="15" />
 		<Setter Property="Padding" Value="20,2" />
+		<Setter Property="MinHeight" Value="32" />
 
 		<Setter Property="ClipToBounds" Value="False" />
 		
@@ -33,20 +35,25 @@
 									   Margin="{TemplateBinding Padding}"
 									   IsVisible="{Binding Path=(rcui:WindowChromeAddon.ManagedShowTitle), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 									   />
-						<rcui:CaptionButtonsSizeBridge HorizontalAlignment="Right"
-													   VerticalAlignment="Top">
+						<rcui:CaptionButtonsSizeBridge x:Name="SizeBridge"
+													HorizontalAlignment="Right"
+													VerticalAlignment="Top">
 							<CaptionButtons x:Name="PART_CaptionButtons"
 											Foreground="{TemplateBinding Foreground}"
-											Classes.leftSideButtons="{Binding Path=(rcui:WindowChromeAddon.LeftSideButtons), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 											Win32Properties.NonClientHitTestResult="Client" />
 						</rcui:CaptionButtonsSizeBridge>
 					</Panel>
 				</Panel>
 			</ControlTemplate>
 		</Setter>
-		<Style Selector="^ /template/ CaptionButtons#PART_CaptionButtons.leftSideButtons">
-			<Setter Property="HorizontalAlignment" Value="Left" />
-			<Setter Property="DockPanel.Dock" Value="Left" />
+		<Style Selector="^:left-side-buttons">
+			<Style Selector="^ /template/ rcui|CaptionButtonsSizeBridge#SizeBridge">
+				<Setter Property="HorizontalAlignment" Value="Left" />
+				<Setter Property="DockPanel.Dock" Value="Left" />
+			</Style>
+			<Style Selector="^ /template/ TextBlock#TitleDisplay">
+				<Setter Property="TextAlignment" Value="Right" />
+			</Style>
 		</Style>
 
 		<Style Selector="^:fullscreen">

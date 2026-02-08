@@ -1,9 +1,51 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.WindowChromeView"
             xmlns="https://github.com/avaloniaui"
-			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<StackPanel Orientation="Vertical" Spacing="20">
-		<Slider Value="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
-				Minimum="-1"
-				Maximum="100" />
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<UserControl.Styles>
+		<Style Selector=":is(Control)#CaptionButtonsWidthIndicator">
+			<Setter Property="HorizontalAlignment" Value="Right" />
+		</Style>
+		<Style Selector=":is(Control)#CaptionButtonsWidthIndicator.leftSide">
+			<Setter Property="HorizontalAlignment" Value="Left" />
+		</Style>
+	</UserControl.Styles>
+	<StackPanel Orientation="Vertical"
+				Spacing="20">
+		<HeaderedContentControl Header="Managed Window Chrome">
+			<StackPanel Classes="leftButtons">
+				<ToggleButton Content="Auto"
+							IsChecked="{Binding CurrentChromeMode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Auto}, Mode=TwoWay}" />
+				<ToggleButton Content="System"
+							IsChecked="{Binding CurrentChromeMode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Never}, Mode=TwoWay}" />
+				<ToggleButton Content="Managed"
+							IsChecked="{Binding CurrentChromeMode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.WheneverPossible}, Mode=TwoWay}" />
+			</StackPanel>
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="Caption buttons">
+			<StackPanel Orientation="Vertical">
+				<CheckBox x:Name="LeftSideButtonsCheckBox"
+						Content="Left side"
+						IsChecked="{Binding LeftSideButtons, Mode=TwoWay}" />
+				<Border x:Name="CaptionButtonsWidthIndicator"
+						Background="#0000FF"
+						BorderBrush="#FF0000"
+						BorderThickness="1"
+						Width="{Binding Path=(rcui:CaptionButtonsSizeBridge.CaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+						Classes.leftSide="{Binding #LeftSideButtonsCheckBox.IsChecked, Mode=OneWay, FallbackValue=False}">
+					<TextBlock Text="Bridged caption-buttons width"
+							TextAlignment="Center" />
+				</Border>
+				<CheckBox Content="Minimize button in middle"
+						IsChecked="{Binding MaxBeforeMin, Mode=TwoWay}" />
+			</StackPanel>
+		</HeaderedContentControl>
+		<!--
+		<HeaderedContentControl Header="TitleBar Height Hint">
+			<Slider Value="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
+					Minimum="-1"
+					Maximum="100" />
+		</HeaderedContentControl>
+		-->
 	</StackPanel>
 </UserControl>

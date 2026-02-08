@@ -18,4 +18,8 @@
 	</ItemGroup>
 	
 	<Import Project="../../build/editorconfig.props" />
+
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);WINDOWS_USE_SETWINDOWCOMPOSITIONATTRIBUTE;TITLEBAR2_CAPTIONBUTTONS</DefineConstants>
+	</PropertyGroup>
 </Project>

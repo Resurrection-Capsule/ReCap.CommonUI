@@ -2,6 +2,7 @@
             xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
+            xmlns:local="using:ReCap.CommonUI.Demo"
             xmlns:v="using:ReCap.CommonUI.Demo.Views"
             RequestedThemeVariant="Dark">
     <Application.DataTemplates>
@@ -9,6 +10,12 @@
     </Application.DataTemplates>
     <Application.Styles>
         <rcui:ReCapTheme />
+
+        <Style Selector="Window">
+            <Setter Property="rcui:WindowChromeAddon.ManagedChromeHint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChromeAddon.LeftSideButtons" Value="{Binding LeftSideButtons, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChromeAddon.ButtonsOrder" Value="{Binding ButtonsOrder, Source={x:Static local:App.Current}, Mode=OneWay}" />
+        </Style>
 
         <Style Selector="HeaderedContentControl">
             <Setter Property="Theme" Value="{DynamicResource GroupBox}" />

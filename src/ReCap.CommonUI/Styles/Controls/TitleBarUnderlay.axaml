@@ -12,7 +12,8 @@
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Panel x:Name="TemplateRoot"
-					Background="#01000000">
+					Background="#01000000"
+					Classes.left-side-buttons="{Binding Path=(rcui:WindowChromeAddon.LeftSideButtons), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}">
 					<DockPanel>
 						<Rectangle x:Name="PART_CaptionButtonsProxy"
 								   Width="{Binding $parent[Window].(rcui:CaptionButtonsSizeBridge.CaptionButtonsWidth), Mode=OneWay}"
@@ -35,6 +36,9 @@
 				</Panel>
 			</ControlTemplate>
 		</Setter>
+		<Style Selector="^ /template/ Panel#TemplateRoot.left-side-buttons">
+			<Setter Property="RenderTransform" Value="scale(-1, 1)" />
+		</Style>
 
 		<Style Selector="^[IsTitleBarVisible=False][IsVisible=True]">
 			<Setter Property="Margin" Value="{Binding $self.DefaultTitleBarHeight, Converter={x:Static rcui:TitleBarHeightToUpwardMarginConverter.Instance}, ConverterParameter=14, Mode=OneWay}" />
@@ -56,7 +60,7 @@
 		</Style>
 
 
-		<Style Selector=":is(Window)[(rcui|WindowChromeAddon.ActualUseTransparencyHack)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
+		<Style Selector=":is(Window)[(rcui|WindowTransparencyHack.ActualIsTransparent)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
 			<Style Selector="^:not(:fills_screen)">
 				<Style Selector="^ /template/ rcui|AngledBorderEx#TitleBarBackgroundMain">
 					<Setter Property="TopLeftCut" Value="6" />

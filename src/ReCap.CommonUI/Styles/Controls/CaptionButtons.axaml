@@ -176,21 +176,27 @@
 						Spacing="2"
 						Orientation="Horizontal"
 						ZIndex="99999999"
-						DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
-						Height="{Binding ExtendClientAreaTitleBarHeightHint, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}">
+						Height="{Binding ExtendClientAreaTitleBarHeightHint, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+						Classes.left-side-buttons="{Binding Path=(rcui:WindowChromeAddon.LeftSideButtons), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}">
 					<rcui:CaptionButton x:Name="PART_FullScreenButton"
 							IsVisible="False">
 					</rcui:CaptionButton>
-					<rcui:CaptionButton x:Name="PART_MinimizeButton"
-										Win32Properties.NonClientHitTestResult="MinButton">
-						<Path Data="M 0 0 L 13 0 L 13 4 L 0 4 Z"/>
-					</rcui:CaptionButton>
-					<rcui:CaptionButton x:Name="PART_RestoreButton"
-										Win32Properties.NonClientHitTestResult="MaxButton">
-						<Path Classes="maxRestoreIcon"
-							Classes.maximized="{Binding WindowState, Converter={StaticResource IsMaxStateConverter}}"
-							Data="M 0 8 H 11 V -1 H 0 Z M 2 1 H 9 V 6 H 2 Z"/>
-					</rcui:CaptionButton>
+					<StackPanel x:Name="MinMax"
+								Spacing="2"
+								Orientation="Horizontal"
+								VerticalAlignment="Stretch"
+								Classes.max-before-min="{Binding Path=(rcui:WindowChromeAddon.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}">
+						<rcui:CaptionButton x:Name="PART_MinimizeButton"
+											Win32Properties.NonClientHitTestResult="MinButton">
+							<Path Data="M 0 0 L 13 0 L 13 4 L 0 4 Z"/>
+						</rcui:CaptionButton>
+						<rcui:CaptionButton x:Name="PART_RestoreButton"
+											Win32Properties.NonClientHitTestResult="MaxButton">
+							<Path Classes="maxRestoreIcon"
+								Classes.maximized="{Binding WindowState, Converter={StaticResource IsMaxStateConverter}}"
+								Data="M 0 8 H 11 V -1 H 0 Z M 2 1 H 9 V 6 H 2 Z"/>
+						</rcui:CaptionButton>
+					</StackPanel>
 					<rcui:CaptionButton x:Name="PART_CloseButton"
 										Win32Properties.NonClientHitTestResult="Close">
 						<Path Data="{DynamicResource CloseButtonGlyphGeometry}" />
@@ -202,6 +208,15 @@
 				</StackPanel>
 			</ControlTemplate>
 		</Setter>
+		<Style Selector="^ /template/ StackPanel.left-side-buttons,
+						^ /template/ StackPanel.left-side-buttons :is(Button) > :is(Visual)">
+			<Setter Property="RenderTransform" Value="scale(-1,1)" />
+		</Style>
+
+		<Style Selector="^ /template/ StackPanel#MinMax.max-before-min,
+						^ /template/ StackPanel#MinMax.max-before-min > :is(Button)">
+			<Setter Property="RenderTransform" Value="scale(-1,1)" />
+		</Style>
 
 
 

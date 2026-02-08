@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
-    <ControlTheme x:Key="{x:Type Window}" TargetType="{x:Type Window}">
+    <ControlTheme x:Key="{x:Type Window}"
+                TargetType="{x:Type Window}">
         <Setter Property="TopLevel.SystemBarColor" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
 		<Setter Property="Background" Value="{DynamicResource Window.Body.Background}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource Window.Body.BorderBrush}" />
@@ -10,8 +11,10 @@
 		<Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
 		<Setter Property="FontSize" Value="12" />
         
+		<Setter Property="rcui:WindowChromeAddon.EnableHackHint" Value="True" />
+        <!--
+        <Setter Property="rcui:WindowChromeAddon.ManagedChromeHint" Value="{DynamicResource {x:Static rcui:ReCapTheme.MANAGED_CHROME_HINT_KEY}}" />
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-		<!--
 		<Setter Property="Background" Value="#00FF00FF" />
 		<Setter Property="TransparencyBackgroundFallback" Value="#00FF00FF" />
 		-->
@@ -26,7 +29,7 @@
                         <Panel Background="Transparent" Margin="{TemplateBinding WindowDecorationMargin}" />
                         <VisualLayerManager>
                             <VisualLayerManager.ChromeOverlayLayer>
-                                <TitleBar />
+                                <rcui:TitleBar2 />
                             </VisualLayerManager.ChromeOverlayLayer>
                             <DockPanel x:Name="Frame">
 							    <rcui:TitleBarUnderlay DockPanel.Dock="Top" />
@@ -118,7 +121,7 @@
 
 
         <!-- System decorations -->
-		<Style Selector="^[IsExtendedIntoWindowDecorations=False]">
+		<Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=False]">
             <Style Selector="^ /template/ rcui|AngledBorderEx#TopEdgeTrim">
                 <Setter Property="IsVisible" Value="True" />
 				<Setter Property="Margin" Value="0,0,0,-5" />
@@ -137,19 +140,18 @@
 
 
         <!-- Managed decorations -->
-        <Style Selector="^[IsExtendedIntoWindowDecorations=True]">
-            <Setter Property="ExtendClientAreaChromeHints" Value="PreferSystemChrome" />
+        <Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=True]">
             <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="32" />
             <Setter Property="TransparencyLevelHint" Value="Transparent" />
             <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
-            <Setter Property="rcui:WindowChromeAddon.UseTransparencyHackHint" Value="True" />
+            <Setter Property="rcui:WindowTransparencyHack.EnableHackHint" Value="True" />
 
 
 			<Style Selector="^ /template/ :is(Panel)#Frame">
                 <Setter Property="Margin" Value="{Binding OffScreenMargin, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
             </Style>
 
-            <Style Selector="^[(rcui|WindowChromeAddon.ActualUseTransparencyHack)=True] /template/ Border#PART_TransparencyFallback">
+            <Style Selector="^[(rcui|WindowTransparencyHack.ActualIsTransparent)=True] /template/ Border#PART_TransparencyFallback">
                 <Setter Property="IsVisible" Value="False" />
             </Style>
 
@@ -161,7 +163,7 @@
 			</Style>
             
             <!-- Transparent -->
-            <Style Selector="^[(rcui|WindowChromeAddon.ActualUseTransparencyHack)=True], ^[ActualTransparencyLevel=Transparent]">
+            <Style Selector="^[(rcui|WindowTransparencyHack.ActualIsTransparent)=True], ^[ActualTransparencyLevel=Transparent]">
 				<Style Selector="^[WindowState=Normal]">
 				    <Style Selector="^ /template/ rcui|AngledBorder#HoloShadow">
                         <Setter Property="Background" Value="{DynamicResource Window.HoloShadow.Background.Translucent}" />
@@ -191,7 +193,7 @@
 			
 			
 			<!-- Opaque -->
-            <Style Selector="^[(rcui|WindowChromeAddon.ActualUseTransparencyHack)=False], ^:not(^[ActualTransparencyLevel=Transparent])">
+            <Style Selector="^[(rcui|WindowTransparencyHack.ActualIsTransparent)=False], ^:not(^[ActualTransparencyLevel=Transparent])">
             </Style>
 		</Style>
     </ControlTheme>
