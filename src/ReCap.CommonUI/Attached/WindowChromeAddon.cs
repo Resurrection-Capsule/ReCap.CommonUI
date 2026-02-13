@@ -176,6 +176,10 @@ namespace ReCap.CommonUI
             DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(DesiredManagedChromeProperty_Changed);
 
 #if DEBUG
+            EnableHackHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+
             ManagedShowTitleProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
             LeftSideButtonsProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
             ButtonsOrderProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
