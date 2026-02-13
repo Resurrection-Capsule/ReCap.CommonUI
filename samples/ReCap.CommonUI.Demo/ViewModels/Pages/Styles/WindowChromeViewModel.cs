@@ -8,7 +8,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
     public partial class WindowChromeViewModel
         : ViewModelBase
     {
-        ManagedChromeMode _currentChromeMode = ManagedChromeMode.Auto;
+        ManagedChromeMode _currentChromeMode = App.Current.ManagedChromeHint;
         public ManagedChromeMode CurrentChromeMode
         {
             get => _currentChromeMode;
@@ -20,7 +20,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         }
 
 
-        bool _leftSideButtons = false;
+        bool _leftSideButtons = App.Current.LeftSideButtons;
         public bool LeftSideButtons
         {
             get => _leftSideButtons;
@@ -32,7 +32,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         }
 
 
-        bool _maxBeforeMin = false;
+        bool _maxBeforeMin = CaptionButtonsOrderToBool(App.Current.ButtonsOrder);
         public bool MaxBeforeMin
         {
             get => _maxBeforeMin;
@@ -52,6 +52,15 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
             => App.Current.LeftSideButtons = leftSide;
 
         void UpdateMaxBeforeMin(bool maxBeforeMin)
+            => App.Current.ButtonsOrder = BoolToCaptionButtonsOrder(maxBeforeMin);
+
+
+
+
+        static bool CaptionButtonsOrderToBool(CaptionButtonsOrder order)
+            => order == CaptionButtonsOrder.MaxMinClose;
+
+        static CaptionButtonsOrder BoolToCaptionButtonsOrder(bool maxBeforeMin)
             => App.Current.ButtonsOrder = maxBeforeMin
                 ? CaptionButtonsOrder.MaxMinClose
                 : CaptionButtonsOrder.MinMaxClose
