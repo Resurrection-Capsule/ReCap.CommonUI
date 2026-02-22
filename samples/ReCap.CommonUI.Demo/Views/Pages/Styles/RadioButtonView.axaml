@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.RadioButtonView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<UniformGrid Rows="1"
+				ColumnSpacing="20">
+		<HeaderedContentControl Header="Enabled">
+			<HeaderedContentControl.Styles>
+				<Style Selector="RadioButton">
+					<Setter Property="GroupName" Value="RadioButtonEnabled" />
+				</Style>
+			</HeaderedContentControl.Styles>
+			<StackPanel Orientation="Vertical">
+				<RadioButton Content="RadioButton 1"
+							IsChecked="True" />
+				<RadioButton Content="RadioButton 2" />
+				<RadioButton Content="RadioButton 3" />
+			</StackPanel>
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="Disabled">
+			<HeaderedContentControl.Styles>
+				<Style Selector="RadioButton">
+					<Setter Property="GroupName" Value="RadioButtonDisabled" />
+				</Style>
+			</HeaderedContentControl.Styles>
+			<StackPanel Orientation="Vertical"
+						IsEnabled="False">
+				<RadioButton Content="RadioButton 1"
+							IsChecked="True" />
+				<RadioButton Content="RadioButton 2" />
+				<RadioButton Content="RadioButton 3" />
+			</StackPanel>
+		</HeaderedContentControl>
+	</UniformGrid>
+</UserControl>

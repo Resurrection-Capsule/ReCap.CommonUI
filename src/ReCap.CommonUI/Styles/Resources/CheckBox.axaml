@@ -1,0 +1,52 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StreamGeometry x:Key="CheckMarkPathData">
+		M  9    0
+
+		M  0    5
+		M  0    5.5
+		L  3.5  6.5
+		L  7.5  0.5
+		L  8.5  0.5
+		L  8    1
+		L  4.25 9
+		L  3.5  9
+		Z
+    </StreamGeometry>
+    <RectangleGeometry x:Key="IndeterminateMarkPathData"
+					Rect="1,1,7,7" />
+
+
+	<BlurEffect x:Key="CheckBox.Glyph.GlowEffect"
+				Radius="4" />
+
+
+	<GradientStops x:Key="CheckBox.Background.Stops">
+		<GradientStop Offset="0" Color="#FF030303" />
+		<GradientStop Offset="1" Color="#FF3C3C3C" />
+	</GradientStops>
+
+
+	<LinearGradientBrush x:Key="CheckBox.Background.Idle"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%"
+						GradientStops="{StaticResource CheckBox.Background.Stops}" />
+	<LinearGradientBrush x:Key="CheckBox.BorderBrush.Idle"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%">
+		<GradientStop Offset="0" Color="#FF414141" />
+		<GradientStop Offset="1" Color="#FF4D4D4D" />
+	</LinearGradientBrush>
+	<BoxShadows x:Key="CheckBox.OuterBoxShadow.Idle">0 0 1 #80FFFFFF</BoxShadows>
+	<Color x:Key="CheckBox.GlyphFill.Idle">#FFFFFFFF</Color>
+
+	
+	<Color x:Key="CheckBox.BorderBrush.Hover">#FFFFFFFF</Color>
+	<BoxShadows x:Key="CheckBox.OuterBoxShadow.Hover">0 0 6 #C0FFFFFF</BoxShadows>
+
+
+	<LinearGradientBrush x:Key="CheckBox.Background.Pressed"
+						StartPoint="0%,100%"
+						EndPoint="0%,0%"
+						GradientStops="{StaticResource CheckBox.Background.Stops}" />
+</ResourceDictionary>

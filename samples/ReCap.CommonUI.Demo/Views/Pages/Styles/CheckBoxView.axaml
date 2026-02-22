@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.CheckBoxView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<UniformGrid Rows="1"
+				ColumnSpacing="20">
+		<HeaderedContentControl Header="Enabled">
+			<StackPanel Orientation="Vertical">
+				<CheckBox Content="Unchecked CheckBox"
+						IsChecked="False" />
+				<CheckBox Content="Checked CheckBox"
+						IsChecked="True" />
+				<CheckBox Content="Indeterminate CheckBox"
+						IsThreeState="True"
+						IsChecked="{x:Null}" />
+			</StackPanel>
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="Disabled">
+			<StackPanel Orientation="Vertical"
+						IsEnabled="False">
+				<CheckBox Content="Unchecked CheckBox"
+						IsChecked="False" />
+				<CheckBox Content="Checked CheckBox"
+						IsChecked="True" />
+				<CheckBox Content="Indeterminate CheckBox"
+						IsThreeState="True"
+						IsChecked="{x:Null}" />
+			</StackPanel>
+		</HeaderedContentControl>
+	</UniformGrid>
+</UserControl>
