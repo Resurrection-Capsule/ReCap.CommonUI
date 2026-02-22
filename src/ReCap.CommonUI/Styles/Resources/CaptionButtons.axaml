@@ -3,7 +3,8 @@
 	<RadialGradientBrush x:Key="CaptionButton.Background.Idle"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						 Radius="0.625">
+						RadiusX="0.625"
+						RadiusY="0.625">
 		<GradientStop Offset="0.125" Color="#FF970000" />
 		<GradientStop Offset="1" Color="#FF590000" />
 	</RadialGradientBrush>
@@ -14,29 +15,20 @@
 	<RadialGradientBrush x:Key="CaptionButton.Background.Idle.Inactive"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						 Radius="0.625">
+						RadiusX="0.625"
+						RadiusY="0.625">
 		<GradientStop Offset="0.125" Color="#FF6C4D4D" />
 		<GradientStop Offset="1" Color="#FF554343" />
 	</RadialGradientBrush>
 	<Color x:Key="CaptionButton.BorderBrush.Idle.Inactive">#FFDDD9D9</Color>
 	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FF875A5A</Color>
-	<!--
-	<RadialGradientBrush x:Key="CaptionButton.Background.Idle.Inactive"
-						Center="50%,50%"
-						GradientOrigin="50%,50%"
-						 Radius="0.625">
-		<GradientStop Offset="0.125" Color="#FF964B4B" />
-		<GradientStop Offset="1" Color="#FF562B2B" />
-	</RadialGradientBrush>
-	<Color x:Key="CaptionButton.BorderBrush.Idle.Inactive">#FFDDD4D4</Color>
-	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FFDD6E6E</Color>
-	-->
 
 
 	<RadialGradientBrush x:Key="CaptionButton.Background.Hover"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						 Radius="0.625">
+						RadiusX="0.625"
+						RadiusY="0.625">
 		<GradientStop Offset="0.125" Color="#FFFF0000" />
 		<GradientStop Offset="1" Color="#FFFD0E0E" />
 	</RadialGradientBrush>
@@ -47,7 +39,8 @@
 	<RadialGradientBrush x:Key="CaptionButton.Background.Pressed"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						 Radius="0.625">
+						RadiusX="0.625"
+						RadiusY="0.625">
 		<GradientStop Offset="0.125" Color="#FF940000" />
 		<GradientStop Offset="1" Color="#FF560000" />
 	</RadialGradientBrush>
@@ -62,7 +55,8 @@
 	<RadialGradientBrush x:Key="CaptionButton.Background.Disabled"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						 Radius="0.625">
+						RadiusX="0.625"
+						RadiusY="0.625">
 		<GradientStop Offset="0.125" Color="#FF970000" />
 		<GradientStop Offset="1" Color="#FF590000" />
 	</RadialGradientBrush>
