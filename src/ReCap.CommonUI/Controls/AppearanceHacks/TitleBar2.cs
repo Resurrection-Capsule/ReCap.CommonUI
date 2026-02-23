@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using ReCap.CommonUI.Attached.WindowChrome;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {

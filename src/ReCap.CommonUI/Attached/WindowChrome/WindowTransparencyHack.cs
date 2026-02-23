@@ -8,7 +8,7 @@ using ReCap.CommonUI.Util;
 
 using static ReCap.CommonUI.WinUnmanagedMethods;
 
-namespace ReCap.CommonUI
+namespace ReCap.CommonUI.Attached.WindowChrome
 {
     public class WindowTransparencyHack
         : AvaloniaObject

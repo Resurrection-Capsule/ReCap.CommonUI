@@ -1,6 +1,7 @@
 using Avalonia.Metadata;
 
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI")]
+[assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Attached.WindowChrome")]
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Controls")]
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Controls.AppearanceHacks")]
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Controls.Decorators")]

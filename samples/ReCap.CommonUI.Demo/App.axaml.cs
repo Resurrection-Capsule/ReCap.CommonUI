@@ -1,8 +1,8 @@
 using System;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using ReCap.CommonUI.Attached.WindowChrome;
 using ReCap.CommonUI.Demo.ViewModels;
 using ReCap.CommonUI.Demo.Views;
 

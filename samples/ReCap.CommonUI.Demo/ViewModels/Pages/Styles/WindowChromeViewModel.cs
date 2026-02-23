@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using ReCap.CommonUI;
+using ReCap.CommonUI.Attached.WindowChrome;
 
 namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 {
