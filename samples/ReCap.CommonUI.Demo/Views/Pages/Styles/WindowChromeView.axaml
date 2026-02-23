@@ -22,11 +22,19 @@
 							IsChecked="{Binding CurrentChromeMode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.WheneverPossible}, Mode=TwoWay}" />
 			</StackPanel>
 		</HeaderedContentControl>
-		<HeaderedContentControl Header="Caption buttons">
+		<HeaderedContentControl Header="Caption buttons options"
+								IsEnabled="{Binding Path=(rcui:WindowChromeAddon.IsUsingManagedChrome), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}">
 			<StackPanel Orientation="Vertical">
 				<CheckBox x:Name="LeftSideButtonsCheckBox"
 						Content="Left side"
 						IsChecked="{Binding LeftSideButtons, Mode=TwoWay}" />
+				<CheckBox Content="Minimize button in middle"
+						IsChecked="{Binding MaxBeforeMin, Mode=TwoWay}" />
+			</StackPanel>
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="Caption buttons size-bridging">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text="{Binding Path=(rcui:CaptionButtonsSizeBridge.CaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}" />
 				<Border x:Name="CaptionButtonsWidthIndicator"
 						Background="#0000FF"
 						BorderBrush="#FF0000"
@@ -36,8 +44,6 @@
 					<TextBlock Text="Bridged caption-buttons width"
 							TextAlignment="Center" />
 				</Border>
-				<CheckBox Content="Minimize button in middle"
-						IsChecked="{Binding MaxBeforeMin, Mode=TwoWay}" />
 			</StackPanel>
 		</HeaderedContentControl>
 		<!--
