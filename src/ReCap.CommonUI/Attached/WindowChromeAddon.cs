@@ -97,7 +97,7 @@ namespace ReCap.CommonUI
         {
             get
             {
-                if (OSInfo.IsWindows)
+                if (OSInfo.IsWindows || OSInfo.IsMacOS)
                     return true;
                 else if (OSInfo.IsLinux)
                     return OSInfo.LinuxIsUsingX11;
