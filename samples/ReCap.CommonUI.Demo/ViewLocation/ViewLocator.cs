@@ -11,6 +11,7 @@ namespace ReCap.CommonUI.Demo.Views
         : IDataTemplate
         , ICachingDataTemplate
     {
+        public static readonly Type USE_TOSTRING = typeof(ViewLocator);
         bool _useCaching = false;
         public bool UseCaching
         {
@@ -23,29 +24,27 @@ namespace ReCap.CommonUI.Demo.Views
         Dictionary<object, Control> _cache = new();
         protected virtual Control BuildIfNeeded(object data)
         {
-            Control ret = null;
             if (data == null)
                 return CreateTextForFailure($"{nameof(data)} was null");
+
+            if (data is not RxObjectBase rxData)
+                return CreateTextForFailure($"'{data.GetType().FullName}' is not assignable to '{typeof(RxObjectBase).FullName}'");
+
+            var type = rxData.GetViewType();
+            if (type == null)
+                return CreateTextForFailure($"'{data}' returned null view type");
+            else if (!type.IsAssignableTo(typeof(Control)))
+                return CreateTextForFailure($"'{data}' returned invalid view type (not assignable to '{typeof(Control).FullName}')");
+
+
+            var inst = Activator.CreateInstance(type);
+            if ((inst != null) && (inst is Control ctrl))
+                return ctrl;
             
-            
-            if (data is RxObjectBase rxData)
-            {
-                var type = rxData.GetViewType();
-            
-                if ((type != null) && type.IsAssignableTo(typeof(Control)))
-                {
-                    var inst = Activator.CreateInstance(type);
-                    ret = (Control)inst;
-                }
-            }
-            
-            return (ret != null)
-                ? ret
-                : CreateTextForFailure($"Couldn't find view for type '{data.GetType().FullName}'")
-            ;
+            return CreateTextForFailure($"Couldn't create view of type '{type.FullName}'");
         }
 
-        TextBlock CreateTextForFailure(string failMsg)
+        static TextBlock CreateTextForFailure(string failMsg)
         {
             Debug.WriteLine($"ViewLocator: {failMsg}");
             return new TextBlock()
@@ -61,6 +60,8 @@ namespace ReCap.CommonUI.Demo.Views
             => this.Build_Impl(data, UseCaching, ref _cache, BuildIfNeeded);
         
         public virtual bool Match(object data)
-            => data is ViewModelBase;
+            => (data is ViewModelBase vm)
+            && (vm.GetViewType() != USE_TOSTRING)
+        ;
     }
 }

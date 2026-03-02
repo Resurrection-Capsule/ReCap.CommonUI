@@ -1,0 +1,31 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Color x:Key="ComboBoxItem.Foreground.Idle">#FFFFFFFF</Color>
+
+
+	<LinearGradientBrush x:Key="ComboBoxItem.Background.Hover"
+						StartPoint="0%,0%"
+						EndPoint="100%,0%">
+		<GradientStop Offset="0" Color="#40FFFFFF" />
+		<GradientStop Offset="1" Color="#00FFFFFF" />
+	</LinearGradientBrush>
+
+
+	<Color x:Key="ComboBoxItem.Foreground.Disabled">#80FFFFFF</Color>
+
+
+	<LinearGradientBrush x:Key="ComboBoxItem.Divider.Top"
+						StartPoint="0%,0%"
+						EndPoint="50%,0%"
+						SpreadMethod="Reflect">
+		<GradientStop Offset="0" Color="#00010101" />
+		<GradientStop Offset="1" Color="#40FFFFFF" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="ComboBoxItem.Divider.Bottom"
+						StartPoint="0%,0%"
+						EndPoint="50%,0%"
+						SpreadMethod="Reflect">
+		<GradientStop Offset="0" Color="#00010101" />
+		<GradientStop Offset="1" Color="#80000000" />
+	</LinearGradientBrush>
+</ResourceDictionary>
