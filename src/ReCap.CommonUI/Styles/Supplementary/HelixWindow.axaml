@@ -11,7 +11,7 @@
 			<Setter Property="Margin" Value="0,64,0,0" />
         </Style>
 
-		<Style Selector="^[IsExtendedIntoWindowDecorations=False]">
+		<Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=False]">
 			<Style Selector="^ /template/ rcui|AngledBorderEx#TopEdgeTrim">
 				<Setter Property="Height" Value="110" />
 				<Setter Property="Margin" Value="0,-32,0,-69" />
@@ -95,7 +95,7 @@
 			<Setter Property="TopRightCut" Value="6" />
 		</Style>
 		
-		<Style Selector=":is(Window)[(rcui|WindowChromeAddon.ActualUseTransparencyHack)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
+		<Style Selector=":is(Window)[(rcui|WindowTransparencyHack.ActualIsTransparent)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
 			<!--
 			<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TopBgElement">
 				<Setter Property="TopLeftCut" Value="6" />
