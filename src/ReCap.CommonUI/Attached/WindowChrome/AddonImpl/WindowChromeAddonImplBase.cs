@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
@@ -66,14 +63,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 Dispatcher.UIThread.Invoke(() =>
                 {
                     isUsingManagedChrome = window.IsExtendedIntoWindowDecorations || desiredManagedChrome;
-                    Debug.WriteLine("1");
                 });
             });
 
 
-            Debug.WriteLine("2");
             useManagedChrome = isUsingManagedChrome;
-            Debug.WriteLine("3");
         }
     }
 }

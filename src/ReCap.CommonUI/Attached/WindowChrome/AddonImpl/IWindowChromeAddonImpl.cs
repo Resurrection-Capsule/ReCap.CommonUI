@@ -1,9 +1,4 @@
-using System;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Platform;
-using Avalonia.Threading;
-using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {

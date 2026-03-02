@@ -47,7 +47,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         /// </remarks>
         void VisualPositionHack(Window window)
         {
-#if NO
+#if WINDOWCHROMEADDON_WINDOWS_LESS_HACKY
             window.InvalidateMeasure();
             window.InvalidateArrange();
             window.InvalidateVisual();
