@@ -137,5 +137,21 @@ namespace ReCap.CommonUI.Util.Reflection
             return new ORMethodWrapper<TOwner, TRet>(methodInfo);
         }
         */
+
+
+        internal static T CreateInstance<T>(Type implType)
+        {
+            object implObj = Activator.CreateInstance(implType);
+            if (implObj is T tImpl)
+                return tImpl;
+
+            string implTypeName
+                //= implObj?.GetType().FullName ?? "null";
+                = (implObj != null)
+                    ? implObj.GetType().FullName
+                    : "null"
+                ;
+            throw new InvalidCastException($"'{implTypeName}' is not assignable to '{typeof(T).FullName}'!");
+        }
     }
 }
