@@ -107,6 +107,7 @@
 						StartPoint="0%,-300%"
 						EndPoint="0%,100%"
 						GradientStops="{DynamicResource Window.Chrome.BorderBrush.GradientStops}"/-->
+	<Color x:Key="Window.Body.InnerGlowColor">#20FFFFFF</Color>
 	
 	
 	<SolidColorBrush x:Key="Window.HoloShadow.Background.Translucent">#9D0D0F12</SolidColorBrush>

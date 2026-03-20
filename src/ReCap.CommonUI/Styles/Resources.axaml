@@ -6,12 +6,14 @@
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Global.axaml" />
 
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Button.axaml" />
-				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/CaptionButtons.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/CaptionButton.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/CaptionButtons2.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/GroupBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ListBoxItem.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Window.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/TabControl.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/TextBox.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/TitleBar.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ScrollBar.axaml" />
 
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/SidePane.axaml" />

@@ -1,5 +1,10 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<x:Double x:Key="CaptionButton.MinWidth">43</x:Double>
+
+
+
+
 	<RadialGradientBrush x:Key="CaptionButton.Background.Idle"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
@@ -19,7 +24,10 @@
 		<GradientStop Offset="1" Color="#FF554343" />
 	</RadialGradientBrush>
 	<Color x:Key="CaptionButton.BorderBrush.Idle.Inactive">#FFDDD9D9</Color>
+	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FFDD6E6E</Color>
+	<!--
 	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FF875A5A</Color>
+	-->
 	<!--
 	<RadialGradientBrush x:Key="CaptionButton.Background.Idle.Inactive"
 						Center="50%,50%"

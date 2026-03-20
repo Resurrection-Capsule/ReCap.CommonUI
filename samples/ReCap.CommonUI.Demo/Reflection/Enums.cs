@@ -3,7 +3,7 @@ using System;
 namespace ReCap.CommonUI.Demo.Reflection
 {
     [Flags]
-    public enum TypeFilterTypeFlags
+    public enum TypeFilterKindFlags
         : byte
     {
         Class       = 0b00000001,
@@ -17,9 +17,9 @@ namespace ReCap.CommonUI.Demo.Reflection
     public enum TypeFilterModifierFlags
         : byte
     {
-        Public      = 0b00000000,
-        NonPublic   = 0b00000001,
-        Generic     = 0b00000010,
-        Abstract    = 0b00000100,
+        Public      = 0b00000001,
+        Internal    = 0b00000010,
+        Protected   = 0b00000100,
+        Private     = 0b10000000,
     }
 }

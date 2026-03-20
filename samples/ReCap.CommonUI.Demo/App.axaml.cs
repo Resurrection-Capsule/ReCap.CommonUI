@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using ReCap.CommonUI.Attached.WindowChrome;
 using ReCap.CommonUI.Demo.ViewModels;
 using ReCap.CommonUI.Demo.Views;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Demo
 {
@@ -33,21 +34,21 @@ namespace ReCap.CommonUI.Demo
         }
 
 
-        public static readonly StyledProperty<bool> LeftSideButtonsProperty =
-            AvaloniaProperty.Register<App, bool>(nameof(LeftSideButtons));
-        public bool LeftSideButtons
+        public static readonly StyledProperty<CaptionButtonRoles> LeftCaptionButtonsProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(LeftCaptionButtons));
+        public CaptionButtonRoles LeftCaptionButtons
         {
-            get => GetValue(LeftSideButtonsProperty);
-            set => SetValue(LeftSideButtonsProperty, value);
+            get => GetValue(LeftCaptionButtonsProperty);
+            set => SetValue(LeftCaptionButtonsProperty, value);
         }
 
 
-        public static readonly StyledProperty<CaptionButtonsOrder> ButtonsOrderProperty =
-            AvaloniaProperty.Register<App, CaptionButtonsOrder>(nameof(ButtonsOrder));
-        public CaptionButtonsOrder ButtonsOrder
+        public static readonly StyledProperty<CaptionButtonRoles> RightCaptionButtonsProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(RightCaptionButtons));
+        public CaptionButtonRoles RightCaptionButtons
         {
-            get => GetValue(ButtonsOrderProperty);
-            set => SetValue(ButtonsOrderProperty, value);
+            get => GetValue(RightCaptionButtonsProperty);
+            set => SetValue(RightCaptionButtonsProperty, value);
         }
 
 
@@ -62,8 +63,9 @@ namespace ReCap.CommonUI.Demo
         public override void OnFrameworkInitializationCompleted()
         {
             ManagedChromeHint = ManagedChromeMode.Auto;
-            LeftSideButtons = WindowChromeAddon.PlatformPrefersLeftSideButtons;
-            ButtonsOrder = WindowChromeAddon.PlatformPreferredCaptionButtonsOrder;
+            var captionButtons = WindowChromeAddon.PlatformDefaultCaptionButtons;
+            LeftCaptionButtons = captionButtons.Left;
+            RightCaptionButtons = captionButtons.Right;
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

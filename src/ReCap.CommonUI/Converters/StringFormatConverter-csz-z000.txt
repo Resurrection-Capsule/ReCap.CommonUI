@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Avalonia.Controls;
+using Avalonia.Data.Converters;
+using Avalonia.Reactive;
+using ReCap.CommonUI.Util;
+
+namespace ReCap.CommonUI.Converters
+{
+    public class StringFormatConverter
+        : IMultiValueConverter
+    {
+        public static readonly StringFormatConverter Instance = new();
+        private StringFormatConverter()
+        {}
+
+
+        static string GetAsString(object obj)
+        {
+            if (obj == null)
+                return "null";
+            else if (obj is string str)
+                return str;
+            else
+                return obj.ToString();
+        }
+
+
+        static bool TryGetAsFormatString(object parameter, out string result)
+        {
+            if (parameter is not string format)
+                goto fail;
+            else if (string.IsNullOrWhiteSpace(format)) 
+                goto fail;
+            else if (format.Contains('{') && format.Contains('}'))
+            {
+                result = format;
+                return true;
+            }
+
+            fail:
+            result = default;
+            return false;
+        }
+        
+
+        public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (TryGetAsFormatString(parameter, out string format))
+            {
+                List<object> values2 = new(values);
+                values2.Add(1);
+                return string.Format(format, values2);
+            }
+
+            object formatRaw = values[0];
+            format = GetAsString(formatRaw);
+
+            int count = values.Count;
+            var args = new object[count - 1];
+            values.CopyTo(args, 1);
+            
+            return string.Format(format, args);
+        }
+    }
+}

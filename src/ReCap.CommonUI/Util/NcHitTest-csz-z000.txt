@@ -1,0 +1,113 @@
+using System;
+using Avalonia.Controls;
+
+namespace ReCap.CommonUI.Util
+{
+    internal static class NcHitTest
+    {
+        /// <summary>
+        /// In the border of a window that does not have a sizing border.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTBORDER = (Win32Properties.Win32HitTestValue)18;
+        /// <summary>
+        /// In the lower-horizontal border of a resizable window (the user can click the mouse to resize the window vertically).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTBOTTOM = (Win32Properties.Win32HitTestValue)15;
+        /// <summary>
+        /// In the lower-left corner of a border of a resizable window (the user can click the mouse to resize the window diagonally).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTBOTTOMLEFT = (Win32Properties.Win32HitTestValue)16;
+        /// <summary>
+        /// In the lower-right corner of a border of a resizable window (the user can click the mouse to resize the window diagonally).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTBOTTOMRIGHT = (Win32Properties.Win32HitTestValue)17;
+        /// <summary>
+        /// In a title bar.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTCAPTION = (Win32Properties.Win32HitTestValue)2;
+        /// <summary>
+        /// In a client area.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTCLIENT = (Win32Properties.Win32HitTestValue)1;
+        /// <summary>
+        /// In a Close button.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTCLOSE = (Win32Properties.Win32HitTestValue)20;
+        /// <summary>
+        /// On the screen background or on a dividing line between windows (same as <see cref="HTNOWHERE"/>, except that the DefWindowProc function produces a system beep to indicate an error).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTERROR = (Win32Properties.Win32HitTestValue)(-2);
+        /// <summary>
+        /// In a size box (same as <see cref="HTSIZE"/>).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTGROWBOX = (Win32Properties.Win32HitTestValue)4;
+        /// <summary>
+        /// In a Help button.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTHELP = (Win32Properties.Win32HitTestValue)21;
+        /// <summary>
+        /// In a horizontal scroll bar.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTHSCROLL = (Win32Properties.Win32HitTestValue)6;
+        /// <summary>
+        /// In the left border of a resizable window (the user can click the mouse to resize the window horizontally).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTLEFT = (Win32Properties.Win32HitTestValue)10;
+        /// <summary>
+        /// In a menu.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTMENU = (Win32Properties.Win32HitTestValue)5;
+        /// <summary>
+        /// In a Maximize button.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTMAXBUTTON = (Win32Properties.Win32HitTestValue)9;
+        /// <summary>
+        /// In a Minimize button.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTMINBUTTON = (Win32Properties.Win32HitTestValue)8;
+        /// <summary>
+        /// On the screen background or on a dividing line between windows.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTNOWHERE = 0;
+        /// <summary>
+        /// In a Minimize button.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTREDUCE = (Win32Properties.Win32HitTestValue)8;
+        /// <summary>
+        /// In the right border of a resizable window (the user can click the mouse to resize the window horizontally).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTRIGHT = (Win32Properties.Win32HitTestValue)11;
+        /// <summary>
+        /// In a size box (same as <see cref="HTGROWBOX"/>).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTSIZE = (Win32Properties.Win32HitTestValue)4;
+        /// <summary>
+        /// In a window menu or in a Close button in a child window.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTSYSMENU = (Win32Properties.Win32HitTestValue)3;
+        /// <summary>
+        /// In the upper-horizontal border of a window.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTTOP = (Win32Properties.Win32HitTestValue)12;
+        /// <summary>
+        /// In the upper-left corner of a window border.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTTOPLEFT = (Win32Properties.Win32HitTestValue)13;
+        /// <summary>
+        /// In the upper-right corner of a window border.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTTOPRIGHT = (Win32Properties.Win32HitTestValue)14;
+        /// <summary>
+        /// In a window currently covered by another window in the same thread (the message will be sent to underlying windows in the same thread until one of them returns a code that is not <see cref="HTTRANSPARENT"/>).
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTTRANSPARENT = (Win32Properties.Win32HitTestValue)(-1);
+        /// <summary>
+        /// In the vertical scroll bar.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTVSCROLL = (Win32Properties.Win32HitTestValue)7;
+        /// <summary>
+        /// In a Maximize button.
+        /// </summary>
+        public const Win32Properties.Win32HitTestValue HTZOOM = (Win32Properties.Win32HitTestValue)9;
+    }
+}

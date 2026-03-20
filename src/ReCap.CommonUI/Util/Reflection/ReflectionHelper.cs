@@ -72,9 +72,16 @@ namespace ReCap.CommonUI.Util.Reflection
         }
 
 
-        public static bool IsAssignableTo(this Type self, Type c)
-            => c.IsAssignableFrom(self);
-        
+        public static bool IsAssignableTo(this Type type, Type other)
+            => other.IsAssignableFrom(type);
+
+        public static bool IsAssignableTo<T>(this Type type)
+            => type.IsAssignableTo(typeof(T));
+
+        public static bool IsAssignableFrom<T>(this Type type)
+            => type.IsAssignableFrom(typeof(T));
+
+
         public static bool IsParameterValid<TParam>(this ParameterInfo info)
             => IsParameterValid(info, typeof(TParam));
         public static bool IsParameterValid(this ParameterInfo info, Type expectedType)

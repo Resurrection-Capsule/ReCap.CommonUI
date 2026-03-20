@@ -1,0 +1,166 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="CaptionButtons2.GlyphPresenter"
+				TargetType="{x:Type TemplatedControl}">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Path x:Name="Glyph"
+					Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}"
+					 />
+				<!--
+					Stretch="None"
+					Width="13"
+					Height="9"
+				-->
+			</ControlTemplate>
+		</Setter>
+
+
+		<Style Selector="^[DataContext=Minimize]">
+			<Style Selector="^ /template/ Path#Glyph">
+				<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Minimize}" />
+			</Style>
+
+			<!-- Windows actually does this. Unsure about other platforms, so following the known precedent for now. -->
+			<Style Selector="^[Tag=Minimized]">
+				<Style Selector="^ /template/ Path#Glyph">
+					<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
+				</Style>
+			</Style>
+		</Style>
+
+
+		<Style Selector="^[DataContext=Maximize]">
+			<Style Selector="^ /template/ Path#Glyph">
+				<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Maximize}" />
+			</Style>
+			<Style Selector="^[Tag=Maximized], ^[Tag=FullScreen]">
+				<Style Selector="^ /template/ Path#Glyph">
+					<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
+				</Style>
+			</Style>
+		</Style>
+
+
+		<Style Selector="^[DataContext=FullScreen] /template/ Path#Glyph">
+			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.FullScreen}" />
+		</Style>
+
+
+		<Style Selector="^[DataContext=Close] /template/ Path#Glyph">
+			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Close}" />
+		</Style>
+	</ControlTheme>
+
+
+
+
+	<ControlTheme x:Key="CaptionButton2Base"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
+		<!--
+		<Setter Property="Command" Value="{Binding ExecuteWindowActionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type rcui:CaptionButtons2}}, Mode=OneWay}" />
+		<Setter Property="CommandParameter" Value="{Binding Mode=OneWay}" />
+		-->
+		<Style Selector="^ /template/ Panel#LayoutRoot">
+			<Setter Property="Background" Value="#01000000" />
+		</Style>
+		<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+			<Setter Property="MinWidth" Value="{DynamicResource CaptionButton.MinWidth}" />
+			<Setter Property="VerticalAlignment" Value="Top" />
+			<Setter Property="Height" Value="{Binding Bounds.Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+			<Setter Property="MaxHeight" Value="23" />
+		</Style>
+		<Style Selector="^[Role=Maximize], ^[Role=FullScreen]">
+			<Setter Property="IsEnabled" Value="{Binding CanResize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}" />
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButton2Left"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButton2Base}">
+		<Setter Property="CornerRadius" Value="5,0,5,0" />
+		<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+			<Setter Property="Margin" Value="9,8,4,0" />
+			<!--
+			-->
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButton2Right"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButton2Base}">
+		<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+			<Setter Property="Margin" Value="0,8,13,0" />
+			<!--
+			-->
+		</Style>
+	</ControlTheme>
+
+
+	<ControlTheme x:Key="CaptionButtonsItemsControl"
+				TargetType="{x:Type ItemsControl}">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ItemsPresenter x:Name="PART_ItemsPresenter"
+								ItemsPanel="{TemplateBinding ItemsPanel}" />
+			</ControlTemplate>
+		</Setter>
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<StackPanel x:Name="PART_ItemsPanel"
+							Orientation="Horizontal"
+							Spacing="-11" />
+			</ItemsPanelTemplate>
+		</Setter>
+		<Setter Property="ItemTemplate">
+			<DataTemplate DataType="{x:Type rcui:CaptionButtonRole}">
+				<rcui:CaptionButton Role="{Binding Mode=OneWay}"
+									Theme="{Binding $parent[ItemsControl].ItemContainerTheme, Mode=OneWay}">
+				<!--
+									Theme="{DynamicResource CaptionButtonTheme}"
+				-->
+					<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
+									DataContext="{Binding $parent[rcui:CaptionButton].Role, Mode=OneWay}"
+									Tag="{Binding $parent[rcui:CaptionButton].HostWindowState, Mode=OneWay}" />
+				</rcui:CaptionButton>
+			</DataTemplate>
+		</Setter>
+	</ControlTheme>
+
+
+	<ControlTheme x:Key="{x:Type rcui:CaptionButtons2}"
+		TargetType="{x:Type rcui:CaptionButtons2}">
+		<Setter Property="ClipToBounds" Value="False" />
+    	<Setter Property="Template">
+      		<ControlTemplate>
+				<DockPanel x:Name="LayoutRoot"
+						LastChildFill="False">
+					<ItemsControl x:Name="PART_LeftButtons"
+								ItemContainerTheme="{DynamicResource CaptionButton2Left}"
+								DockPanel.Dock="Left">
+						<!--
+						<ItemsControl.Resources>
+							<StaticResource x:Key="CaptionButtonTheme"
+											ResourceKey="CaptionButton2Left" />
+						</ItemsControl.Resources>
+						-->
+					</ItemsControl>
+					<ItemsControl x:Name="PART_RightButtons"
+								ItemContainerTheme="{DynamicResource CaptionButton2Right}"
+								DockPanel.Dock="Right">
+						<!--
+						<ItemsControl.Resources>
+							<StaticResource x:Key="CaptionButtonTheme"
+											ResourceKey="CaptionButton2Right" />
+						</ItemsControl.Resources>
+						-->
+					</ItemsControl>
+				</DockPanel>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^ /template/ DockPanel#LayoutRoot > ItemsControl">
+			<Setter Property="ZIndex" Value="99999999" />
+			<Setter Property="Theme" Value="{DynamicResource CaptionButtonsItemsControl}" />
+		</Style>
+	</ControlTheme>
+</ResourceDictionary>

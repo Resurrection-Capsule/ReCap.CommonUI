@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Platform;
 
@@ -18,16 +19,31 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public override bool PrefersLeftSideButtons
-        {
-            get => true;
-        }
+        protected override IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles()
+            => new List<CaptionButtonRole>()
+            {
+                CaptionButtonRole.Minimize,
+                CaptionButtonRole.Maximize,
+                CaptionButtonRole.FullScreen,
+                CaptionButtonRole.Close,
+                CaptionButtonRole.Menu,
+            };
 
 
-        public override CaptionButtonsOrder PreferredCaptionButtonsOrder
-        {
-            get => CaptionButtonsOrder.MaxMinClose;
-        }
+        protected override CaptionButtonRolesPair CreateDefaultCaptionButtons()
+            => new()
+            {
+                Left = new()
+                {
+                    CaptionButtonRole.Close,
+                    CaptionButtonRole.Minimize,
+                    CaptionButtonRole.Maximize,
+                    CaptionButtonRole.Menu,
+                },
+                Right = new()
+                {
+                },
+            };
 
 
         public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)

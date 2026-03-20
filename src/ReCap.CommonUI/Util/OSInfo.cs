@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ReCap.CommonUI.Util.Win32;
 
 namespace ReCap.CommonUI.Util
 {
@@ -49,7 +50,7 @@ namespace ReCap.CommonUI.Util
             osVersion = default;
             try
             {
-                if (!SafeRtlGetVersion(out WinUnmanagedMethods.RTL_OSVERSIONINFOEX osVersionInfoEx))
+                if (!SafeRtlGetVersion(out RTL_OSVERSIONINFOEX osVersionInfoEx))
                     return false;
 
                 osVersion = new Version((int)osVersionInfoEx.dwMajorVersion, (int)osVersionInfoEx.dwMinorVersion, (int)osVersionInfoEx.dwBuildNumber);
@@ -62,10 +63,10 @@ namespace ReCap.CommonUI.Util
         }
 
 
-        static bool SafeRtlGetVersion(out WinUnmanagedMethods.RTL_OSVERSIONINFOEX osVersionInfoEx)
+        static bool SafeRtlGetVersion(out RTL_OSVERSIONINFOEX osVersionInfoEx)
         {
-            osVersionInfoEx = new WinUnmanagedMethods.RTL_OSVERSIONINFOEX();
-            return WinUnmanagedMethods.RtlGetVersion(ref osVersionInfoEx) == 0;
+            osVersionInfoEx = new RTL_OSVERSIONINFOEX();
+            return Win32Methods.RtlGetVersion(ref osVersionInfoEx) == 0;
         }
 
 

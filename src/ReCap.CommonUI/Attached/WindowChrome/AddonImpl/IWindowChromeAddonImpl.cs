@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Controls;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
@@ -14,12 +16,17 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             get;
         }
 
-        bool PrefersLeftSideButtons
+        bool DefaultIconInTitleBar
         {
             get;
         }
 
-        CaptionButtonsOrder PreferredCaptionButtonsOrder
+        CaptionButtonRolesPair DefaultCaptionButtons
+        {
+            get;
+        }
+
+        IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
         {
             get;
         }
@@ -27,7 +34,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         void Init();
 
+
         bool GetDesiredManagedChrome(Window window, ManagedChromeMode chromeMode);
         void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome);
+        void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e);
     }
 }

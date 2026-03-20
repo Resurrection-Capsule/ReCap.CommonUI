@@ -4,7 +4,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/Button_RepeatButton_ToggleButton.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButton.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButtons.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButtons2.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/Closeable.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/GroupBox.axaml" />
 	            <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/ListBox.axaml" />
@@ -15,6 +17,7 @@
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TabItem_TabStripItem.axaml" />
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TextBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TitleBar.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TitleBar2.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TitleBarUnderlay.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/Window.axaml" />
             </ResourceDictionary.MergedDictionaries>

@@ -4,6 +4,7 @@
         xmlns:v="using:ReCap.CommonUI.Demo.Views"
         Title="ReCap Common UI Tests"
         Width="1020" Height="572"
-        Padding="12,8">
+        Padding="12,8"
+        Icon="avares://ReCap.CommonUI.Demo/Assets/icon.ico">
     <v:UITestView />
 </Window>

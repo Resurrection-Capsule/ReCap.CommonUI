@@ -5,8 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using ReCap.CommonUI.Util;
-
-using static ReCap.CommonUI.WinUnmanagedMethods;
+using ReCap.CommonUI.Util.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -85,8 +84,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 cxRightWidth = 0,
                 cyBottomHeight = 0,
             };
-            var ret = DwmExtendFrameIntoClientArea(hWnd, ref margins);
-            Debug.WriteLine($"{nameof(DwmExtendFrameIntoClientArea)}: {ret}");
+            var ret = Win32Methods.DwmExtendFrameIntoClientArea(hWnd, ref margins);
+            Debug.WriteLine($"{nameof(Win32Methods.DwmExtendFrameIntoClientArea)}: {ret}");
         }
         static void OnActualIsTransparentPropertyChanged(Window sender, bool newValue)
         {
@@ -122,7 +121,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             return SafeSetWindowCompositionAttribute(hWnd, ref data);
         }
         static bool SafeSetWindowCompositionAttribute(IntPtr hWnd, ref WindowCompositionAttributeData data)
-            => SetWindowCompositionAttribute(hWnd, ref data) > 0;
+            => Win32Methods.SetWindowCompositionAttribute(hWnd, ref data) > 0;
 #endif
     }
 }

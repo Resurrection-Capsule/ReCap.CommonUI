@@ -2,15 +2,18 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net5.0</TargetFramework>
+		<ApplicationIcon>Assets/avalonia-logo.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<Import Project="../../build/avalonia.props" />
 
 	<ItemGroup>
+		<PackageReference Include="Sortable.Avalonia" Version="2.0.1" />
 		<ProjectReference Include="../../src/ReCap.CommonUI/ReCap.CommonUI.csproj" />
     </ItemGroup>
 
 	<ItemGroup>
+		<AvaloniaResource Include="Assets/**/*.ico" />
 		<AvaloniaResource Include="Assets/**/*.ttf" />
 	</ItemGroup>
 </Project>

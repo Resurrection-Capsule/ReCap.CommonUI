@@ -1,0 +1,248 @@
+﻿using System;
+using Avalonia;
+using Avalonia.Media;
+using ReCap.CommonUI.Controls.Decorators;
+
+namespace ReCap.CommonUI.Controls.AppearanceHacks
+{
+    public partial class TitleBarAngledBorder2
+        : AngledBorderBase
+    {
+        public static readonly StyledProperty<double> TopLeftMajorCutProperty =
+            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopLeftMajorCut), 0);
+        public double TopLeftMajorCut
+        {
+            get => GetValue(TopLeftMajorCutProperty);
+            set => SetValue(TopLeftMajorCutProperty, value);
+        }
+
+
+        public static readonly StyledProperty<double> TopLeftMinorCutProperty =
+            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopLeftMinorCut), 0);
+        public double TopLeftMinorCut
+        {
+            get => GetValue(TopLeftMinorCutProperty);
+            set => SetValue(TopLeftMinorCutProperty, value);
+        }
+
+
+        public static readonly StyledProperty<double> TopLeftInsetProperty =
+            AngledBorderEx.TopLeftInsetProperty.AddOwner<TitleBarAngledBorder2>();
+        public double TopLeftInset
+        {
+            get => GetValue(TopLeftInsetProperty);
+            set => SetValue(TopLeftInsetProperty, value);
+        }
+        public static readonly StyledProperty<double> TopRightMajorCutProperty =
+            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopRightMajorCut), 0);
+        public double TopRightMajorCut
+        {
+            get => GetValue(TopRightMajorCutProperty);
+            set => SetValue(TopRightMajorCutProperty, value);
+        }
+
+
+        public static readonly StyledProperty<double> TopRightMinorCutProperty =
+            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopRightMinorCut), 0);
+        public double TopRightMinorCut
+        {
+            get => GetValue(TopRightMinorCutProperty);
+            set => SetValue(TopRightMinorCutProperty, value);
+        }
+
+
+        public static readonly StyledProperty<double> TopRightInsetProperty =
+            AngledBorderEx.TopRightInsetProperty.AddOwner<TitleBarAngledBorder2>();
+        public double TopRightInset
+        {
+            get => GetValue(TopRightInsetProperty);
+            set => SetValue(TopRightInsetProperty, value);
+        }
+
+
+        /// <summary>
+        /// Defines the <see cref="BottomRightCut"/> property.
+        /// </summary>
+        public static readonly StyledProperty<double> BottomRightCutProperty =
+            AngledBorderEx.BottomRightCutProperty.AddOwner<TitleBarAngledBorder>();
+        /// <summary>
+        /// Gets or sets the size of the cut corner
+        /// </summary>
+        public double BottomRightCut
+        {
+            get => GetValue(BottomRightCutProperty);
+            set => SetValue(BottomRightCutProperty, value);
+        }
+
+
+        /// <summary>
+        /// Defines the <see cref="BottomLeftCut"/> property.
+        /// </summary>
+        public static readonly StyledProperty<double> BottomLeftCutProperty =
+            AngledBorderEx.BottomLeftCutProperty.AddOwner<TitleBarAngledBorder>();
+        /// <summary>
+        /// Gets or sets the size of the cut corner
+        /// </summary>
+        public double BottomLeftCut
+        {
+            get => GetValue(BottomLeftCutProperty);
+            set => SetValue(BottomLeftCutProperty, value);
+        }
+
+
+        /// <summary>
+        /// Defines the <see cref="BottomRightInset"/> property.
+        /// </summary>
+        public static readonly StyledProperty<double> BottomRightInsetProperty =
+            AngledBorderEx.BottomRightInsetProperty.AddOwner<TitleBarAngledBorder>();
+        /// <summary>
+        /// Gets or sets the inset distance of the cut corner
+        /// </summary>
+        public double BottomRightInset
+        {
+            get => GetValue(BottomRightInsetProperty);
+            set => SetValue(BottomRightInsetProperty, value);
+        }
+
+
+        /// <summary>
+        /// Defines the <see cref="BottomLeftInset"/> property.
+        /// </summary>
+        public static readonly StyledProperty<double> BottomLeftInsetProperty =
+            AngledBorderEx.BottomLeftInsetProperty.AddOwner<TitleBarAngledBorder>();
+        /// <summary>
+        /// Gets or sets the inset distance of the cut corner
+        /// </summary>
+        public double BottomLeftInset
+        {
+            get => GetValue(BottomLeftInsetProperty);
+            set => SetValue(BottomLeftInsetProperty, value);
+        }
+
+
+
+
+        static TitleBarAngledBorder2()
+        {
+            AvaloniaProperty[] props =
+            {
+                TopLeftMajorCutProperty,
+                TopLeftMinorCutProperty,
+                TopLeftInsetProperty,
+                TopRightMajorCutProperty,
+                TopRightMinorCutProperty,
+                TopRightInsetProperty,
+                BottomRightCutProperty,
+                BottomLeftCutProperty,
+                BottomRightInsetProperty,
+                BottomLeftInsetProperty,
+            };
+
+
+            AffectsGeometry<TitleBarAngledBorder2>(props);
+            AffectsRender<TitleBarAngledBorder2>(props);
+        }
+
+        protected override void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out RoundedRect glowRect)
+        {
+            //Console.WriteLine($"Updating geometries...");
+            double width = Math.Round(Bounds.Width);
+            double height = Math.Round(Bounds.Height);
+
+            double minDimen = Math.Min(width, height);
+
+            double tlMa = Math.Min(TopLeftMajorCut, minDimen);
+            double tlMi = Math.Min(TopLeftMinorCut, minDimen);
+            double tlMB = tlMa + tlMi;
+            double tlInset = Math.Min(TopLeftInset, minDimen);
+
+            double trMa = Math.Min(TopRightMajorCut, minDimen);
+            double trMi = Math.Min(TopRightMinorCut, minDimen);
+            double trMB = trMa + trMi;
+            double trInset = Math.Min(TopRightInset, minDimen);
+
+            double br = Math.Min(BottomRightCut, minDimen);
+            double bl = Math.Min(BottomLeftCut, minDimen);
+
+            double brInset = Math.Min(BottomRightInset, width);
+            double blInset = Math.Min(BottomLeftInset, width);
+
+            void CreateGeometryFromRect(ref StreamGeometry streamGeom, Rect rect)
+            {
+                CreateGeometry(ref streamGeom, rect.Left, rect.Top, rect.Right, rect.Bottom);
+            }
+
+            void CreateGeometry(ref StreamGeometry streamGeom, double rectLeft, double rectTop, double rectRight, double rectBottom)
+            {
+                using StreamGeometryContext ctx = streamGeom.Open();
+                if (rectBottom > Math.Min(tlMa, trMa))
+                {
+                    double insetBottom = Math.Min(rectBottom - tlMB, rectBottom - trMB);
+                    ctx.BeginFigure(new(rectLeft + blInset, insetBottom), true);
+                    //ctx.LineTo(new(rectLeft + blInset + bl, insetBottom));
+                    ctx.LineTo(new(rectLeft + blInset, insetBottom + bl));
+
+                    ctx.LineTo(new(rectLeft, insetBottom + bl));
+                    ctx.LineTo(new(rectLeft + tlMi, insetBottom));
+                    ctx.LineTo(new(rectLeft + tlInset, insetBottom));
+
+
+                    ctx.LineTo(new(rectLeft + tlInset + tlMa, rectTop));
+                    ctx.LineTo(new(rectRight - (trInset + trMa), rectTop));
+
+
+                    ctx.LineTo(new(rectRight - trInset, insetBottom));
+                    ctx.LineTo(new(rectRight - trMi, insetBottom));
+                    ctx.LineTo(new(rectRight - trMi, insetBottom + br));
+
+
+                    ctx.LineTo(new(rectRight, insetBottom + br));
+                    ctx.LineTo(new(rectRight - brInset, insetBottom + br));
+                    ctx.LineTo(new(rectRight - (brInset + br), insetBottom));
+                }
+                else
+                {
+                    double l = rectLeft + tlInset;
+                    double r = rectRight + trInset;
+                    ctx.BeginFigure(new(l, rectBottom), true);
+                    ctx.LineTo(new(l + tlMa, rectTop));
+                    ctx.LineTo(new(r - trMa, rectTop));
+                    ctx.LineTo(new(r, rectBottom));
+                }
+
+                ctx.EndFigure(true);
+            }
+
+
+            double strokeThickness = StrokeThickness;
+            bool hasStroke = strokeThickness > 0;
+            double borderBothSides = strokeThickness * 2;
+
+            double fillWidth = width - borderBothSides;
+            double fillHeight = height - borderBothSides;
+
+
+            Rect fillBounds = new(strokeThickness, strokeThickness, fillWidth, fillHeight);
+            StreamGeometry fillGeom = new();
+            CreateGeometryFromRect(ref fillGeom, fillBounds);
+            
+            fillGeometry = fillGeom;
+            if (hasStroke)
+            {
+                Rect strokeBounds = new(0, 0, width, height);
+                StreamGeometry strokeGeom = new();
+                CreateGeometryFromRect(ref strokeGeom, strokeBounds);
+                CreateGeometryFromRect(ref strokeGeom, fillBounds);
+
+                strokeGeometry = strokeGeom;
+            }
+            else
+            {
+                strokeGeometry = null;
+            }
+
+
+            glowRect = new(fillBounds, Math.Max(bl, br), Math.Max(blInset, brInset));
+        }
+    }
+}

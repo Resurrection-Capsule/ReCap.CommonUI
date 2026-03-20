@@ -13,8 +13,8 @@
 
         <Style Selector="Window">
             <Setter Property="rcui:WindowChromeAddon.ManagedChromeHint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:WindowChromeAddon.LeftSideButtons" Value="{Binding LeftSideButtons, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:WindowChromeAddon.ButtonsOrder" Value="{Binding ButtonsOrder, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChromeAddon.LeftCaptionButtons" Value="{Binding LeftCaptionButtons, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChromeAddon.RightCaptionButtons" Value="{Binding RightCaptionButtons, Source={x:Static local:App.Current}, Mode=OneWay}" />
         </Style>
 
         <Style Selector="HeaderedContentControl">

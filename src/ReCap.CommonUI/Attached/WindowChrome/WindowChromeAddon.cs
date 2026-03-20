@@ -2,28 +2,34 @@
 using Avalonia;
 using Avalonia.Controls;
 using ReCap.CommonUI.Util;
+using ReCap.CommonUI.Util.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    public enum CaptionButtonsOrder
-    {
-        MinMaxClose,
-        MaxMinClose,
-    }
-
-
-    public enum ManagedChromeMode
-    {
-        Never = 0,
-        Auto,
-        WheneverPossible,
-    }
-
-
     public partial class WindowChromeAddon
         : AvaloniaObject
     {
         static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatform<IWindowChromeAddonImpl>();
+        static WindowChromeAddon()
+        {
+            EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
+            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
+            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(DesiredManagedChromeProperty_Changed);
+
+            _IMPL.Init();
+
+#if WINDOWCHROMEADDON_PRINT_PROPERTY_CHANGES
+            EnableHackHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+
+            ManagedShowTitleProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
+#endif
+            CaptionButtonsInit();
+        }
+
+
+
 
 #region Decorations Customization
         public static readonly AttachedProperty<bool> ManagedShowTitleProperty =
@@ -34,20 +40,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => control.SetValue(ManagedShowTitleProperty, value);
 
 
-        public static readonly AttachedProperty<bool> LeftSideButtonsProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("LeftSideButtons", PlatformPrefersLeftSideButtons);
-        public static bool GetLeftSideButtons(Window control)
-            => control.GetValue(LeftSideButtonsProperty);
-        public static void SetLeftSideButtons(Window control, bool value)
-            => control.SetValue(LeftSideButtonsProperty, value);
-
-
-        public static readonly AttachedProperty<CaptionButtonsOrder> ButtonsOrderProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, CaptionButtonsOrder>("ButtonsOrder", PlatformPreferredCaptionButtonsOrder);
-        public static CaptionButtonsOrder GetButtonsOrder(Window control)
-            => control.GetValue(ButtonsOrderProperty);
-        public static void SetButtonsOrder(Window control, CaptionButtonsOrder value)
-            => control.SetValue(ButtonsOrderProperty, value);
+        public static readonly AttachedProperty<bool> ManagedShowIconProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ManagedShowIcon", _IMPL.DefaultIconInTitleBar);
+        public static bool GetManagedShowIcon(Window control)
+            => control.GetValue(ManagedShowIconProperty);
+        public static void SetManagedShowIcon(Window control, bool value)
+            => control.SetValue(ManagedShowIconProperty, value);
 #endregion
 
 
@@ -92,6 +90,15 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
+
+        public static readonly AttachedProperty<NCHitTestResult> NonClienHitTestResultProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Visual, NCHitTestResult>("NonClienHitTestResult", NCHitTestResult.CLIENT, inherits: true);
+        public static NCHitTestResult GetNonClienHitTestResult(Visual control)
+            => control.GetValue(NonClienHitTestResultProperty);
+        public static void SetNonClienHitTestResult(Visual control, NCHitTestResult value)
+            => control.SetValue(NonClienHitTestResultProperty, value);
+
+
         
         public static bool PlatformCanUseManagedWindowChrome
         {
@@ -105,44 +112,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public static bool PlatformPrefersLeftSideButtons
-        {
-            get => _IMPL.PrefersLeftSideButtons;
-        }
-
-
-        public static CaptionButtonsOrder PlatformPreferredCaptionButtonsOrder
-        {
-            get => _IMPL.PreferredCaptionButtonsOrder;
-        }
-
-
-
-
-        static WindowChromeAddon()
-        {
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
-            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
-            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(DesiredManagedChromeProperty_Changed);
-
-            _IMPL.Init();
-
-#if DEBUG
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-
-            ManagedShowTitleProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            LeftSideButtonsProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            ButtonsOrderProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-#endif
-        }
 
 
         static void WindowChromeCosmeticProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
         {
+#if WINDOWCHROMEADDON_PRINT_PROPERTY_CHANGES
             Console.WriteLine($"WINDOW '{window.Title}' PROPERTY '{e.Property.Name}' CHANGED:");
             Console.WriteLine($"    '{e.OldValue}' ==> '{e.NewValue}'");
+#endif
         }
 
 

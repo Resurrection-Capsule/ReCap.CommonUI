@@ -44,7 +44,7 @@ namespace ReCap.CommonUI.Util
 
             string implTypeName;
             if (OSInfo.IsWindows)
-                implTypeName = "Windows";
+                implTypeName = "Win32";
             else if (OSInfo.IsLinux)
                 implTypeName = "Linux";
             else if (OSInfo.IsMacOS)

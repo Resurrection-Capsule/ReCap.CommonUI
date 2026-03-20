@@ -1,20 +1,31 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Threading;
 using ReCap.CommonUI.Attached.WindowChrome;
+using ReCap.CommonUI.Util;
+using ReCap.CommonUI.Util.Win32;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
-    [PseudoClasses(
-        //_STATE_MINIMIZED, _STATE_NORMAL, _STATE_MAXIMIZED, _STATE_FULLSCREEN,
-        _LEFT_SIDE_BUTTONS)]
+    //[TemplatePart(IsRequired = true, Name = _PART_CAPTIONBUTTONS2, Type = typeof(CaptionButtons2))]
+    [PseudoClasses(_LEFT_SIDE_BUTTONS)]
     public sealed class TitleBar2
         : TitleBar
     {
+        const string _PART_CAPTIONBUTTONS = "PART_CaptionButtons";
+        const string _PART_CAPTIONBUTTONS2 = _PART_CAPTIONBUTTONS + "2";
+
         const string _STATE_MINIMIZED = ":minimized";
         const string _STATE_NORMAL = ":normal";
         const string _STATE_MAXIMIZED = ":maximized";
@@ -26,29 +37,27 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 #nullable enable
         CompositeDisposable? _disposables;
-#if TITLEBAR2_CAPTIONBUTTONS
-        CaptionButtons? _captionButtons;
-#endif
+        CaptionButtons2? _captionButtons;
 #nullable restore
-
+        CaptionButton _windowIconContainer;
         void UpdateSize(Window window)
         {
+            /*
             Margin = new Thickness(
                 window.OffScreenMargin.Left,
                 window.OffScreenMargin.Top,
                 window.OffScreenMargin.Right,
                 window.OffScreenMargin.Bottom);
-
+            */
+            Margin = new(0d);
             if (window.WindowState != WindowState.FullScreen)
             {
                 Height = Math.Max(Math.Max(0, MinHeight), window.WindowDecorationMargin.Top);
 
-#if TITLEBAR2_CAPTIONBUTTONS
                 if (_captionButtons != null)
                 {
                     _captionButtons.Height = Height;
                 }
-#endif
             }
 
             IsVisible = WindowChromeAddon.GetIsUsingManagedChrome(window);
@@ -58,55 +67,114 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);
-
-#if TITLEBAR2_CAPTIONBUTTONS
             _captionButtons?.Detach();
+            _captionButtons = e.NameScope.Get<CaptionButtons2>(_PART_CAPTIONBUTTONS);
 
-            _captionButtons = e.NameScope.Get<CaptionButtons>("PART_CaptionButtons");
-#endif
 
             if (VisualRoot is Window window)
             {
-#if TITLEBAR2_CAPTIONBUTTONS
                 _captionButtons?.Attach(window);
-#endif
-
                 UpdateSize(window);
             }
+            else
+            {
+                window = null;
+            }
+
+
+            if (_windowIconContainer != null)
+            {
+                /*
+                _windowIconContainer.Click -= WindowIconContainer_Click;
+                _windowIconContainer.DoubleTapped -= WindowIconContainer_DoubleTapped;
+                */
+                _windowIconContainer.Executed -= WindowIconContainer_Executed;
+                _windowIconContainer = null;
+            }
+
+            _windowIconContainer = e.NameScope.Get<CaptionButton>("PART_WindowIconContainer");
+            var role = CaptionButtonRole.Menu;
+            _windowIconContainer.Role = role;
+            WindowChromeAddon.SetNonClienHitTestResult(_windowIconContainer, CaptionButton.ROLE_TO_NCHITTEST[role]);
+            if (window != null)
+            {
+                Rectangle rectangle = (Rectangle)_windowIconContainer.Content;
+                Avalonia.Media.Imaging.Bitmap bmp;
+#if !NO
+                if (window.TryGetPlatformIcon(out IPlatformIcon icon, WindowIconRequestFallbackMode.NoFallback))
+                {
+                    var sizes = icon.PixelSizes;
+                    if (sizes.Count() <= 0)
+                    {
+                        PlatformIconHelper.TryGetAppPlatformIcon(out icon);
+                        sizes = icon.PixelSizes;
+                    }
+
+                    bmp = icon[sizes.First()];
+                    //
+#else
+                using (var icon = System.Drawing.Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName))
+                {
+                    bmp = icon.ToAvBitmap();
+#endif
+                    var brush = new ImageBrush(bmp);
+                    rectangle.Fill = brush;
+                    Console.WriteLine($"ICON SOGHJSIOUFGJDIOU {bmp != null}, {bmp}");
+                }
+            }
+            /*
+            _windowIconContainer.Click += WindowIconContainer_Click;
+            _windowIconContainer.DoubleTapped += WindowIconContainer_DoubleTapped;
+            */
+            _windowIconContainer.Executed += WindowIconContainer_Executed;
         }
+
+        void WindowIconContainer_Executed(object sender, CaptionButtonClickEventArgs e)
+            => _captionButtons?.ExecuteCaptionButton(_windowIconContainer, e);
+
+        /*
+        void WindowIconContainer_Click(object sender, RoutedEventArgs e)
+            => _captionButtons?.ExecuteCaptionButton(_windowIconContainer, CaptionButtonInputAction.LeftClick);
+        void WindowIconContainer_DoubleTapped(object sender, TappedEventArgs e)
+            => _captionButtons?.ExecuteCaptionButton(_windowIconContainer, CaptionButtonInputAction.DoubleClick);
+        */
+
 
         /// <inheritdoc />
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
 
-            if (VisualRoot is Window window)
-            {
-                _disposables = new CompositeDisposable(6)
-                {
-                    window.GetObservable(Window.WindowDecorationMarginProperty)
-                        .Subscribe(_ => UpdateSize(window)),
-                    window.GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
-                        .Subscribe(_ => UpdateSize(window)),
-                    window.GetObservable(Window.OffScreenMarginProperty)
-                        .Subscribe(_ => UpdateSize(window)),
-                    window.GetObservable(Window.ExtendClientAreaChromeHintsProperty)
-                        .Subscribe(_ => UpdateSize(window)),
-                    window.GetObservable(Window.WindowStateProperty)
-                        .Subscribe(x =>
-                        {
-                            PseudoClasses.Set(_STATE_MINIMIZED, x == WindowState.Minimized);
-                            PseudoClasses.Set(_STATE_NORMAL, x == WindowState.Normal);
-                            PseudoClasses.Set(_STATE_MAXIMIZED, x == WindowState.Maximized);
-                            PseudoClasses.Set(_STATE_FULLSCREEN, x == WindowState.FullScreen);
-                        }),
-                    window.GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
-                        .Subscribe(_ => UpdateSize(window)),
+            if (VisualRoot is not Window window)
+                return;
 
-                    window.GetObservable(WindowChromeAddon.LeftSideButtonsProperty)
-                        .Subscribe(x => PseudoClasses.Set(_LEFT_SIDE_BUTTONS, x)),
-                };
-            }
+            _disposables = new CompositeDisposable(6)
+            {
+                window.GetObservable(Window.WindowDecorationMarginProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+                window.GetObservable(WindowChromeAddon.IsUsingManagedChromeProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+                window.GetObservable(Window.SystemDecorationsProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+                window.GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+                window.GetObservable(Window.OffScreenMarginProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+                window.GetObservable(Window.ExtendClientAreaChromeHintsProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+                window.GetObservable(Window.WindowStateProperty)
+                    .Subscribe(x =>
+                    {
+                        PseudoClasses.Set(_STATE_MINIMIZED, x == WindowState.Minimized);
+                        PseudoClasses.Set(_STATE_NORMAL, x == WindowState.Normal);
+                        PseudoClasses.Set(_STATE_MAXIMIZED, x == WindowState.Maximized);
+                        PseudoClasses.Set(_STATE_FULLSCREEN, x == WindowState.FullScreen);
+                    }),
+                window.GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
+                    .Subscribe(_ => UpdateSize(window)),
+            };
+
+            UpdateSize(window);
         }
 
         /// <inheritdoc />
@@ -116,14 +184,8 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
             _disposables?.Dispose();
 
-#if TITLEBAR2_CAPTIONBUTTONS
             _captionButtons?.Detach();
             _captionButtons = null;
-#endif
         }
-
-
-        protected override Type StyleKeyOverride
-            => typeof(TitleBar);
     }
 }
