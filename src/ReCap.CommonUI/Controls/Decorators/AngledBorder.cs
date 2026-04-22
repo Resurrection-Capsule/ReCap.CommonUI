@@ -30,8 +30,9 @@ namespace ReCap.CommonUI.Controls.Decorators
             AffectsRender<AngledBorder>(CornerRadiusProperty);
         }
 
-        protected override void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out RoundedRect glowRect)
+        protected override void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out bool strokeUseAutoXor, out RoundedRect glowRect)
         {
+            strokeUseAutoXor = true;
             //Console.WriteLine($"Updating geometries...");
             double width = Math.Round(Bounds.Width);
             double height = Math.Round(Bounds.Height);

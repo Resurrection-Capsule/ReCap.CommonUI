@@ -15,46 +15,28 @@ using ReCap.CommonUI.Util.Win32;
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
     internal sealed partial class Win32WindowChromeAddonImpl
-        : WindowChromeAddonImplBase
+        : IWindowChromeAddonImpl
     {
-        public override bool CanUseManagedWindowChrome
+        public bool CanUseManagedWindowChrome
         {
             get => true;
         }
 
 
-        public override bool PrefersManagedWindowChrome
+        public bool PrefersManagedWindowChrome
         {
             get => true;
         }
 
 
-        public override bool DefaultIconInTitleBar
+        public bool DefaultIconInTitleBar
         {
             get => true;
         }
 
-
-        protected override bool ShouldSetSystemDecorationsAsFallback
-        {
-            get => false;
-        }
-
-
-
-
-        public override void Init()
-        {
-            base.Init();
-            Win32Properties.NonClientHitTestResultProperty.Changed.AddClassHandler<Visual>(NonClientHitTestVisual_ResultChanged);
-            WindowChromeAddon.NonClienHitTestResultProperty.Changed.AddClassHandler<Visual>(NonClienHitTestResultProperty_Changed);
-        }
-
-
-
-
-        protected override IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles()
-            => new List<CaptionButtonRole>()
+        
+        readonly IEnumerable<CaptionButtonRole> _validCaptionButtonRoles
+            = new[]
             {
                 CaptionButtonRole.Menu,
                 CaptionButtonRole.Minimize,
@@ -62,27 +44,63 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 CaptionButtonRole.FullScreen,
                 CaptionButtonRole.Close,
             };
+        public IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
+            => _validCaptionButtonRoles;
 
 
-        protected override CaptionButtonRolesPair CreateDefaultCaptionButtons()
-            => new()
-            {
-                Left = new()
-                {
-                    CaptionButtonRole.Menu,
-                },
-                Right = new()
-                {
-                    CaptionButtonRole.Minimize,
-                    CaptionButtonRole.Maximize,
-                    CaptionButtonRole.Close,
-                },
-            };
-
-
-        protected override void ExecuteMenu(Window window, CaptionButtonClickEventArgs e)
+        readonly CaptionButtonRolesPair _defaultCaptionButtons;
+        public CaptionButtonRolesPair DefaultCaptionButtons
         {
-            base.ExecuteMenu(window, e);
+            get => _defaultCaptionButtons;
+        }
+
+
+
+
+        public Win32WindowChromeAddonImpl()
+            : base()
+        {
+            _defaultCaptionButtons = DefaultWindowChromeAddonImpl.DefaultCaptionButtons_Default(this);
+        }
+
+
+        public void Init()
+        {
+            Win32Properties.NonClientHitTestResultProperty.Changed.AddClassHandler<Visual>(NonClientHitTestVisual_ResultChanged);
+            WindowChromeAddon.NonClienHitTestResultProperty.Changed.AddClassHandler<Visual>(NonClienHitTestResultProperty_Changed);
+        }
+
+
+
+        public bool GetDesiredManagedChrome(Window window, ManagedChromeMode chromeMode)
+            => DefaultWindowChromeAddonImpl.GetDesiredManagedChrome_Default(this, window, chromeMode);
+
+
+        public void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e)
+        {
+            var role = e.Role;
+            switch (role)
+            {
+                case CaptionButtonRole.Menu:
+                {
+                    ExecuteMenu(window, e);
+                    break;
+                }
+                case CaptionButtonRole.KeepAbove:
+                {
+                    ExecuteKeepAbove(window, e);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+
+
+        void ExecuteMenu(Window window, CaptionButtonClickEventArgs e)
+        {
             return;
             /*
             https://stackoverflow.com/questions/73927623/how-to-show-the-windows-system-menu-programmatically-when-formborderstyle-is-no
@@ -110,12 +128,18 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 var visual = e.Visual;
                 /*
                 var pt = e.Visual.Bounds.BottomLeft;
-                var pxPoint = new(Extensions.RoundToInt(pt.X), Extensions.RoundToInt(pt.Y))
+                var pxPoint = new(Helpers.RoundToInt(pt.X), Helpers.RoundToInt(pt.Y))
                 */
                 PixelPoint bottomLeft = visual.PointToScreen(new(0d, visual.Bounds.Height));
                 ShowWindowMenu(hWnd, bottomLeft);
             }
         }
+
+
+        void ExecuteKeepAbove(Window window, CaptionButtonClickEventArgs e)
+            => window.Topmost = !window.Topmost;
+
+
 
 
         static void ExecuteWindowMenuDefaultItem(IntPtr hWnd)
@@ -271,10 +295,13 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         */
 
 
-        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
+        public void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
         {
             window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
-            base.ApplyDesiredManagedChrome(window, desiredManagedChrome, ref useManagedChrome);
+            DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
+                this, window, desiredManagedChrome, ref useManagedChrome
+                , fallbackToSystemDecorationsProperty: false
+            );
 
             if (useManagedChrome)
             {

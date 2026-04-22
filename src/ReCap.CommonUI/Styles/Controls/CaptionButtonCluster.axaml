@@ -1,0 +1,46 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="{x:Type rcui:CaptionButtonCluster}"
+				TargetType="{x:Type rcui:CaptionButtonCluster}">
+		<!--
+		<Setter Property="IsVisible" Value="{Binding $parent[rcui:CaptionButtons2].IsVisible, Mode=OneWay}" />
+		-->
+		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}" />
+		<Setter Property="ZIndex" Value="99999999" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ItemsPresenter x:Name="PART_ItemsPresenter"
+								ItemsPanel="{TemplateBinding ItemsPanel}" />
+			</ControlTemplate>
+		</Setter>
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<StackPanel x:Name="PART_ItemsPanel"
+							Orientation="Horizontal"
+							Spacing="-11" />
+			</ItemsPanelTemplate>
+		</Setter>
+		<Setter Property="ItemTemplate">
+			<DataTemplate DataType="{x:Type rcui:CaptionButtonRole}">
+				<rcui:CaptionButton Role="{Binding Mode=OneWay}"
+									Theme="{Binding $parent[ItemsControl].ItemContainerTheme, Mode=OneWay}">
+				<!--
+									Classes.minimize="{Binding Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonRole.Minimize}, Mode=OneWay}"
+									Classes.maximize="{Binding Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonRole.Maximize}, Mode=OneWay}"
+				-->
+					<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
+									DataContext="{Binding $parent[rcui:CaptionButton].Role, Mode=OneWay}"
+									Tag="{Binding $parent[rcui:CaptionButton].HostWindowState, Mode=OneWay}" />
+				</rcui:CaptionButton>
+			</DataTemplate>
+		</Setter>
+		<!--
+		<Style Selector="^[IsVisible=False]">
+			<Setter Property="MinWidth" Value="0" />
+			<Setter Property="MaxWidth" Value="0" />
+			<Setter Property="Width" Value="0" />
+		</Style>
+		-->
+	</ControlTheme>
+</ResourceDictionary>

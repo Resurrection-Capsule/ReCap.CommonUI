@@ -4,6 +4,7 @@
             xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
             xmlns:local="using:ReCap.CommonUI.Demo"
             xmlns:v="using:ReCap.CommonUI.Demo.Views"
+            xmlns:vps="using:ReCap.CommonUI.Demo.Views.Pages.Styles"
             RequestedThemeVariant="Dark">
     <Application.DataTemplates>
         <v:ViewLocator />
@@ -29,6 +30,111 @@
     </Application.Styles>
     <Application.Resources>
         <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Assets/Font/Monospace#Ubuntu Mono</FontFamily>
+
+
+
+
+        <!--
+        <ControlTheme x:Key="HeaderedContentControl.WindowCustomization.Base"
+					TargetType="{x:Type HeaderedContentControl}"
+                    BasedOn="{StaticResource GroupBox}">
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="Content" Value="{x:Static BindingOperations.DoNothing}" />
+
+            <Style Selector="^ /template/ :is(StyledElement)#DataTemplateRoot">
+                <Setter Property="DataContext" Value="{CompiledBinding $parent[HeaderedContentControl].DataContext, Mode=OneWay}" />
+            </Style>
+        </ControlTheme>
+
+
+        <ControlTheme x:Key="HeaderedContentControl.WindowCustomization.ManagedChromeHint"
+					TargetType="{x:Type HeaderedContentControl}"
+                    BasedOn="{StaticResource HeaderedContentControl.WindowCustomization.Base}">
+            <Setter Property="Header" Value="Window chrome preference" />
+            <Setter Property="ContentTemplate">
+                <DataTemplate>
+                    <StackPanel x:Name="DataTemplateRoot"
+                                Classes="leftButtons">
+                        <ToggleButton Content="Auto"
+                                    IsChecked="{Binding $parent[HeaderedContentControl].DataContext, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Auto}, Mode=TwoWay}" />
+                        <ToggleButton Content="System"
+                                    IsChecked="{Binding $parent[HeaderedContentControl].DataContext, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Never}, Mode=TwoWay}" />
+                        <ToggleButton Content="Managed"
+                                    IsChecked="{Binding $parent[HeaderedContentControl].DataContext, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.WheneverPossible}, Mode=TwoWay}" />
+                    </StackPanel>
+                </DataTemplate>
+			</Setter>
+        </ControlTheme>
+
+
+        <ControlTheme x:Key="HeaderedContentControl.WindowCustomization.ExtendClientAreaTitleBarHeightHint"
+					TargetType="{x:Type HeaderedContentControl}"
+                    BasedOn="{StaticResource HeaderedContentControl.WindowCustomization.Base}">
+            <Setter Property="Header" Value="TitleBar Height Hint" />
+            <Setter Property="ContentTemplate">
+                <DataTemplate>
+                    <StackPanel x:Name="DataTemplateRoot"
+                                Orientation="Vertical"
+                                Spacing="0"
+                                >
+                        <Slider Value="{Binding $parent[HeaderedContentControl].DataContext, Mode=TwoWay}"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                Minimum="-1"
+                                Maximum="100" />
+                        <Panel>
+                            <TextBlock x:Name="AutoLabel"
+                                    Text="Height:     Auto"
+                                    IsVisible="{Binding $parent[HeaderedContentControl].DataContext, Converter={x:Static rcui:ArithmeticConverters.LessThan}, ConverterParameter=0, Mode=OneWay}" />
+                            <TextBlock x:Name="TextLabel"
+                                    Text="{Binding $parent[HeaderedContentControl].DataContext, StringFormat='Height:     {0:#######0}', Mode=OneWay}"
+                                    IsVisible="{Binding !#AutoLabel.IsVisible, Mode=OneWay}" />
+                        </Panel>
+                    </StackPanel>
+                </DataTemplate>
+			</Setter>
+            <Style Selector="^ /template/ StackPanel#DataTemplateRoot > :is(Layoutable)">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </ControlTheme>
+
+
+        <ControlTheme x:Key="{x:Static vps:WindowView.DEMO_CONTENT_THEME_KEY}"
+					TargetType="{x:Type ContentControl}">
+            <Setter Property="Content" Value="{Binding WindowTitle, Mode=OneWay}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <!- -
+            <Setter Property="Margin" Value="100" />
+            - ->
+			<Setter Property="ContentTemplate">
+				<DataTemplate>
+					<Panel>
+                        <StackPanel Orientation="Vertical"
+                                    Spacing="4">
+                            <!- -
+                            <StackPanel HorizontalAlignment="Center"
+                                        Spacing="8">
+                                    <CheckBox Content="Resizable"
+                                            IsChecked="{Binding CanResize, Mode=TwoWay}" />
+                                    <CheckBox Content="Allow minimize"
+                                            IsChecked="{Binding CanMinimize, Mode=TwoWay}" />
+                                    <CheckBox Content="Show in taskbar"
+                                            IsChecked="{Binding ShowInTaskbar, Mode=TwoWay}" />
+                                    <CheckBox Content="Allow maximize"
+                                            IsChecked="{Binding CanMaximize, Mode=TwoWay}" />
+                            </StackPanel>
+                            - ->
+                            <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ManagedChromeHint}"
+                                                    DataContext="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedChromeHint), Mode=TwoWay}" />
+                            <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ExtendClientAreaTitleBarHeightHint}"
+                                                    DataContext="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Panel>
+				</DataTemplate>
+			</Setter>
+		</ControlTheme>
+        -->
 
 
         <ControlTheme x:Key="ResourceKeyDisplay"

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
@@ -23,7 +24,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, CaptionButtonRoles>("RightCaptionButtons", PlatformDefaultCaptionButtons.Right);
         public static CaptionButtonRoles GetRightCaptionButtons(Window control)
             => control.GetValue(RightCaptionButtonsProperty);
-        public static void SetRightCaptionButtons(Window control, CaptionButtonsOrder value)
+        public static void SetRightCaptionButtons(Window control, CaptionButtonRoles value)
             => control.SetValue(RightCaptionButtonsProperty, value);
 #endregion
 
@@ -71,6 +72,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         internal static void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e)
             => _IMPL.ExecuteExtendedCaptionButton(window, e);
+
+
+        public static IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
+        {
+            get => _IMPL.ValidCaptionButtonRoles;
+        }
     }
 
 
@@ -199,19 +206,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             else
                 ClickCount = -1;
         }
-        /*
-        public CaptionButtonClickEventArgs(CaptionButton captionButton, PointerEventArgs baseArgs, MouseButton mouseButton, bool pressed, int clickCount)
-            : this(captionButton, captionButton.Role, mouseButton, pressed, clickCount)
-        {}
-        public CaptionButtonClickEventArgs(Visual visual, CaptionButtonRole role, PointerEventArgs baseArgs, MouseButton mouseButton, bool pressed, int clickCount)
-        {
-            Visual = visual;
-            Role = role;
-            MouseButton = mouseButton;
-            Pressed = pressed;
-            ClickCount = clickCount;
-        }
-        */
 
 
         static MouseButton GetMouseButton(PointerEventArgs e)

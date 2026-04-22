@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
 	<SolidColorBrush x:Key="WindowBodyBorderBrush">#FFC0C0C0</SolidColorBrush>
 
 	<Color x:Key="WindowBodyBackgroundColor">#F7111213</Color>
@@ -12,6 +13,9 @@
 		<GradientStop Offset="0.375" Color="{DynamicResource WindowBodyBackgroundGlowMidColor}" />
 		<GradientStop Offset="1" Color="{DynamicResource WindowBodyBackgroundGlowEndColor}" />
 	</GradientStops>
+	<!--
+	<rcui:ResourcesToResourceObservableConverter x:Key="InvertTitleBarHeightConversion"
+	-->
 
 
 
@@ -50,7 +54,18 @@
 		<GradientStop Offset="0.7" Color="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive.Color1}" />
 		<GradientStop Offset="1" Color="{DynamicResource HelixWindow.TitleBar.BackgroundBrush.Inactive.Color2}" />
 	</LinearGradientBrush>
-	
+
+	<Color x:Key="HelixWindow.TitleBar.CaptionButtonsFrame.Background">#DE2B2C31</Color>
+	<LinearGradientBrush x:Key="HelixWindow.TitleBar.CaptionButtonsFrame.BorderBrush"
+						StartPoint="0,2"
+						EndPoint="0,6">
+		<GradientStop Offset="0" Color="#BE414248" />
+		<GradientStop Offset="1" Color="#9D515452" />
+	</LinearGradientBrush>
+
+
+
+
 	<Color x:Key="Window.Chrome.BorderBrush.SoftColor">#40FFFFFF</Color>
 	<Color x:Key="Window.Chrome.BorderBrush.HarshColor">#80FFFFFF</Color>
 	<!--

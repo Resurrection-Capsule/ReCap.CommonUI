@@ -52,13 +52,9 @@
 									Width="{Binding $parent[Window].(rcui:WindowChromeAddon.RightCaptionButtonsWidth), Mode=OneWay}"
 									Margin="10,0,0,0" />
 							<Panel x:Name="TitleContainer">
-							<!--
-								Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
-								Classes.hasMenu="{Binding HasMenuAsLastOnLeft, ElementName=PART_CaptionButtons, Mode=OneWay}"
-								ColumnDefinitions="Auto,*"
-							-->
 								<StackPanel Orientation="Horizontal"
-											IsHitTestVisible="False">
+											IsHitTestVisible="False"
+											IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.ReserveCaptionArea), Mode=OneWay}">
 									<Control x:Name="IconSpaceFake"
 											Width="{Binding Bounds.Width, ElementName=PART_WindowIconContainer, Mode=OneWay}"
 											MaxWidth="5"
@@ -66,16 +62,24 @@
 											Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
 											Focusable="False"
 											IsTabStop="False" />
-									<!--
-											Width="{Binding #PART_WindowIconContainer.Bounds.Width, Mode=OneWay}"
-											Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
-											Classes.hasMenu="{Binding #PART_WindowIconContainer.IsVisible, Mode=OneWay}"
-									-->
 									<TextBlock x:Name="TitleDisplay"
 											Margin="5,0"
 											VerticalAlignment="Center"
-											Text="{Binding $parent[Window].Title}"
-											IsVisible="{Binding Path=(rcui:WindowChromeAddon.ManagedShowTitle), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}" />
+											Text="{Binding $parent[Window].Title, Mode=OneWay}"
+											IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowTitle), Mode=OneWay}">
+									<!--
+										<TextBlock.IsVisible>
+											<MultiBinding>
+												<Binding Path="(rcui:WindowChromeAddon.ManagedShowTitle)"
+														RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+														Mode="OneWay" />
+												<Binding Path="(rcui:WindowChromeAddon.ReserveCaptionArea)"
+														RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+														Mode="OneWay" />
+											</MultiBinding>
+										</TextBlock.IsVisible>
+									-->
+									</TextBlock>
 								</StackPanel>
 								<rcui:CaptionButton x:Name="PART_WindowIconContainer"
 													Theme="{DynamicResource WindowIconButton}"
@@ -87,32 +91,12 @@
 								<!--
 										Win32Properties.NonClientHitTestResult="{x:Static rcwin32:NCHitTestResult.SYSMENU}"
 								-->
-									<!--
-									<Rectangle Fill="{Binding $parent[Window].Icon, Converter={x:Static rcui:WindowIconToBitmapConverter.Instance}, Mode=OneWay}"
-											Stroke="#FFFF00FF"
-											StrokeThickness="1"
-											Width="16"
-											Height="16"
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center"
-											IsHitTestVisible="False" />
-									-->
-									<!--
-									<rcui:ImagePresenter x:Name="WindowIconPresenter"
-														Source="{Binding $parent[Window], Converter={x:Static rcui:WindowIconToIPlatformIconConverter.Instance}, Mode=OneWay}"
+									<rcui:ImagePresenter IsHitTestVisible="False"
 														Width="16"
 														Height="16"
 														HorizontalAlignment="Center"
 														VerticalAlignment="Center"
-														IsHitTestVisible="False" />
-									-->
-									<Rectangle IsHitTestVisible="False"
-											Width="16"
-											Height="16"
-											HorizontalAlignment="Center"
-											VerticalAlignment="Center"
-											Stroke="Red"
-											StrokeThickness="1" />
+														Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:WindowIconToMultipleSizesWrapperImageConverter.Instance}, Mode=OneWay, FallbackValue={x:Null}}" />
 								</rcui:CaptionButton>
 							</Panel>
 						</DockPanel>

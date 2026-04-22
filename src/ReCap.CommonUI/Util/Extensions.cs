@@ -7,7 +7,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Platform;
-using ReCap.CommonUI.Util.Win32;
+using Avalonia.Styling;
 using SColl = System.Collections;
 
 namespace ReCap.CommonUI.Util
@@ -189,18 +189,6 @@ namespace ReCap.CommonUI.Util
 
 
 
-        public static int RoundToInt(double d)
-            => (int)Math.Round(d);
-
-        public static int RoundToInt(float f)
-            => (int)Math.Round(f);
-
-        public static int RoundToInt(decimal m)
-            => (int)Math.Round(m);
-
-
-
-
         public static PixelSize ToPixelSize(this PixelPoint pxPoint)
             => new(pxPoint.X, pxPoint.Y);
 
@@ -312,6 +300,180 @@ namespace ReCap.CommonUI.Util
                 }
             };
         }
+
+
+
+        /// <inheritdoc cref="StyledElement.TryGetResource(object, ThemeVariant?, out object?)" />
+        /// <typeparam name="T">The type of the resource to find.</typeparam>
+        public static bool TryGetResource<T>(this StyledElement control, object key
+#nullable enable
+        , ThemeVariant? theme
+#nullable restore
+        , out T value)
+        {
+            if (control.TryGetResource(key, theme, out object obj) && (obj is T v))
+            {
+                value = v;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+
+
+        /// <inheritdoc cref="ResourceNodeExtensions.TryGetResource(object, out object?)" />
+        /// <typeparam name="T">The type of the resource to find.</typeparam>
+        public static bool TryGetResource<T>(this IResourceHost control, object key, out T value)
+        {
+            if (ResourceNodeExtensions.TryGetResource(control, key, out object obj) && (obj is T v))
+            {
+                value = v;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+        /*
+        public static bool TryFindResource(this IResourceHost control, object key, ThemeVariant? theme, out object? value)
+        public static bool TryFindResource(this IResourceHost control, object key, out object? value)
+        */
+
+
+
+        /// <inheritdoc cref="ResourceNodeExtensions.TryFindResource(IResourceHost, object, ThemeVariant?, out object?)" />
+        /// <typeparam name="T">The type of the resource to find.</typeparam>
+        public static bool TryFindResource<T>(this IResourceHost control, object key
+#nullable enable
+        , ThemeVariant? theme
+#nullable restore
+        , out T value)
+        {
+            if (ResourceNodeExtensions.TryFindResource(control, key, theme, out object obj) && (obj is T v))
+            {
+                value = v;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+
+
+        /// <inheritdoc cref="ResourceNodeExtensions.TryFindResource(IResourceHost, object, out object?)" />
+        /// <typeparam name="T">The type of the resource to find.</typeparam>
+        public static bool TryFindResource<T>(this IResourceHost control, object key, out T value)
+        {
+            if (ResourceNodeExtensions.TryFindResource(control, key, out object obj) && (obj is T v))
+            {
+                value = v;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+
+
+#nullable enable
+        const bool _DEFAULT_FindResource_throwIfNotFound = false;
+        public static T? FindResource<T>(this IResourceHost control, object key, bool throwIfNotFound = _DEFAULT_FindResource_throwIfNotFound)
+        {
+            var result = ResourceNodeExtensions.FindResource(control, key);
+
+            if (result is T tResult)
+                return tResult;
+            else if (throwIfNotFound)
+                throw GetExceptionForFindResource(key, result, typeof(T));
+            else
+                return unchecked((T)AvaloniaProperty.UnsetValue);
+        }
+
+
+        /// <inheritdoc cref="ResourceNodeExtensions.FindResource(IResourceHost, ThemeVariant?, object)" />
+        /// <typeparam name="T">The type of the resource to find.</typeparam>
+        // /// <param name="throwIfNotFound">If true, t</param>
+        public static T? FindResource<T>(this IResourceHost control, ThemeVariant? theme, object key, bool throwIfNotFound = _DEFAULT_FindResource_throwIfNotFound)
+        {
+            var result = ResourceNodeExtensions.FindResource(control, theme, key);
+
+            if (result is T tResult)
+                return tResult;
+            else if (throwIfNotFound)
+                throw GetExceptionForFindResource(key, result, typeof(T));
+            else
+                return unchecked((T)AvaloniaProperty.UnsetValue);
+        }
+#nullable restore
+
+
+        /// <inheritdoc cref="ResourceNodeExtensions.FindResource(IResourceHost, ThemeVariant?, object)" />
+        /// <typeparam name="T">The type of the resource to find.</typeparam>
+        static Exception GetExceptionForFindResource(object key, object result, Type type)
+        {
+            if (result == AvaloniaProperty.UnsetValue)
+                return new KeyNotFoundException($"No resource at '{key}'!");
+            else if (result != null)
+                return new InvalidCastException($"Resource at '{key}' is a '{result.GetType().FullName}', which is not assignable to '{type.FullName}'!");
+            else
+                return new Exception($"Is this even reachable? (key: '{key}')");
+        }
+
+
+
+
+        public static T WithClasses<T>(this T control, params string[] names)
+            where T
+                : StyledElement
+            => control.WithClasses((IEnumerable<string>)names);
+        public static T WithClasses<T>(this T control, IEnumerable<string> names)
+            where T
+                : StyledElement
+        {
+            foreach (string name in names)
+            {
+                control.Classes.Set(name, true);
+            }
+            return control;
+        }
+
+
+        public static T WithClass<T>(this T control, string name)
+            where T
+                : StyledElement
+        {
+            control.Classes.Set(name, true);
+            return control;
+        }
+
+
+        public static bool TryTranslatePoint(this Visual visual, Point point, Visual relativeTo, out Point result)
+        {
+            Point? translated = visual.TranslatePoint(point, relativeTo);
+            if ((translated != null) && translated.HasValue)
+            {
+                result = translated.Value;
+                return true;
+            }
+            else
+            {
+                result = default;
+                return false;
+            }
+        }
+
+
+        internal static T GetService<T>(this IServiceProvider serviceProvider)
+            => (T)serviceProvider.GetService(typeof(T));
     }
 
 

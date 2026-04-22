@@ -5,6 +5,19 @@ namespace ReCap.CommonUI.Demo.ViewModels
     public partial class UITestViewModel
         : TabsViewModelBase
     {
+#region Properties
+        bool _useReservedCaptionArea = true;
+        public bool UseReservedCaptionArea
+        {
+            get => _useReservedCaptionArea;
+            set => RASIC(ref _useReservedCaptionArea, value);
+        }
+#endregion
+
+
+
+
+#region Scale properties
         double _scaleIncrement = 0.25;
         public double ScaleIncrement
         {
@@ -38,6 +51,9 @@ namespace ReCap.CommonUI.Demo.ViewModels
                 RASIC(ref _scaleFactor, clamped);
             }
         }
+#endregion
+
+
 
 
         public void ResetScaleFactor()

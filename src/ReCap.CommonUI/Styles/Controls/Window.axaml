@@ -12,6 +12,7 @@
 		<Setter Property="FontSize" Value="12" />
         
 		<Setter Property="rcui:WindowChromeAddon.EnableHackHint" Value="True" />
+        <Setter Property="rcui:WindowChromeAddon.DefaultTitleBarHeight" Value="{DynamicResource TitleBar.DefaultHeight}" />
         <!--
         <Setter Property="rcui:WindowChromeAddon.ManagedChromeHint" Value="{DynamicResource {x:Static rcui:ReCapTheme.MANAGED_CHROME_HINT_KEY}}" />
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
@@ -20,13 +21,14 @@
 		-->
         <Setter Property="Template">
             <ControlTemplate>
-                <Panel>
+                <Panel x:Name="TemplateRoot">
                     <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
 					<rcui:AngledBorder x:Name="HoloShadow"
 					                Background="{DynamicResource Window.HoloShadow.Background.Opaque.Inactive}"
 									IsHitTestVisible="False" />
 					<Panel x:Name="MainContent">
-                        <Panel Background="Transparent" Margin="{TemplateBinding WindowDecorationMargin}" />
+                        <Panel Background="Transparent"
+                            Margin="{TemplateBinding WindowDecorationMargin}" />
                         <VisualLayerManager>
                             <VisualLayerManager.ChromeOverlayLayer>
                                 <rcui:TitleBar2 />
@@ -34,21 +36,7 @@
                             <Panel x:Name="Frame">
                                 <DockPanel>
                                     <rcui:TitleBarUnderlay x:Name="TitleBarUnderlay"
-                                                        IsVisible="False"
                                                         DockPanel.Dock="Top" />
-                                    <!--
-                                                        MinHeight="{DynamicResource TitleBar.DefaultHeight}"
-                                    -->
-                                    <rcui:AngledBorderEx x:Name="TopEdgeTrim"
-                                                        Classes="topEdge activateColoration"
-                                                        BorderBrush="{DynamicResource Window.BottomEdgeTrim.BorderBrush}"
-                                                        InvertSide="Bottom"
-                                                
-                                                        BottomLeftCut="6"
-                                                        BottomRightCut="6"
-                                                
-                                                        BottomLeftInset="18"
-                                                        BottomRightInset="18" />
                                     <rcui:AngledBorderEx x:Name="BottomEdgeTrim"
                                                         Classes="bottomEdge activateColoration"
                                                         BorderBrush="{DynamicResource Window.BottomEdgeTrim.BorderBrush}"
@@ -75,13 +63,11 @@
                                 </DockPanel>
                                 <DockPanel>
                                     <Control x:Name="TitleBarHeightStandIn"
-                                            Classes.negativeHeightHint="{TemplateBinding ExtendClientAreaTitleBarHeightHint, Converter={x:Static rcui:LessThanConverter.Instance}, ConverterParameter=0}"
                                             Classes.fullScreen="{TemplateBinding WindowState, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static WindowState.FullScreen}}"
+                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChromeAddon.ReserveCaptionArea), Mode=OneWay}"
                                             IsVisible="False"
                                             Height="{DynamicResource TitleBar.DefaultHeight}"
                                             DockPanel.Dock="Top" />
-                                    <Control DockPanel.Dock="Top"
-                                            Classes="topEdge" />
                                     <Control DockPanel.Dock="Bottom"
                                             Classes="bottomEdge" />
 								    <!--
@@ -112,15 +98,6 @@
             </ControlTemplate>
         </Setter>
 
-        
-        <Style Selector="^ /template/ :is(Control).topEdge">
-            <Setter Property="Height" Value="14" />
-            <Setter Property="Margin" Value="0,0,0,-5" />
-            <Setter Property="DockPanel.Dock" Value="Top" />
-        </Style>
-        <Style Selector="^:not(^[WindowState=FullScreen]) /template/ :is(Control).topEdge">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
 
         <Style Selector="^ /template/ :is(Control).bottomEdge">
             <Setter Property="Height" Value="14" />
@@ -128,9 +105,11 @@
             <Setter Property="DockPanel.Dock" Value="Bottom" />
         </Style>
 
+        <!--
         <Style Selector="^ /template/ rcui|TitleBarUnderlay#TitleBarUnderlay">
             <Setter Property="IsVisible" Value="False" />
         </Style>
+        -->
 
         <Style Selector="^ /template/ rcui|AngledBorderEx.activateColoration">
 			<Setter Property="StrokeThickness" Value="1" />
@@ -154,16 +133,47 @@
 
         <!-- System decorations -->
 		<Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=False]">
-            <Style Selector="^ /template/ :is(Control).topEdge">
-                <Setter Property="IsVisible" Value="True" />
-			</Style>
+            <!--
             <Style Selector="^ /template/ :is(Panel)#Frame">
-                <Setter Property="Margin" Value="-2,-6" />
+            -->
+            <Style Selector="^ /template/ :is(Panel)#TemplateRoot">
+                <Setter Property="Margin" Value="-2,0,-2,-6" />
             </Style>
             <!--
             <Style Selector="^ /template/ rcui|AngledBorderEx#BottomEdgeTrim">
                 <Setter Property="StrokeThickness" Value="1" />
             </Style>
+            -->
+            <!--
+            <Style Selector="^ /template/ rcui|TitleBarUnderlay#TitleBarUnderlay">
+                <Setter Property="MinHeight" Value="{DynamicResource TitleBar.DefaultHeight}" />
+                <Setter Property="Margin">
+                    <MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
+                                ConverterParameter="0,_,0,0">
+                        <!- -
+                        <Binding Path="ExtendClientAreaTitleBarHeightHint"
+                                RelativeSource="{RelativeSource Mode=TemplatedParent}"
+                                Converter="{x:Static rcui:ArithmeticConverters.Invert}" />
+                        - ->
+                        <!- -
+                        <Binding Path="Bounds.Height"
+                                ElementName="TitleBarHeightStandIn"
+                                Converter="{x:Static rcui:ArithmeticConverters.Invert}" />
+                        - ->
+                        <!- -
+                        <rcui:DynamicResourceBinding ResourceKey="TitleBar.DefaultHeight" />
+                        <DynamicResource ResourceKey="TitleBar.DefaultHeight" />
+                        <Binding Path="Tag.Bounds.Height"
+                                Converter="{x:Static rcui:ArithmeticConverters.Invert}" />
+                        - ->
+                        <Binding Path="MinHeight"
+                                RelativeSource="{RelativeSource Mode=Self}"
+                                Converter="{x:Static rcui:ArithmeticConverters.Invert}"
+                                Mode="OneWay" />
+                        <!- -[TODO: invert TitleBar.DefaultHeight]- ->
+                    </MultiBinding>
+                </Setter>
+		    </Style>
             -->
 		</Style>
 
@@ -197,23 +207,31 @@
                     <Setter Property="Margin" Value="{Binding OffScreenMargin, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                     -->
 				</Style>
+                <!--
+                <Style Selector="^ /template/ :is(Panel)#Frame">
+                -->
+                <Style Selector="^ /template/ :is(Panel)#TemplateRoot">
+                    <Setter Property="Margin" Value="-2,0,-2,-6" />
+				</Style>
 			</Style>
 
             <Style Selector="^:not(^[WindowState=FullScreen])">
-                <Style Selector="^ /template/ Control#TitleBarHeightStandIn.negativeHeightHint">
+                <Style Selector="^ /template/ Control#TitleBarHeightStandIn.reserveCaptionArea">
                     <Setter Property="IsVisible" Value="True" />
                 </Style>
                 <!--
-                <Style Selector="^ /template/ Control#TitleBarHeightStandIn.negativeHeightHint">
+                <Style Selector="^ /template/ Control#TitleBarHeightStandIn.reserveCaptionArea">
                     <Setter Property="IsVisible" Value="False" />
                 </Style>
                 -->
+                <!--
                 <Style Selector="^ /template/ rcui|TitleBarUnderlay#TitleBarUnderlay[IsTitleBarVisible=True]">
                     <Setter Property="IsVisible" Value="True" />
                 </Style>
+                -->
             </Style>
             <!--
-            <Style Selector="^ /template/ Control#TitleBarHeightStandIn.negativeHeightHint:not(.fullScreen)">
+            <Style Selector="^ /template/ Control#TitleBarHeightStandIn.reserveCaptionArea:not(.fullScreen)">
                 <Setter Property="IsVisible" Value="True" />
             </Style>
             -->
@@ -239,12 +257,6 @@
                     <Style Selector="^ /template/ Panel#MainContent">
                         <Setter Property="Margin" Value="4,0,0,6" />
                     </Style>
-                    <!--
-                    <Style Selector="^ /template/ rcui|AngledBorderEx#TopEdgeTrim">
-                        <Setter Property="TopLeftCut" Value="6" />
-                        <Setter Property="TopRightCut" Value="6" />
-                    </Style>
-                    -->
                     <Style Selector="^ /template/ rcui|AngledBorderEx#BottomEdgeTrim">
                         <Setter Property="BottomLeftCut" Value="6" />
                         <Setter Property="BottomRightCut" Value="6" />

@@ -121,9 +121,7 @@ namespace ReCap.CommonUI.Controls.Decorators
         static readonly Geometry _DEFAULT_GEOMETRY = new StreamGeometry();
         Geometry _fillGeometry = new StreamGeometry();
         Geometry _strokeGeometry = new StreamGeometry();
-#if DEBUG_ANGLED_BORDER
-        Geometry _strokeGeometryOuter = null;
-#endif
+        Geometry _strokeOuterGeometry = null;
         RoundedRect _glowRect = new RoundedRect(new Rect(0, 0, 3, 3), 0);
 
         
@@ -207,25 +205,24 @@ namespace ReCap.CommonUI.Controls.Decorators
         protected void InvalidateGeometry()
         {
             var prevFillGeometry = _fillGeometry;
-            RefreshGeometry(out _fillGeometry, out Geometry strokeGeometryOuter, out RoundedRect glowRect);
+            var prevStrokeGeometry = _strokeGeometry;
+            RefreshGeometry(out _fillGeometry, out _strokeOuterGeometry, out bool strokeUseAutoXor, out RoundedRect glowRect);
             if (prevFillGeometry != _fillGeometry)
                 RaisePropertyChanged(FillClipBindableProperty, prevFillGeometry, _fillGeometry);
-            
-            var prevStrokeGeometry = _strokeGeometry;
-            if (strokeGeometryOuter != null)
-                _strokeGeometry = new CombinedGeometry(GeometryCombineMode.Xor, strokeGeometryOuter, _fillGeometry);
-            else
-                _strokeGeometry = null;
-#if DEBUG_ANGLED_BORDER
-            _strokeGeometryOuter = strokeGeometryOuter;
-#endif
-            if (prevStrokeGeometry != _strokeGeometry)
+
+
+            if (prevStrokeGeometry != _strokeOuterGeometry)
             {
-                var newStrokeGeometry = _strokeGeometry != null
-                    ? _strokeGeometry
-                    : _DEFAULT_GEOMETRY
-                ;
-                RaisePropertyChanged(StrokeClipBindableProperty, prevStrokeGeometry, newStrokeGeometry);
+                _strokeGeometry = _strokeOuterGeometry;
+                if (_strokeGeometry != null)
+                {
+                    if (strokeUseAutoXor)
+                        _strokeGeometry = new CombinedGeometry(GeometryCombineMode.Xor, _strokeGeometry, _fillGeometry);
+                    else
+                        _strokeGeometry = _strokeOuterGeometry;
+                }
+
+                RaisePropertyChanged(StrokeClipBindableProperty, prevStrokeGeometry, _strokeGeometry);
             }
 
             //rrect.Rect
@@ -250,7 +247,7 @@ namespace ReCap.CommonUI.Controls.Decorators
             _boxShadow.Spread = spreadBase + BLUR_SPREAD_OFFSET;
         }
         
-        protected abstract void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out RoundedRect glowRect);
+        protected abstract void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out bool strokeUseAutoXor, out RoundedRect glowRect);
         
 
 #if DEBUG_ANGLED_BORDER
@@ -261,7 +258,7 @@ namespace ReCap.CommonUI.Controls.Decorators
         public override void Render(DrawingContext context)
         {
 #if DEBUG_ANGLED_BORDER
-            context.DrawGeometry(DEBUG_BRUSH, null, _strokeGeometryOuter);
+            context.DrawGeometry(DEBUG_BRUSH, null, _strokeOuterGeometry);
             context.DrawGeometry(DEBUG_BRUSH_2, null, _fillGeometry);
             
             using (var what = context.PushGeometryClip(_fillGeometry))

@@ -46,6 +46,22 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => control.GetValue(ManagedShowIconProperty);
         public static void SetManagedShowIcon(Window control, bool value)
             => control.SetValue(ManagedShowIconProperty, value);
+
+
+        public static readonly AttachedProperty<bool> ReserveCaptionAreaProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ReserveCaptionArea", true);
+        public static bool GetReserveCaptionArea(Window control)
+            => control.GetValue(ReserveCaptionAreaProperty);
+        public static void SetReserveCaptionArea(Window control, bool value)
+            => control.SetValue(ReserveCaptionAreaProperty, value);
+
+
+        public static readonly AttachedProperty<double> DefaultTitleBarHeightProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, double>("DefaultTitleBarHeight", 1d);
+        public static double GetDefaultTitleBarHeight(Window control)
+            => control.GetValue(DefaultTitleBarHeightProperty);
+        public static void SetDefaultTitleBarHeight(Window control, double value)
+            => control.SetValue(DefaultTitleBarHeightProperty, value);
 #endregion
 
 
@@ -64,7 +80,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, ManagedChromeMode>("ManagedChromeHint", ManagedChromeMode.Auto);
         public static ManagedChromeMode GetManagedChromeHint(Window control)
             => control.GetValue(ManagedChromeHintProperty);
-        internal static void SetManagedChromeHint(Window control, ManagedChromeMode value)
+        public static void SetManagedChromeHint(Window control, ManagedChromeMode value)
             => control.SetValue(ManagedChromeHintProperty, value);
 
 

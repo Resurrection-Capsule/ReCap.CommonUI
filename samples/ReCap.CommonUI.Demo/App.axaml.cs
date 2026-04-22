@@ -1,11 +1,11 @@
 using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReCap.CommonUI.Attached.WindowChrome;
 using ReCap.CommonUI.Demo.ViewModels;
 using ReCap.CommonUI.Demo.Views;
-using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Demo
 {
@@ -52,6 +52,18 @@ namespace ReCap.CommonUI.Demo
         }
 
 
+        public static readonly DirectProperty<App, UITestViewModel> MainVMProperty
+            = AvaloniaProperty.RegisterDirect<App, UITestViewModel>(nameof(MainVM)
+                , getter: x => x.MainVM
+            );
+        UITestViewModel _mainVM = null;
+        public UITestViewModel MainVM
+        {
+            get => _mainVM;
+            private set => SetAndRaise(MainVMProperty, ref _mainVM, value);
+        }
+
+
 
 
         public override void Initialize()
@@ -66,12 +78,14 @@ namespace ReCap.CommonUI.Demo
             var captionButtons = WindowChromeAddon.PlatformDefaultCaptionButtons;
             LeftCaptionButtons = captionButtons.Left;
             RightCaptionButtons = captionButtons.Right;
+            MainVM = new UITestViewModel();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
                 desktop.MainWindow = new MainWindow()
                 {
-                    DataContext = new UITestViewModel(),
+                    DataContext = MainVM,
                 };
             }
 

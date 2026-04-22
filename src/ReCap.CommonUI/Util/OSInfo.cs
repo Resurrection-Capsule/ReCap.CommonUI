@@ -14,13 +14,11 @@ namespace ReCap.CommonUI.Util
         public static readonly bool IsVersionDefinitelyAccurate;
 
 
-        public static readonly bool LinuxIsUsingX11 = false;
-        public static readonly bool LinuxIsUsingGnome = false;
         static OSInfo()
         {
             if (IsWindows)
             {
-                if (TryGetWindowsVersion(out Version))
+                if (WindowsInfo.TryGetRealVersion(out Version))
                 {
                     IsVersionDefinitelyAccurate = true;
                 }
@@ -34,77 +32,89 @@ namespace ReCap.CommonUI.Util
             {
                 Version = Environment.OSVersion.Version;
                 IsVersionDefinitelyAccurate = true;
+            }
+        }
 
-                if (IsLinux)
+
+
+        public static class WindowsInfo
+        {
+            internal static bool TryGetRealVersion(out Version osVersion)
+            {
+                osVersion = default;
+                try
                 {
-                    LinuxIsUsingX11 = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11";
-                    LinuxIsUsingGnome = IsDesktopEnvironment("Gnome"); //[TODO: confirm]
+                    if (!SafeRtlGetVersion(out RTL_OSVERSIONINFOEX osVersionInfoEx))
+                        return false;
+
+                    osVersion = new Version((int)osVersionInfoEx.dwMajorVersion, (int)osVersionInfoEx.dwMinorVersion, (int)osVersionInfoEx.dwBuildNumber);
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
+
+
+            static bool SafeRtlGetVersion(out RTL_OSVERSIONINFOEX osVersionInfoEx)
+            {
+                osVersionInfoEx = new RTL_OSVERSIONINFOEX();
+                return Win32Methods.RtlGetVersion(ref osVersionInfoEx) == 0;
+            }
         }
 
 
-
-        static bool TryGetWindowsVersion(out Version osVersion)
+        public static class LinuxInfo
         {
-            osVersion = default;
-            try
+            public static readonly bool IsUsingX11 = false;
+            public static readonly bool IsUsingGnome = false;
+            static LinuxInfo()
             {
-                if (!SafeRtlGetVersion(out RTL_OSVERSIONINFOEX osVersionInfoEx))
+                if (!IsLinux)
+                    return;
+                    
+                IsUsingX11 = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "x11";
+                IsUsingGnome = IsDesktopEnvironment("Gnome"); //[TODO: confirm]
+            }
+
+
+            // https://superuser.com/questions/1074068/what-is-the-difference-between-desktop-session-xdg-session-desktop-and-xdg-cur
+            // https://unix.stackexchange.com/questions/116539/how-to-detect-the-desktop-environment-in-a-bash-script/645761#645761
+            static bool IsDesktopEnvironment(string desktopEnvironment)
+            {
+                if (!IsLinux)
                     return false;
 
-                osVersion = new Version((int)osVersionInfoEx.dwMajorVersion, (int)osVersionInfoEx.dwMinorVersion, (int)osVersionInfoEx.dwBuildNumber);
-                return true;
-            }
-            catch
-            {
+
+                string desktopEnv = desktopEnvironment;
+                string xdgCurrDesktop = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP");
+
+                //Shortcut: If desktopEnv is empty, check if empty xdgCurrDesktop
+                if (string.IsNullOrEmpty(desktopEnv))
+                {
+                    if (string.IsNullOrEmpty(xdgCurrDesktop))
+                        return true;
+                    else
+                        return false;
+                }
+
+                //Lowercase both
+                desktopEnv = desktopEnv.ToLowerInvariant();
+                xdgCurrDesktop = xdgCurrDesktop.ToLowerInvariant(); //${de,,}; DEs=${DEs,,}
+
+                //Check de against each DEs component
+                //IFS=:; for DE in $DEs; do if [[ "$de" == "$DE" ]]; then return; fi; done
+                string[] xdgCurrDesktops = xdgCurrDesktop.Split(':');
+                foreach (string xdgDesk in xdgCurrDesktops)
+                {
+                    if (xdgDesk == desktopEnv)
+                        return true;
+                }
+
+                //Not found
                 return false;
             }
-        }
-
-
-        static bool SafeRtlGetVersion(out RTL_OSVERSIONINFOEX osVersionInfoEx)
-        {
-            osVersionInfoEx = new RTL_OSVERSIONINFOEX();
-            return Win32Methods.RtlGetVersion(ref osVersionInfoEx) == 0;
-        }
-
-
-        // https://superuser.com/questions/1074068/what-is-the-difference-between-desktop-session-xdg-session-desktop-and-xdg-cur
-        // https://unix.stackexchange.com/questions/116539/how-to-detect-the-desktop-environment-in-a-bash-script/645761#645761
-        static bool IsDesktopEnvironment(string desktopEnvironment)
-        {
-            if (!IsLinux)
-                return false;
-
-
-            string desktopEnv = desktopEnvironment;
-            string xdgCurrDesktop = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP");
-
-            //Shortcut: If desktopEnv is empty, check if empty xdgCurrDesktop
-            if (string.IsNullOrEmpty(desktopEnv))
-            {
-                if (string.IsNullOrEmpty(xdgCurrDesktop))
-                    return true;
-                else
-                    return false;
-            }
-
-            //Lowercase both
-            desktopEnv = desktopEnv.ToLowerInvariant();
-            xdgCurrDesktop = xdgCurrDesktop.ToLowerInvariant(); //${de,,}; DEs=${DEs,,}
-
-            //Check de against each DEs component
-            //IFS=:; for DE in $DEs; do if [[ "$de" == "$DE" ]]; then return; fi; done
-            string[] xdgCurrDesktops = xdgCurrDesktop.Split(':');
-            foreach (string xdgDesk in xdgCurrDesktops)
-            {
-                if (xdgDesk == desktopEnv)
-                    return true;
-            }
-
-            //Not found
-            return false;
         }
     }
 }

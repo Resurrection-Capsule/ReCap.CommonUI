@@ -1,0 +1,22 @@
+﻿<HeaderedContentControl x:Class="ReCap.CommonUI.Demo.Views.Parts.ExtendClientAreaTitleBarHeightHintCustomizationView"
+						xmlns="https://github.com/avaloniaui"
+						xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+						xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
+						VerticalContentAlignment="Top"
+						Header="TitleBar Height Hint">
+	<StackPanel Orientation="Vertical">
+		<Slider Value="{Binding $parent[HeaderedContentControl].HeightHint, Mode=TwoWay}"
+				TickFrequency="1"
+				IsSnapToTickEnabled="True"
+				Minimum="-1"
+				Maximum="100" />
+		<Panel>
+			<TextBlock x:Name="AutoLabel"
+					Text="Height:     Auto"
+					IsVisible="{Binding $parent[HeaderedContentControl].HeightHint, Converter={x:Static rcui:ArithmeticConverters.LessThan}, ConverterParameter=0, Mode=OneWay}" />
+			<TextBlock x:Name="TextLabel"
+					Text="{Binding $parent[HeaderedContentControl].HeightHint, StringFormat='Height:     {0:#######0}', Mode=OneWay}"
+					IsVisible="{Binding !#AutoLabel.IsVisible, Mode=OneWay}" />
+		</Panel>
+	</StackPanel>
+</HeaderedContentControl>

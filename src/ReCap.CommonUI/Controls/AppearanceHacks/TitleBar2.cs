@@ -1,30 +1,21 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
-using Avalonia.Threading;
 using ReCap.CommonUI.Attached.WindowChrome;
-using ReCap.CommonUI.Util;
-using ReCap.CommonUI.Util.Win32;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
-    //[TemplatePart(IsRequired = true, Name = _PART_CAPTIONBUTTONS2, Type = typeof(CaptionButtons2))]
     [PseudoClasses(_LEFT_SIDE_BUTTONS)]
     public sealed class TitleBar2
         : TitleBar
     {
         const string _PART_CAPTIONBUTTONS = "PART_CaptionButtons";
-        const string _PART_CAPTIONBUTTONS2 = _PART_CAPTIONBUTTONS + "2";
 
         const string _STATE_MINIMIZED = ":minimized";
         const string _STATE_NORMAL = ":normal";
@@ -96,32 +87,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             var role = CaptionButtonRole.Menu;
             _windowIconContainer.Role = role;
             WindowChromeAddon.SetNonClienHitTestResult(_windowIconContainer, CaptionButton.ROLE_TO_NCHITTEST[role]);
-            if (window != null)
-            {
-                Rectangle rectangle = (Rectangle)_windowIconContainer.Content;
-                Avalonia.Media.Imaging.Bitmap bmp;
-#if !NO
-                if (window.TryGetPlatformIcon(out IPlatformIcon icon, WindowIconRequestFallbackMode.NoFallback))
-                {
-                    var sizes = icon.PixelSizes;
-                    if (sizes.Count() <= 0)
-                    {
-                        PlatformIconHelper.TryGetAppPlatformIcon(out icon);
-                        sizes = icon.PixelSizes;
-                    }
-
-                    bmp = icon[sizes.First()];
-                    //
-#else
-                using (var icon = System.Drawing.Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName))
-                {
-                    bmp = icon.ToAvBitmap();
-#endif
-                    var brush = new ImageBrush(bmp);
-                    rectangle.Fill = brush;
-                    Console.WriteLine($"ICON SOGHJSIOUFGJDIOU {bmp != null}, {bmp}");
-                }
-            }
             /*
             _windowIconContainer.Click += WindowIconContainer_Click;
             _windowIconContainer.DoubleTapped += WindowIconContainer_DoubleTapped;
@@ -136,7 +101,11 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         void WindowIconContainer_Click(object sender, RoutedEventArgs e)
             => _captionButtons?.ExecuteCaptionButton(_windowIconContainer, CaptionButtonInputAction.LeftClick);
         void WindowIconContainer_DoubleTapped(object sender, TappedEventArgs e)
-            => _captionButtons?.ExecuteCaptionButton(_windowIconContainer, CaptionButtonInputAction.DoubleClick);
+        {
+            CaptionButton button = (CaptionButton)sender;
+            CaptionButtonClickEventArgs args = new(button, button.Role, true, e);
+            _captionButtons?.ExecuteCaptionButton(_windowIconContainer, args);
+        }
         */
 
 

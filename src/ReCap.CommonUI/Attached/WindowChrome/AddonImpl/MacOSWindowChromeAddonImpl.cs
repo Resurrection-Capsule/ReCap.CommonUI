@@ -49,7 +49,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
         {
             window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
-            base.ApplyDesiredManagedChrome(window, desiredManagedChrome, ref useManagedChrome);
+            DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
+                this, window, desiredManagedChrome, ref useManagedChrome
+                , fallbackToSystemDecorationsProperty: true
+            );
 
             window.ExtendClientAreaChromeHints = useManagedChrome
                 ? ExtendClientAreaChromeHints.NoChrome

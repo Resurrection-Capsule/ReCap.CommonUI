@@ -2,7 +2,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
 		xmlns:demo="using:ReCap.CommonUI.Demo"
-		xmlns:v="using:ReCap.CommonUI.Demo.Views.Pages.Styles"
+		xmlns:vps="using:ReCap.CommonUI.Demo.Views.Pages.Styles"
 		xmlns:st="using:Sortable.Avalonia">
 	<Styles.Resources>
 		<GradientStops x:Key="FakeTitleBarFadeStops">
@@ -223,15 +223,13 @@
 		</ControlTheme>
 
 
-		<ControlTheme x:Key="CaptionButtonRoles"
+		<ControlTheme x:Key="CaptionButtonRolesBase"
 				  	TargetType="{x:Type ItemsControl}"
 					BasedOn="{StaticResource {x:Type ItemsControl}}">
 			<Setter Property="MinWidth" Value="60" />
 			<Setter Property="Padding" Value="0,8,0,0" />
 
 			<Setter Property="st:Sortable.Group" Value="CaptionButtonsRoles" />
-			<Setter Property="st:Sortable.Droppable" Value="True" />
-			<Setter Property="st:Sortable.DropCommand" Value="{Binding StDropCommand, Mode=OneWay}" />
 			<!--
 			<Setter Property="st:Sortable.AnimationDuration" Value="1" />
 			-->
@@ -251,62 +249,78 @@
 					<Setter Property="CornerRadius" Value="5,0,5,0" />
 				</Style>
 			</Style>
+		</ControlTheme>
+
+		<ControlTheme x:Key="CaptionButtonsSide"
+				  	TargetType="{x:Type ItemsControl}"
+					BasedOn="{StaticResource CaptionButtonRolesBase}">
+			<Setter Property="st:Sortable.Droppable" Value="True" />
+			<Setter Property="st:Sortable.Sortable" Value="True" />
+
+			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBSideDropCommand, Mode=OneWay}" />
+			<Setter Property="st:Sortable.UpdateCommand" Value="{Binding CBSideUpdateCommand, Mode=OneWay}" />
+			<Setter Property="st:Sortable.ReleaseCommand" Value="{Binding CBSideReleaseCommand, Mode=OneWay}" />
+
+			<Setter Property="ItemTemplate">
+				<DataTemplate>
+					<Panel x:Name="ItemLayoutRoot"
+						Background="#01000000"
+						st:Sortable.IsSortable="True"
+						st:Sortable.IsDroppable="True">
+						<rcui:CaptionButton x:Name="CaptionButton"
+											Classes="FakeCaptionButton"
+											ToolTip.Tip="{Binding Mode=OneWay}">
+							<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
+											DataContext="{Binding Mode=OneWay}" />
+						</rcui:CaptionButton>
+					</Panel>
+				</DataTemplate>
+			</Setter>
 
 			<Style Selector="^[(DockPanel.Dock)=Right]">
 				<Setter Property="HorizontalAlignment" Value="Right" />
 				<Setter Property="Margin" Value="0,0,9,0" />
 			</Style>
+		</ControlTheme>
 
-			<Style Selector="^.ReadOnly">
-				<Setter Property="st:Sortable.CrossCollectionTransferMode" Value="Copy" />
-				<Setter Property="ItemTemplate">
-					<DataTemplate>
-						<StackPanel x:Name="ItemLayoutRoot"
-									Background="#01000000"
-									Orientation="Vertical"
-									Spacing="12"
-									st:Sortable.IsDroppable="True"
-									Margin="0,5">
-							<rcui:CaptionButton x:Name="CaptionButton"
-												Classes="FakeCaptionButton"
-												Margin="8,0,9,0">
-								<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
-												DataContext="{Binding Mode=OneWay}" />
-							</rcui:CaptionButton>
-							<!--
-							<Border Background="Red"
-									HorizontalAlignment="Center">
-							-->
-							<TextBlock Text="{Binding Mode=OneWay}"
-									HorizontalAlignment="Stretch"
-									TextAlignment="Center" />
-							<!--
-							</Border>
-							-->
-						</StackPanel>
-					</DataTemplate>
-				</Setter>
-			</Style>
-			<Style Selector="^:not(.ReadOnly)">
-				<Setter Property="st:Sortable.Sortable" Value="True" />
-				<Setter Property="st:Sortable.UpdateCommand" Value="{Binding StUpdateCommand, Mode=OneWay}" />
-				<Setter Property="st:Sortable.ReleaseCommand" Value="{Binding StReleaseCommand, Mode=OneWay}" />
-				<Setter Property="ItemTemplate">
-					<DataTemplate>
-						<Panel x:Name="ItemLayoutRoot"
-							Background="#01000000"
-							st:Sortable.IsSortable="True"
-							st:Sortable.IsDroppable="True">
-							<rcui:CaptionButton x:Name="CaptionButton"
-												Classes="FakeCaptionButton"
-												ToolTip.Tip="{Binding Mode=OneWay}">
-								<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
-												DataContext="{Binding Mode=OneWay}" />
-							</rcui:CaptionButton>
-						</Panel>
-					</DataTemplate>
-				</Setter>
-			</Style>
+		<ControlTheme x:Key="CaptionButtonsPool"
+				  	TargetType="{x:Type ItemsControl}"
+					BasedOn="{StaticResource CaptionButtonRolesBase}">
+			<Setter Property="st:Sortable.Droppable" Value="True" />
+			<Setter Property="st:Sortable.Sortable" Value="True" />
+
+			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBPoolDropCommand, Mode=OneWay}" />
+			<Setter Property="st:Sortable.UpdateCommand" Value="{Binding CBPoolUpdateCommand, Mode=OneWay}" />
+
+			<Setter Property="st:Sortable.CrossCollectionTransferMode" Value="Copy" />
+			<Setter Property="ItemTemplate">
+				<DataTemplate>
+					<StackPanel x:Name="ItemLayoutRoot"
+								Background="#01000000"
+								Orientation="Vertical"
+								Spacing="12"
+								st:Sortable.IsSortable="True"
+								st:Sortable.IsDroppable="True"
+								Margin="0,5">
+						<rcui:CaptionButton x:Name="CaptionButton"
+											Classes="FakeCaptionButton"
+											Margin="8,0,9,0">
+							<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
+											DataContext="{Binding Mode=OneWay}" />
+						</rcui:CaptionButton>
+						<!--
+						<Border Background="Red"
+								HorizontalAlignment="Center">
+						-->
+						<TextBlock Text="{Binding Mode=OneWay}"
+								HorizontalAlignment="Stretch"
+								TextAlignment="Center" />
+						<!--
+						</Border>
+						-->
+					</StackPanel>
+				</DataTemplate>
+			</Setter>
 		</ControlTheme>
 
 
@@ -341,10 +355,10 @@
 	</Styles.Resources>
 
 
-	<Style Selector=":is(v|WindowView):not(.IsWindowUsingManagedChrome) :is(Control).RequiresManagedChrome.ToEnable">
+	<Style Selector=":is(vps|WindowView):not(.IsWindowUsingManagedChrome) :is(Control).RequiresManagedChrome.ToEnable">
 		<Setter Property="IsEnabled" Value="False" />
 	</Style>
-	<Style Selector=":is(v|WindowView):not(.IsWindowUsingManagedChrome) :is(Control).RequiresManagedChrome.ToBeVisible">
+	<Style Selector=":is(vps|WindowView):not(.IsWindowUsingManagedChrome) :is(Control).RequiresManagedChrome.ToBeVisible">
 		<Setter Property="IsVisible" Value="False" />
 	</Style>
 
@@ -359,4 +373,18 @@
 		<Setter Property="IsHitTestVisible" Value="False" />
 		<Setter Property="Padding" Value="15,2" />
 	</Style>
+
+
+	<!--
+	<Style Selector="TabControl.demo-helix-tab-control">
+		<Setter Property="Theme" Value="{DynamicResource HelixTabControl}" />
+		<Setter Property="Items">
+			<TabItem Header="Content">
+				<TemplatedControl Theme="{DynamicResource {x:Static vps:WindowView.DEMO_CONTENT_THEME_KEY}}" />
+			</TabItem>
+			<TabItem Header="Empty"
+					IsEnabled="False" />
+		</Setter>
+	</Style>
+	-->
 </Styles>

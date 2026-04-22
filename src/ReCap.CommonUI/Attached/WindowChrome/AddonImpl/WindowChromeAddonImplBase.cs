@@ -24,12 +24,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         public virtual bool DefaultIconInTitleBar
         {
-            get => false;
-        }
-
-
-        protected virtual bool ShouldSetSystemDecorationsAsFallback
-        {
             get => true;
         }
 
@@ -57,41 +51,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         public virtual bool GetDesiredManagedChrome(Window window, ManagedChromeMode chromeMode)
-            => chromeMode switch
-            {
-                ManagedChromeMode.WheneverPossible => CanUseManagedWindowChrome,
-                ManagedChromeMode.Auto => PrefersManagedWindowChrome,
-                _ => false,
-            };
+            => DefaultWindowChromeAddonImpl.GetDesiredManagedChrome_Default(this, window, chromeMode);
 
 
-        public virtual void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
-        {
-            bool oldIsExtendedIntoWindowDecorations = window.IsExtendedIntoWindowDecorations;
-            bool isUsingManagedChrome = default;
-
-
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                if (ShouldSetSystemDecorationsAsFallback)
-                {
-                    if (desiredManagedChrome && !window.IsExtendedIntoWindowDecorations)
-                        window.SystemDecorations = SystemDecorations.None;
-                    else if ((!desiredManagedChrome) && !oldIsExtendedIntoWindowDecorations)
-                        window.SystemDecorations = SystemDecorations.Full;
-                }
-
-
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    isUsingManagedChrome = window.IsExtendedIntoWindowDecorations || desiredManagedChrome;
-                });
-            });
-
-
-            useManagedChrome = isUsingManagedChrome;
-        }
-
+        public abstract void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome);
 
 
 

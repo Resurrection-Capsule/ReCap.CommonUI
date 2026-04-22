@@ -184,7 +184,10 @@
 								Spacing="2"
 								Orientation="Horizontal"
 								VerticalAlignment="Stretch"
-								Classes.max-before-min="{Binding Path=(rcui:WindowChromeAddon.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}">
+								>
+					<!--
+								Classes.max-before-min="{Binding Path=(rcui:WindowChromeAddon.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}"
+					-->
 						<rcui:CaptionButton x:Name="PART_MinimizeButton"
 											Win32Properties.NonClientHitTestResult="MinButton">
 							<Path Data="{DynamicResource CaptionButtons.GlyphGeometry.Minimize}" />
@@ -212,10 +215,12 @@
 			<Setter Property="RenderTransform" Value="scale(-1,1)" />
 		</Style>
 
+		<!--
 		<Style Selector="^ /template/ StackPanel#MinMax.max-before-min,
 						^ /template/ StackPanel#MinMax.max-before-min > :is(Button)">
 			<Setter Property="RenderTransform" Value="scale(-1,1)" />
 		</Style>
+		-->
 
 
 

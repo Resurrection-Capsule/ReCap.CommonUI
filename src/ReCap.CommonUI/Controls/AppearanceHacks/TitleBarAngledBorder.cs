@@ -5,11 +5,11 @@ using ReCap.CommonUI.Controls.Decorators;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
-    public partial class TitleBarAngledBorder2
+    public partial class TitleBarAngledBorder
         : AngledBorderBase
     {
         public static readonly StyledProperty<double> TopLeftMajorCutProperty =
-            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopLeftMajorCut), 0);
+            AvaloniaProperty.Register<TitleBarAngledBorder, double>(nameof(TopLeftMajorCut), 0d);
         public double TopLeftMajorCut
         {
             get => GetValue(TopLeftMajorCutProperty);
@@ -18,7 +18,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
         public static readonly StyledProperty<double> TopLeftMinorCutProperty =
-            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopLeftMinorCut), 0);
+            AvaloniaProperty.Register<TitleBarAngledBorder, double>(nameof(TopLeftMinorCut), 0);
         public double TopLeftMinorCut
         {
             get => GetValue(TopLeftMinorCutProperty);
@@ -27,14 +27,14 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
         public static readonly StyledProperty<double> TopLeftInsetProperty =
-            AngledBorderEx.TopLeftInsetProperty.AddOwner<TitleBarAngledBorder2>();
+            AngledBorderEx.TopLeftInsetProperty.AddOwner<TitleBarAngledBorder>();
         public double TopLeftInset
         {
             get => GetValue(TopLeftInsetProperty);
             set => SetValue(TopLeftInsetProperty, value);
         }
         public static readonly StyledProperty<double> TopRightMajorCutProperty =
-            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopRightMajorCut), 0);
+            AvaloniaProperty.Register<TitleBarAngledBorder, double>(nameof(TopRightMajorCut), 0d);
         public double TopRightMajorCut
         {
             get => GetValue(TopRightMajorCutProperty);
@@ -43,7 +43,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
         public static readonly StyledProperty<double> TopRightMinorCutProperty =
-            AvaloniaProperty.Register<TitleBarAngledBorder2, double>(nameof(TopRightMinorCut), 0);
+            AvaloniaProperty.Register<TitleBarAngledBorder, double>(nameof(TopRightMinorCut), 0d);
         public double TopRightMinorCut
         {
             get => GetValue(TopRightMinorCutProperty);
@@ -52,7 +52,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
         public static readonly StyledProperty<double> TopRightInsetProperty =
-            AngledBorderEx.TopRightInsetProperty.AddOwner<TitleBarAngledBorder2>();
+            AngledBorderEx.TopRightInsetProperty.AddOwner<TitleBarAngledBorder>();
         public double TopRightInset
         {
             get => GetValue(TopRightInsetProperty);
@@ -122,7 +122,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
 
-        static TitleBarAngledBorder2()
+        static TitleBarAngledBorder()
         {
             AvaloniaProperty[] props =
             {
@@ -139,79 +139,28 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             };
 
 
-            AffectsGeometry<TitleBarAngledBorder2>(props);
-            AffectsRender<TitleBarAngledBorder2>(props);
+            AffectsGeometry<TitleBarAngledBorder>(props);
+            AffectsRender<TitleBarAngledBorder>(props);
         }
 
-        protected override void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out RoundedRect glowRect)
+
+
+
+        protected override void RefreshGeometry(out Geometry fillGeometry, out Geometry strokeGeometry, out bool strokeUseAutoXor, out RoundedRect glowRect)
         {
-            //Console.WriteLine($"Updating geometries...");
-            double width = Math.Round(Bounds.Width);
-            double height = Math.Round(Bounds.Height);
+            strokeUseAutoXor = false;
+            var bounds = Bounds;
+            double width = Math.Round(bounds.Width);
+            double height = Math.Round(bounds.Height);
 
             double minDimen = Math.Min(width, height);
 
-            double tlMa = Math.Min(TopLeftMajorCut, minDimen);
-            double tlMi = Math.Min(TopLeftMinorCut, minDimen);
-            double tlMB = tlMa + tlMi;
-            double tlInset = Math.Min(TopLeftInset, minDimen);
-
-            double trMa = Math.Min(TopRightMajorCut, minDimen);
-            double trMi = Math.Min(TopRightMinorCut, minDimen);
-            double trMB = trMa + trMi;
-            double trInset = Math.Min(TopRightInset, minDimen);
-
             double br = Math.Min(BottomRightCut, minDimen);
-            double bl = Math.Min(BottomLeftCut, minDimen);
-
             double brInset = Math.Min(BottomRightInset, width);
+
+            double bl = Math.Min(BottomLeftCut, minDimen);
             double blInset = Math.Min(BottomLeftInset, width);
 
-            void CreateGeometryFromRect(ref StreamGeometry streamGeom, Rect rect)
-            {
-                CreateGeometry(ref streamGeom, rect.Left, rect.Top, rect.Right, rect.Bottom);
-            }
-
-            void CreateGeometry(ref StreamGeometry streamGeom, double rectLeft, double rectTop, double rectRight, double rectBottom)
-            {
-                using StreamGeometryContext ctx = streamGeom.Open();
-                if (rectBottom > Math.Min(tlMa, trMa))
-                {
-                    double insetBottom = Math.Min(rectBottom - tlMB, rectBottom - trMB);
-                    ctx.BeginFigure(new(rectLeft + blInset, insetBottom), true);
-                    //ctx.LineTo(new(rectLeft + blInset + bl, insetBottom));
-                    ctx.LineTo(new(rectLeft + blInset, insetBottom + bl));
-
-                    ctx.LineTo(new(rectLeft, insetBottom + bl));
-                    ctx.LineTo(new(rectLeft + tlMi, insetBottom));
-                    ctx.LineTo(new(rectLeft + tlInset, insetBottom));
-
-
-                    ctx.LineTo(new(rectLeft + tlInset + tlMa, rectTop));
-                    ctx.LineTo(new(rectRight - (trInset + trMa), rectTop));
-
-
-                    ctx.LineTo(new(rectRight - trInset, insetBottom));
-                    ctx.LineTo(new(rectRight - trMi, insetBottom));
-                    ctx.LineTo(new(rectRight - trMi, insetBottom + br));
-
-
-                    ctx.LineTo(new(rectRight, insetBottom + br));
-                    ctx.LineTo(new(rectRight - brInset, insetBottom + br));
-                    ctx.LineTo(new(rectRight - (brInset + br), insetBottom));
-                }
-                else
-                {
-                    double l = rectLeft + tlInset;
-                    double r = rectRight + trInset;
-                    ctx.BeginFigure(new(l, rectBottom), true);
-                    ctx.LineTo(new(l + tlMa, rectTop));
-                    ctx.LineTo(new(r - trMa, rectTop));
-                    ctx.LineTo(new(r, rectBottom));
-                }
-
-                ctx.EndFigure(true);
-            }
 
 
             double strokeThickness = StrokeThickness;
@@ -221,28 +170,61 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             double fillWidth = width - borderBothSides;
             double fillHeight = height - borderBothSides;
 
-
             Rect fillBounds = new(strokeThickness, strokeThickness, fillWidth, fillHeight);
             StreamGeometry fillGeom = new();
-            CreateGeometryFromRect(ref fillGeom, fillBounds);
+            BuildGeometry(ref fillGeom, fillBounds, false);
             
             fillGeometry = fillGeom;
             if (hasStroke)
             {
-                Rect strokeBounds = new(0, 0, width, height);
-                StreamGeometry strokeGeom = new();
-                CreateGeometryFromRect(ref strokeGeom, strokeBounds);
-                CreateGeometryFromRect(ref strokeGeom, fillBounds);
-
-                strokeGeometry = strokeGeom;
+                Pen strokePen = new(Brushes.Red, borderBothSides);
+                Geometry strokeOuterGeometry = fillGeom.GetWidenedGeometry(strokePen);
+                strokeGeometry = new CombinedGeometry(GeometryCombineMode.Exclude, strokeOuterGeometry, fillGeom);
             }
             else
             {
-                strokeGeometry = null;
+                strokeGeometry = new StreamGeometry();
             }
 
 
             glowRect = new(fillBounds, Math.Max(bl, br), Math.Max(blInset, brInset));
+        }
+
+
+
+
+        void BuildGeometry(ref StreamGeometry geom, Rect rect, bool isStroked)
+            => BuildGeometry(ref geom
+                , rect.Left, rect.Top, rect.Right, rect.Bottom
+                , isStroked
+            );
+        void BuildGeometry(ref StreamGeometry geom
+            , double rectLeft, double rectTop, double rectRight, double rectBottom
+            , bool isStroked
+        )
+        {
+            using PointsBuilder builder = new(geom
+                , rectLeft, rectTop, rectRight, rectBottom
+                , isStroked: isStroked
+            )
+            {
+                TopLeftMajorCut = TopLeftMajorCut,
+                TopLeftMinorCut = TopLeftMinorCut,
+                TopLeftInset = TopLeftInset,
+
+                TopRightMajorCut = TopRightMajorCut,
+                TopRightMinorCut = TopRightMinorCut,
+                TopRightInset = TopRightInset,
+
+                BottomLeftCut = BottomLeftCut,
+                BottomLeftInset = BottomLeftInset,
+
+                BottomRightCut = BottomRightCut,
+                BottomRightInset = BottomRightInset,
+
+                StrokeThickness = StrokeThickness,
+            };
+            builder.AddPoints(builder.CreateAllPoints());
         }
     }
 }
