@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <RadialGradientBrush x:Key="RadioButton.GlyphFill.Mask"
+						Center="100%,112.5%"
+						GradientOrigin="100%,112.5%"
+                        RadiusX="87.5%"
+                        RadiusY="87.5%">
+		<GradientStop Offset="0.8" Color="#00FFFFFF" />
+		<GradientStop Offset="1" Color="#FFFFFFFF" />
+    </RadialGradientBrush>
+    <LinearGradientBrush x:Key="RadioButton.GlyphFill"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%">
+		<GradientStop Offset="0" Color="#DCFFFFFF" />
+		<GradientStop Offset="0.4" Color="#B4FFFFFF" />
+		<GradientStop Offset="0.8" Color="#80FFFFFF" />
+	</LinearGradientBrush>
+    <Color x:Key="RadioButton.GlyphStroke">#44FFFFFF</Color>
+</ResourceDictionary>

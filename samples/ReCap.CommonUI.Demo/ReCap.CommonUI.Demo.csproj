@@ -5,6 +5,11 @@
 		<ApplicationIcon>Assets/avalonia-logo.ico</ApplicationIcon>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<SuppressTfmSupportBuildWarnings>True</SuppressTfmSupportBuildWarnings>
+		<NoWarn>$(NoWarn);NETSDK1138</NoWarn>
+	</PropertyGroup>
+
 	<Import Project="../../build/avalonia.props" />
 
 	<ItemGroup>
