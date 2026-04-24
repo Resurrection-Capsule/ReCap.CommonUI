@@ -1,0 +1,124 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Thickness x:Key="ComboBox.Padding">6,2,0,1</Thickness>
+    <x:Double x:Key="ComboBox.MinHeight">18</x:Double>
+	<StreamGeometry x:Key="ComboBox.Arrow.Geometry">M 12 0 V 12 H 0 Z</StreamGeometry>
+
+
+	<LinearGradientBrush x:Key="ComboBox.Background.Idle"
+						StartPoint="0,0"
+						EndPoint="0,8">
+		<GradientStop Offset="0" Color="#34FFFFFF" />
+		<GradientStop Offset="1" Color="#34808080" />
+		<GradientStop Offset="1" Color="#34000000" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="ComboBox.BorderBrush.Idle"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%">
+		<GradientStop Offset="0" Color="#60F7F7F7" />
+		<GradientStop Offset="0.25" Color="#B02B2B2B" />
+		<GradientStop Offset="0.75" Color="#BD181818" />
+		<GradientStop Offset="1" Color="#953C3C3C" />
+	</LinearGradientBrush>
+	<Color x:Key="ComboBox.TrimColor.Idle">#809AD2FD</Color>
+
+	<RadialGradientBrush x:Key="ComboBox.Arrow.Fill.Idle"
+						Center="66.667%,66.667%"
+						GradientOrigin="66.667%,66.667%">
+		<GradientStop Offset="0" Color="#FF147E9D" />
+		<GradientStop Offset="1" Color="#FF3798BB" />
+	</RadialGradientBrush>
+	<Color x:Key="ComboBox.Arrow.Stroke.Idle">#FF64BAE2</Color>
+
+
+	<LinearGradientBrush x:Key="ComboBox.Background.Hover"
+						StartPoint="0,0"
+						EndPoint="0,8">
+		<GradientStop Offset="0" Color="#53A8D2F2" />
+		<GradientStop Offset="1" Color="#5B59819F" />
+		<GradientStop Offset="1" Color="#62214E6F" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="ComboBox.BorderBrush.Hover"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%">
+		<GradientStop Offset="0" Color="#919FCFF3" />
+		<GradientStop Offset="0.25" Color="#9A2F3A42" />
+		<GradientStop Offset="0.75" Color="#C0284963" />
+		<GradientStop Offset="1" Color="#D34883B0" />
+	</LinearGradientBrush>
+
+	<RadialGradientBrush x:Key="ComboBox.Arrow.Fill.Hover"
+						Center="66.667%,66.667%"
+						GradientOrigin="66.667%,66.667%">
+		<GradientStop Offset="0" Color="#FF3FD6FF" />
+		<GradientStop Offset="1" Color="#FF69D4FF" />
+	</RadialGradientBrush>
+	<Color x:Key="ComboBox.Arrow.Stroke.Hover">#FF70D4FF</Color>
+
+
+	<!-- Idle but hue-shifted -50 in PDN -->
+	<RadialGradientBrush x:Key="ComboBox.Arrow.Fill.Open"
+						Center="66.667%,66.667%"
+						GradientOrigin="66.667%,66.667%">
+		<GradientStop Offset="0" Color="#FF149D4A" />
+		<GradientStop Offset="1" Color="#FF37BB70" />
+	</RadialGradientBrush>
+	<Color x:Key="ComboBox.Arrow.Stroke.Open">#FF64E2A1</Color>
+
+
+
+
+	<LinearGradientBrush x:Key="ComboBox.Background.Disabled"
+						StartPoint="0,0"
+						EndPoint="0,8">
+		<GradientStop Offset="0" Color="#34404040" />
+		<GradientStop Offset="1" Color="#34000000" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="ComboBox.BorderBrush.Disabled"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%">
+		<GradientStop Offset="0" Color="#30F7F7F7" />
+		<GradientStop Offset="0.25" Color="#582B2B2B" />
+		<GradientStop Offset="0.75" Color="#5E181818" />
+		<GradientStop Offset="1" Color="#743C3C3C" />
+	</LinearGradientBrush>
+	<Color x:Key="ComboBox.TrimColor.Disabled">#40FCFCFC</Color>
+
+	<RadialGradientBrush x:Key="ComboBox.Arrow.Fill.Disabled"
+						Center="66.667%,66.667%"
+						GradientOrigin="66.667%,66.667%">
+		<GradientStop Offset="0" Color="#FF4D4D4D" />
+		<GradientStop Offset="1" Color="#FF5D5D5D" />
+	</RadialGradientBrush>
+	<Color x:Key="ComboBox.Arrow.Stroke.Disabled">#FF707070</Color>
+
+
+	<LinearGradientBrush x:Key="ComboBox.BorderBrush.Error"
+						StartPoint="0%,0%"
+						EndPoint="0%,100%">
+		<GradientStop Offset="0" Color="#BDF29F9F" />
+		<GradientStop Offset="0.25" Color="#C63F2D2D" />
+		<GradientStop Offset="0.75" Color="#EC602727" />
+		<GradientStop Offset="1" Color="#FFAF4848" />
+	</LinearGradientBrush>
+
+
+	<RadialGradientBrush x:Key="ComboBox.Popup.Background"
+						Center="50%,0%"
+						GradientOrigin="50%,0%"
+						RadiusX="52.895752895752895752895752895753%"
+						RadiusY="73.55967078189300411522633744856%">
+		<GradientStop Offset="0" Color="#FF3C3C3C" />
+		<GradientStop Offset="1" Color="#FF111111" />
+	</RadialGradientBrush>
+	<LinearGradientBrush x:Key="ComboBox.Popup.BorderBrush"
+						StartPoint="0%,-3.494693877551020408163265306122%"
+						EndPoint="0%,103.494693877551020408163265306122%">
+		<GradientStop Offset="0.53" Color="#FF2B2B2B" />
+		<GradientStop Offset="0.87" Color="#FF666666" />
+	</LinearGradientBrush>
+
+	<Color x:Key="ComboBox.Flash">#10FFFFFF</Color>
+	<Color x:Key="ComboBox.Arrow.Flash.Fill">#FFFFFFFF</Color>
+	<Color x:Key="ComboBox.Arrow.Flash.Stroke">#E0FFFFFF</Color>
+</ResourceDictionary>
