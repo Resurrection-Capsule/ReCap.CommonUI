@@ -4,26 +4,21 @@
                     x:CompileBindings="True">
     <ControlTheme x:Key="GroupBoxHeaderBackground"
                 TargetType="{x:Type rcui:AngledBorderEx}">
-        <Setter Property="InvertSide" Value="Bottom" />
-        <Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Window.BottomEdgeTrim.BorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource GroupBox.Header.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource GroupBox.Header.BorderBrush}" />
         <Setter Property="StrokeThickness" Value="1" />
-        
+        <Setter Property="Margin" Value="0,0,0,-4" />
+        <Setter Property="InvertSide" Value="Bottom" />
+
         <Setter Property="TopLeftCut" Value="5" />
         <Setter Property="TopRightCut" Value="5" />
-        
+
         <Setter Property="BottomRightCut" Value="5" />
         <Setter Property="BottomLeftCut" Value="5" />
-        
-        
-        <Setter Property="Margin" Value="0,0,0,-4" />
-        <Setter Property="Opacity" Value="0.4" />
     </ControlTheme>
 
     <ControlTheme x:Key="GroupBoxBodyBackground"
                 TargetType="{x:Type rcui:AngledBorderEx}">
-        <Setter Property="Background" Value="{ReflectionBinding Background, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-        <Setter Property="BorderBrush" Value="{ReflectionBinding BorderBrush, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
         <Setter Property="StrokeThickness" Value="1" />
         
         <Setter Property="TopLeftCut" Value="5" />
@@ -59,15 +54,9 @@
                                         Margin="12,2" />
                     </Panel>
                     <Panel>
-                    <!--
-                    <Border x:Name="ExpanderContent"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                    -->
-                        <rcui:AngledBorderEx Theme="{DynamicResource GroupBoxBodyBackground}" />
+                        <rcui:AngledBorderEx Theme="{DynamicResource GroupBoxBodyBackground}"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}" />
                         <ContentPresenter x:Name="PART_ContentPresenter"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
@@ -78,9 +67,6 @@
                                         Foreground="{TemplateBinding Foreground}"
                                         HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    <!--
-                    </Border>
-                    -->
                     </Panel>
                 </DockPanel>
             </ControlTemplate>

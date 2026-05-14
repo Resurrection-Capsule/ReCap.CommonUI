@@ -17,6 +17,7 @@
 	            <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/ScrollViewer.axaml" />
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TabControl.axaml" />
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TabItem_TabStripItem.axaml" />
+                <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TabStrip.axaml" />
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TextBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TitleBar.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/TitleBarUnderlay.axaml" />
