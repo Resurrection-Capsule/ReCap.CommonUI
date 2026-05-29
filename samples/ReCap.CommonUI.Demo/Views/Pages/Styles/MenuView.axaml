@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.MenuView"
+			xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Menu VerticalAlignment="Top">
+		<MenuItem Header="File">
+			<MenuItem Header="Item 0" />
+			<MenuItem Header="Item 1" />
+			<MenuItem Header="Item 2" />
+			<MenuItem Header="Item 3" />
+			<MenuItem Header="Item 4 but disabled"
+					IsEnabled="False" />
+		</MenuItem>
+		<MenuItem Header="Edit">
+			<MenuItem Header="Item A" />
+			<MenuItem Header="-" />
+			<MenuItem Header="Item B" />
+		</MenuItem>
+		<MenuItem Header="View" />
+		<MenuItem Header="Help"
+				IsEnabled="False" />
+	</Menu>
+</UserControl>

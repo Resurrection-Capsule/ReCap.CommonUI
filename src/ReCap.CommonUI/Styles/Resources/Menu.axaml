@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Idle" Color="#E0FFFFFF" />
+
+
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Background.Hover" Color="#4D000000" />
+    <SolidColorBrush x:Key="Menu.TopLevelItem.BorderBrush.Hover" Color="#27FFFFFF" />
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Hover" Color="#FFFFFFFF" />
+
+
+    <LinearGradientBrush x:Key="Menu.TopLevelItem.Background.Open"
+                        StartPoint="0%,0%"
+                        EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#64D5E1FE" />
+        <GradientStop Offset="0" Color="#3596B5FD" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Menu.TopLevelItem.BorderBrush.Open"
+                        StartPoint="0%,0%"
+                        EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#A4AAB1BF" />
+        <GradientStop Offset="0" Color="#887A859C" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Open" Color="#FFFFFFFF" />
+
+
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Disabled" Color="#80FFFFFF" />
+</ResourceDictionary>

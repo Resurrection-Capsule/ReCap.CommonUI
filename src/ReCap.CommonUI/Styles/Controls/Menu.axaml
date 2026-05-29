@@ -1,0 +1,131 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+    <ControlTheme x:Key="ReCapTopLevelMenuItem"
+                TargetType="{x:Type MenuItem}">
+        <Setter Property="Foreground" Value="{DynamicResource Menu.TopLevelItem.Foreground.Idle}" />
+        <Setter Property="Padding" Value="12,2" />
+        <Setter Property="CornerRadius" Value="4,0,4,0" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel x:Name="LayoutRoot"
+                    Background="#01000000">
+                    <Panel x:Name="Insetter">
+                        <Panel Margin="0,6,0,4">
+                            <rcui:AngledBorder x:Name="BG"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            StrokeThickness="1"
+                                            CornerRadius="{TemplateBinding CornerRadius}">
+                            </rcui:AngledBorder>
+                            <ContentPresenter x:Name="PART_HeaderPresenter"
+                                            Content="{TemplateBinding Header}"
+                                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            Margin="{TemplateBinding Padding}" />
+                            <Popup x:Name="PART_Popup"
+                                WindowManagerAddShadowHint="False"
+                                MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                IsLightDismissEnabled="True"
+                                IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
+                                Placement="BottomEdgeAlignedLeft"
+                                OverlayInputPassThroughElement="{Binding $parent[Menu], Mode=OneWay}">
+                                <Border Background="{DynamicResource MenuFlyoutPresenterBackground}"
+                                        BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+                                        BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
+                                        Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
+                                        MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
+                                        MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+                                        HorizontalAlignment="Stretch"
+                                        CornerRadius="{DynamicResource OverlayCornerRadius}">
+                                    <ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+                                        <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                                        ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                        Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+                                                        Grid.IsSharedSizeScope="True" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Panel>
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+
+        <Style Selector="^:selected /template/ Panel#LayoutRoot:pointerover">
+            <Style Selector="^ rcui|AngledBorder#BG">
+                <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Background.Hover}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Menu.TopLevelItem.BorderBrush.Hover}" />
+            </Style>
+            <Style Selector="^ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource Menu.TopLevelItem.Foreground.Hover}" />
+            </Style>
+        </Style>
+
+
+        <Style Selector="^:pressed, ^:open">
+            <Style Selector="^ /template/ rcui|AngledBorder#BG">
+                <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Background.Open}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Menu.TopLevelItem.BorderBrush.Open}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource Menu.TopLevelItem.Foreground.Open}" />
+            </Style>
+        </Style>
+
+
+        <Style Selector="^:nth-child(1) /template/ Panel#Insetter">
+            <Setter Property="Margin" Value="12,0,0,0" />
+        </Style>
+        <Style Selector="^:nth-last-child(1) /template/ Panel#Insetter">
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+
+
+        <Style Selector="^:disabled">
+            <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource Menu.TopLevelItem.Foreground.Disabled}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type Menu}"
+                TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="{DynamicResource GroupBox.Header.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource GroupBox.Header.BorderBrush}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource ReCapTopLevelMenuItem}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                <rcui:AngledBorderEx x:Name="TopEdgeTrim"
+                                    Classes="activateColoration"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    StrokeThickness="1"
+                                    Padding="{TemplateBinding Padding}"
+
+                                    InvertSide="Bottom"
+
+                                    TopLeftCut="6"
+                                    TopRightCut="6"
+
+                                    TopLeftInset="18"
+                                    TopRightInset="18"
+
+                                    BottomLeftCut="6"
+                                    BottomRightCut="6"
+
+                                    Margin="0,0,0,-6" />
+                    <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    VerticalAlignment="Stretch"
+                                    KeyboardNavigation.TabNavigation="Continue" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

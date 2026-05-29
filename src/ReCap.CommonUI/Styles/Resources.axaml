@@ -12,6 +12,7 @@
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ComboBoxItem.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/GroupBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ListBoxItem.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Menu.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/RadioButton.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Window.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/TabControl.axaml" />
