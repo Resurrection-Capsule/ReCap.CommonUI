@@ -1,0 +1,157 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:Avalonia.Controls.Converters"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+    <ControlTheme x:Key="ReCapMenuScrollViewerLineButton"
+                TargetType="{x:Type RepeatButton}">
+		<Setter Property="Background" Value="{DynamicResource MenuItem.Background.Idle}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Idle}" />
+        <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Idle}" />
+		<Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel ClipToBounds="False">
+                    <Border x:Name="OuterGlow"
+                            Margin="0"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="0 0 4 0 #FFFFFFFF" />
+                    <rcui:AngledBorder x:Name="LayoutRoot"
+                                    Background="{TemplateBinding Background}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+									StrokeThickness="1"
+                                    InnerGlowColor="{DynamicResource MenuItem.Glow.Idle}"
+                                    InnerGlowSize="2" />
+                    <ContentPresenter x:Name="PART_ContentPresenter"
+									Background="Transparent"
+									BorderBrush="Transparent"
+									BorderThickness="0"
+									Content="{TemplateBinding Content}"
+									ContentTemplate="{TemplateBinding ContentTemplate}"
+									Padding="{TemplateBinding Padding}"
+									HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+									VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+
+
+
+        <Style Selector="^:pressed">
+            <Style Selector="^ /template/ rcui|AngledBorder#LayoutRoot">
+                <Setter Property="Background" Value="{DynamicResource MenuItem.Background.Pressed}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Pressed}" />
+                <Setter Property="InnerGlowColor" Value="{DynamicResource MenuItem.Glow.Pressed}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Pressed}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ rcui|AngledBorder#LayoutRoot">
+                <Setter Property="Background" Value="{DynamicResource MenuItem.Background.Hover}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Hover}" />
+                <Setter Property="InnerGlowColor" Value="{DynamicResource MenuItem.Glow.Hover}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Hover}" />
+            </Style>
+        </Style>
+
+
+        <Style Selector="^:disabled">
+            <Style Selector="^ /template/ rcui|AngledBorder#LayoutRoot">
+                <Setter Property="Background" Value="{DynamicResource MenuItem.Background.Disabled}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Disabled}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Disabled}" />
+            </Style>
+            <Style Selector="^ /template/ Border#OuterGlow">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+
+    <ControlTheme x:Key="ReCapMenuScrollViewer"
+                TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Background" Value="{DynamicResource ContextMenu.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ContextMenu.BorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ContextMenu.BorderThickness}" />
+        <Setter Property="CornerRadius" Value="0" />
+
+        <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
+        <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
+        <Setter Property="IsScrollChainingEnabled" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <rcui:DetectRootTransparencyControl>
+                    <Border x:Name="VisualRoot"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <DockPanel>
+                            <RepeatButton Command="{Binding LineUp, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Margin="4,4,4,8"
+                                        DockPanel.Dock="Top">
+                                <RepeatButton.IsVisible>
+                                    <MultiBinding Converter="{x:Static converters:MenuScrollingVisibilityConverter.Instance}"
+                                                    ConverterParameter="0">
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="VerticalScrollBarVisibility" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Offset.Y" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Extent.Height" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Viewport.Height" />
+                                    </MultiBinding>
+                                </RepeatButton.IsVisible>
+                                <Path RenderTransform="rotate(-90deg)" />
+                            </RepeatButton>
+                            <RepeatButton Command="{Binding LineDown, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Margin="4,8,4,4"
+                                        DockPanel.Dock="Bottom">
+                                <RepeatButton.IsVisible>
+                                    <MultiBinding Converter="{x:Static converters:MenuScrollingVisibilityConverter.Instance}"
+                                                ConverterParameter="100">
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="VerticalScrollBarVisibility" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Offset.Y" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Extent.Height" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Viewport.Height" />
+                                    </MultiBinding>
+                                </RepeatButton.IsVisible>
+                                <Path RenderTransform="rotate(90deg)" />
+                            </RepeatButton>
+                            <ScrollContentPresenter x:Name="PART_ContentPresenter">
+                                <ScrollContentPresenter.GestureRecognizers>
+                                    <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                                            CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}" />
+                                </ScrollContentPresenter.GestureRecognizers>
+                            </ScrollContentPresenter>
+                        </DockPanel>
+                    </Border>
+                </rcui:DetectRootTransparencyControl>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ RepeatButton">
+            <Setter Property="Theme" Value="{DynamicResource ReCapMenuScrollViewerLineButton}" />
+            <Setter Property="RenderTransform" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ RepeatButton > Path">
+            <Setter Property="Data" Value="{DynamicResource MenuItem.Arrow.Geometry}" />
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Height" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
+        </Style>
+
+
+        <Style Selector="^ /template/ rcui|DetectRootTransparencyControl:transparent :is(Control)#VisualRoot">
+            <Setter Property="Margin" Value="4" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

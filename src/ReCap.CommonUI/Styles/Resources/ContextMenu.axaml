@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Thickness x:Key="ContextMenu.ScrollViewer.Content.Margin">0</Thickness>
+	<Thickness x:Key="ContextMenu.BorderThickness">0</Thickness>
+
+
+	<ItemsPanelTemplate x:Key="ContextMenu.ItemsPanel">
+		<StackPanel x:Name="PART_ItemsPanel"
+					Spacing="-9"
+					ClipToBounds="False" />
+	</ItemsPanelTemplate>
+
+
+	<Color x:Key="ContextMenu.Background">#01000000</Color>
+    <Color x:Key="ContextMenu.BorderBrush">#00000000</Color>
+</ResourceDictionary>

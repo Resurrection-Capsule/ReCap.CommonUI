@@ -6,64 +6,6 @@ namespace ReCap.CommonUI.Demo.ViewModels
     public class SampleItemViewModel
         : ViewModelBase
     {
-        public static IEnumerable<SampleItemViewModel> CreateSampleItems(
-            int enabledCount, string enabledTitleFormat = "Item {0}"
-            , int disabledCount = 1
-        )
-            => CreateSampleItems(
-                enabledCount, enabledTitleFormat
-                , disabledCount, $"{enabledTitleFormat} but disabled"
-            );
-
-
-        static SampleItemViewModel CreateEnabledItem(string title)
-            => new()
-            {
-                Title = title,
-                Enabled = true,
-            };
-
-        static SampleItemViewModel CreateDisabledItem(string title)
-            => new()
-            {
-                Title = title,
-                Enabled = false,
-            };
-
-        public static IEnumerable<SampleItemViewModel> CreateSampleItems(
-            int enabledCount, string enabledTitleFormat,
-            int disabledCount, string disabledTitleFormat
-        )
-        {
-            List<SampleItemViewModel> items = new();
-
-            CreateSampleItemsInternal(ref items, 0, enabledCount, enabledTitleFormat, CreateEnabledItem);
-            CreateSampleItemsInternal(ref items, enabledCount, disabledCount, disabledTitleFormat, CreateDisabledItem);
-
-            return items;
-        }
-
-
-        static void CreateSampleItemsInternal<TSampleItemVM>(
-            ref List<TSampleItemVM> items
-            , int start, int count
-            , string titleFormat
-            , Func<string, TSampleItemVM> createItem
-        )
-            where TSampleItemVM
-                : SampleItemViewModel
-        {
-            for (int i = 0; i < count; i++)
-            {
-                string title = string.Format(titleFormat, i + start);
-                TSampleItemVM item = createItem(title);
-                items.Add(item);
-            }
-        }
-
-
-
-
         string _title = null;
         public string Title
         {
@@ -80,13 +22,110 @@ namespace ReCap.CommonUI.Demo.ViewModels
         }
 
 
+        bool _selected = false;
+        public bool Selected
+        {
+            get => _selected;
+            set => RASIC(ref _selected, value);
+        }
+
+
 
 
         public override Type GetViewType()
             => Views.ViewLocator.USE_TOSTRING;
 
 
-        public override string ToString()
+        public sealed override string ToString()
             => Title;
+
+
+
+        List<string> _propsFormatted = null;
+        public string ToString(bool extended)
+        {
+            if (!extended)
+                return ToString();
+
+            _propsFormatted = new();
+            GetPropertiesForToString();
+            
+
+            string propsJoined = string.Join(", ", _propsFormatted);
+            _propsFormatted = null;
+            return $"'{CleanString(Title)}' ({propsJoined})";
+        }
+
+
+        protected virtual void GetPropertiesForToString()
+        {
+            AddPropertyIf(!Enabled, $"!{nameof(Enabled)}");
+            AddPropertyIf(Selected, nameof(Selected));
+        }
+
+
+        protected void AddProperty(string name)
+            => AddPropertyInternal(name, null, false);
+        protected void AddProperty(string name, object value)
+            => AddPropertyInternal(name, value, true);
+
+        protected void AddPropertyIf(bool condition, string name)
+            => AddPropertyIfInternal(condition, name, null, false);
+        protected void AddPropertyIf(bool condition, string name, object value)
+            => AddPropertyIfInternal(condition, name, value, true);
+
+        protected void AddPropertyIf(Func<bool> condition, string name)
+            => AddPropertyIfInternal(condition(), name, null, false);
+        protected void AddPropertyIf(Func<bool> condition, string name, object value)
+            => AddPropertyIfInternal(condition(), name, value, true);
+
+
+        void AddPropertyIfInternal(bool condition, string name, object value, bool includeValue)
+        {
+            if (condition)
+                AddPropertyInternal(name, value, includeValue);
+        }
+
+
+        void AddPropertyInternal(string name, object value, bool includeValue)
+        {
+            string formatted = CleanString(name);
+            if (includeValue)
+                formatted = $"{formatted}: {GetValueString(value)}";
+
+            _propsFormatted.Add(formatted);
+        }
+
+
+
+
+        static string CleanString(string value)
+        {
+            if (value == null)
+                return "null";
+
+            int length = value.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (char.IsWhiteSpace(value[i]))
+                    return $"'{value}'";
+            }
+
+            return value;
+        }
+
+
+        static string GetValueString(object value)
+        {
+            string result;
+            if (value == null)
+                result = null;
+            if (value is string valStr)
+                result = valStr;
+            else
+                result = value.ToString();
+
+            return CleanString(result);
+        }
     }
 }

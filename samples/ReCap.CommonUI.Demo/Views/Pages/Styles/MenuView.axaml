@@ -1,22 +1,107 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.MenuView"
 			xmlns="https://github.com/avaloniaui"
-			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Menu VerticalAlignment="Top">
-		<MenuItem Header="File">
-			<MenuItem Header="Item 0" />
-			<MenuItem Header="Item 1" />
-			<MenuItem Header="Item 2" />
-			<MenuItem Header="Item 3" />
-			<MenuItem Header="Item 4 but disabled"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:v="clr-namespace:ReCap.CommonUI.Demo.Views;assembly=ReCap.CommonUI.Demo"
+            xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<UserControl.Styles>
+		<Style Selector=":is(Control)#SeparateWindowDemo:not(.in-main-view)">
+			<Setter Property="IsVisible" Value="False" />
+		</Style>
+		<Style Selector=":is(Control)#SeparateWindowDemo.in-main-view > Button#SeparateWindowDemoButton">
+			<Setter Property="IsEnabled" Value="False" />
+		</Style>
+
+
+		<Style Selector="MenuItem">
+			<Setter Property="Command" Value="{Binding $parent[UserControl].DataContext.ExecuteCommand, Mode=OneWay}" />
+			<Setter Property="CommandParameter" Value="{Binding $self, Mode=OneWay}" />
+		</Style>
+
+
+		<Style Selector="MenuItem > MenuItem.auto-group">
+			<Setter Property="ToggleType" Value="Radio" />
+			<Setter Property="GroupName" Value="{Binding $parent[MenuItem].Header, Mode=OneWay}" />
+		</Style>
+
+
+		<Style Selector=":is(ItemsControl).sample-items">
+			<Setter Property="ItemsSource" Value="{Binding SampleItems, Mode=OneWay}" />
+		</Style>
+		<Style Selector=":is(ItemsControl).sample-items > MenuItem">
+			<Setter Property="IsEnabled" Value="{Binding $self.DataContext.Enabled, Mode=OneWay}" />
+			<Setter Property="SelectingItemsControl.IsSelected" Value="{Binding $self.DataContext.Selected, Mode=OneWayToSource}" />
+			<Setter Property="ItemsSource" Value="{Binding $self.DataContext.ChildItems, Mode=OneWay}" />
+			<Setter Property="ToggleType" Value="{Binding $self.DataContext.ToggleType, Mode=OneWay}" />
+			<Setter Property="IsChecked" Value="{Binding $self.DataContext.IsChecked, Mode=TwoWay}" />
+			<Setter Property="GroupName" Value="{Binding $self.DataContext.GroupName, Mode=TwoWay}" />
+		</Style>
+	</UserControl.Styles>
+	<DockPanel HorizontalSpacing="8"
+			VerticalSpacing="8">
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="File">
+				<MenuItem Header="_Open"
+						InputGesture="Ctrl+O" />
+				<MenuItem Header="Open _recent..." >
+					<MenuItem Header="Recent file 1" />
+					<MenuItem Header="Recent file 2" />
+					<MenuItem Header="Recent file 3" />
+				</MenuItem>
+				<MenuItem Header="-" />
+				<MenuItem Header="_Save"
+						InputGesture="Ctrl+S" />
+				<MenuItem Header="Save _as..."
+						InputGesture="Ctrl+Shift+S" />
+				<MenuItem Header="-" />
+				<MenuItem Header="Self-_Destruct"
+						InputGesture="Ctrl+Alt+Shift+Delete"
+						IsEnabled="False" />
+				<MenuItem Header="_Close"
+						InputGesture="Ctrl+Q" />
+			</MenuItem>
+			<MenuItem Header="Edit"
+					Classes="sample-items" />
+			<MenuItem Header="View">
+				<MenuItem Header="View A"
+						Classes="auto-group" />
+				<MenuItem Header="View B"
+						Classes="auto-group" />
+				<MenuItem Header="View C"
+						Classes="auto-group" />
+				<MenuItem Header="-" />
+				<MenuItem Header="Show checkmark (1)"
+						ToggleType="CheckBox" />
+			</MenuItem>
+			<MenuItem Header="Tools">
+				<MenuItem Header="Show checkmark (2)"
+						ToggleType="CheckBox" />
+			</MenuItem>
+			<MenuItem Header="Help"
 					IsEnabled="False" />
-		</MenuItem>
-		<MenuItem Header="Edit">
-			<MenuItem Header="Item A" />
-			<MenuItem Header="-" />
-			<MenuItem Header="Item B" />
-		</MenuItem>
-		<MenuItem Header="View" />
-		<MenuItem Header="Help"
-				IsEnabled="False" />
-	</Menu>
+		</Menu>
+		<DockPanel DockPanel.Dock="Top">
+			<HeaderedContentControl x:Name="SeparateWindowDemo"
+									Header="Separate window"
+									Classes.in-main-view="{Binding $parent[v:UITestView], Converter={x:Static rcui:NullComparisonConverters.NotNull}, Mode=OneWay}">
+				<StackPanel Orientation="Vertical">
+					<TextBlock Text="Show in a separate window" />
+					<Button x:Name="SeparateWindowDemoButton"
+							Content="Show"
+							Click="SeparateWindowDemoButton_Click" />
+				</StackPanel>
+			</HeaderedContentControl>
+			<HeaderedContentControl Header="Context Menu">
+				<HeaderedContentControl.ContextMenu>
+					<ContextMenu Classes="sample-items" />
+				</HeaderedContentControl.ContextMenu>
+				<TextBlock Text="Right-click or long-press here." />
+			</HeaderedContentControl>
+		</DockPanel>
+		<Panel>
+			<TextBlock Text="{Binding SampleText, Mode=OneWay}"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					TextAlignment="Center" />
+		</Panel>
+	</DockPanel>
 </UserControl>

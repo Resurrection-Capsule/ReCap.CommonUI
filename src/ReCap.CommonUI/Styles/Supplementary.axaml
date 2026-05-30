@@ -7,8 +7,10 @@
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/HexagonRingProgressBar.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/RowBelowTabs.axaml" />
                 <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/InventoryTabs.axaml" />
+                <ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/MenuScrollViewer.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/HelixTabs.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/HelixWindow.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Supplementary/TopLevelMenuItem.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>

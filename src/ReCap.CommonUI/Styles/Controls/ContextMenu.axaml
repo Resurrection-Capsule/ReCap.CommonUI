@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
+                    x:ClassModifier="internal"
+					x:CompileBindings="True">
+    <ControlTheme x:Key="{x:Type ContextMenu}"
+                TargetType="{x:Type ContextMenu}">
+        <Setter Property="Background" Value="{DynamicResource ContextMenu.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ContextMenu.BorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ContextMenu.BorderThickness}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Idle}" />
+
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
+        <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
+        <Setter Property="MinWidth" Value="16" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="WindowManagerAddShadowHint" Value="False" />
+        <Setter Property="ItemsPanel" Value="{DynamicResource ContextMenu.ItemsPanel}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ScrollViewer Theme="{StaticResource ReCapMenuScrollViewer}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            MaxWidth="{TemplateBinding MaxWidth}"
+                            MinHeight="{TemplateBinding MinHeight}">
+                    <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                    Margin="{DynamicResource ContextMenu.ScrollViewer.Content.Margin}"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    Grid.IsSharedSizeScope="True"
+                                    ClipToBounds="False"
+                                    KeyboardNavigation.TabNavigation="Continue" />
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

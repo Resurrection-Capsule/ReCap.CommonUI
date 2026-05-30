@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type PopupRoot}"
+                TargetType="{x:Type PopupRoot}">
+        <Setter Property="Background" Value="{DynamicResource ContextMenu.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ContextMenu.BorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ContextMenu.BorderThickness}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Idle}" />
+        <Setter Property="TransparencyLevelHint" Value="Transparent" />
+		<Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
+		<Setter Property="FontSize" Value="12" />
+
+        <Setter Property="Inline.TextDecorations" Value="" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <LayoutTransformControl LayoutTransform="{TemplateBinding Transform}">
+                    <Panel>
+                        <Border x:Name="PART_TransparencyFallback"
+                                IsHitTestVisible="False" />
+                        <VisualLayerManager IsPopup="True">
+                            <ContentPresenter x:Name="PART_ContentPresenter"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="{TemplateBinding CornerRadius}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            Content="{TemplateBinding Content}"
+                                            Padding="{TemplateBinding Padding}" />
+                        </VisualLayerManager>
+                    </Panel>
+                </LayoutTransformControl>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
