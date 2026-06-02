@@ -4,6 +4,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 {
     public class TabControlViewModel
         : TabsViewModelBase
+        , IPopOutWindowProvider
     {
         public TabControlViewModel()
             : base()
@@ -16,5 +17,11 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
                 new("Tab 3", null),
             });
         }
+
+
+
+
+        public Avalonia.Controls.Window CreatePopOutWindow()
+            => new Views.Pages.PopOutWindow(this);
     }
 }

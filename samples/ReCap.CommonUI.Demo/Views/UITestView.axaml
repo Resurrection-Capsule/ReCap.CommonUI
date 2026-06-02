@@ -74,8 +74,7 @@
 						Spacing="4">
 				<Button x:Name="SeparateWindowDemoButton"
 						Content="Pop Out"
-						Command="{Binding PopOutCommand, Mode=OneWay}"
-						CommandParameter="{Binding SelectedContent, ElementName=Tabs, Mode=OneWay}" />
+						Command="{Binding PopOutCurrentTabCommand, Mode=OneWay}" />
 				<TextBlock Text="Show the current page in a separate window."
 						MaxWidth="{Binding #SeparateWindowDemoButton.Bounds.Width, Mode=OneWay}"
 						TextWrapping="Wrap" />

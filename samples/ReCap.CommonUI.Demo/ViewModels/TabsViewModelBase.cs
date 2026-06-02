@@ -53,6 +53,36 @@ namespace ReCap.CommonUI.Demo.ViewModels
         }
 
 
+        public bool TryGetTabAt(int idx, out PageTabViewModel tab)
+        {
+            if (IsTabIndexValid(idx))
+            {
+                tab = Tabs[idx];
+                return tab != null;
+            }
+            else
+            {
+                tab = null;
+                return false;
+            }
+        }
+
+
+        public bool TryGetTabContentAt(int idx, out ViewModelBase content)
+        {
+            if (TryGetTabAt(idx, out PageTabViewModel tab))
+            {
+                content = tab.ContentVM;
+                return content != null;
+            }
+            else
+            {
+                content = null;
+                return false;
+            }
+        }
+
+
         public TabsViewModelBase()
             : base()
         {}
