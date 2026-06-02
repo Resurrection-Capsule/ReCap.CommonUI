@@ -19,10 +19,12 @@ namespace ReCap.CommonUI.Demo
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
+                MainWindow mainWindow = new()
                 {
                     DataContext = new UITestViewModel(),
                 };
+                desktop.MainWindow = mainWindow;
+                PopOutWindowManager.Instance.MainWindow = mainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();
