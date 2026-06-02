@@ -24,6 +24,35 @@
         <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Assets/Font/Monospace#Ubuntu Mono</FontFamily>
 
 
+        <ControlTheme x:Key="HeaderlessGroupBox"
+                    TargetType="{x:Type ContentControl}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TabControl.Body.BorderBrush.Top}" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="ContentPresenter.RecognizesAccessKey" Value="False" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <rcui:AngledBorderEx Theme="{DynamicResource GroupBoxBodyBackground}"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="PART_ContentPresenter"
+                                            Background="Transparent"
+                                            BorderBrush="Transparent"
+                                            BorderThickness="0"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </rcui:AngledBorderEx>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+
+
         <ControlTheme x:Key="ResourceKeyDisplay"
                     TargetType="{x:Type HeaderedContentControl}">
             <Setter Property="Background" Value="#40000000" />
