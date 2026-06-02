@@ -7,6 +7,8 @@
 		<Setter Property="Background" Value="{DynamicResource MenuItem.Background.Idle}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Idle}" />
         <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Idle}" />
+		<Setter Property="FontFamily" Value="{DynamicResource ContextMenu.FontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource ContextMenu.FontSize}" />
 		<Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate>

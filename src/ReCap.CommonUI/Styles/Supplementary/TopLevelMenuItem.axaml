@@ -26,7 +26,9 @@
                                             ContentTemplate="{TemplateBinding HeaderTemplate}"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center"
-                                            Margin="{TemplateBinding Padding}" />
+                                            Margin="{TemplateBinding Padding}"
+		                                    FontFamily="{DynamicResource HeaderFont}"
+                                            RecognizesAccessKey="True" />
                             <Popup x:Name="PART_Popup"
                                 WindowManagerAddShadowHint="False"
                                 IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
@@ -34,6 +36,8 @@
 
                                 IsLightDismissEnabled="True"
                                 Placement="BottomEdgeAlignedLeft"
+                                HorizontalOffset="{DynamicResource Menu.TopLevelItem.Popup.HorizontalOffset}"
+                                VerticalOffset="{DynamicResource Menu.TopLevelItem.Popup.VerticalOffset}"
 
                                 OverlayInputPassThroughElement="{Binding $parent[Menu], Mode=OneWay}"
                                 MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">

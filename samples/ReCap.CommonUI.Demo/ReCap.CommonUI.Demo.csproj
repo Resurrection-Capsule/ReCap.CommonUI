@@ -17,5 +17,6 @@
 
 	<ItemGroup>
 		<AvaloniaResource Include="Assets/**/*.ttf" />
+		<AvaloniaResource Include="Assets/**/*.png" />
 	</ItemGroup>
 </Project>

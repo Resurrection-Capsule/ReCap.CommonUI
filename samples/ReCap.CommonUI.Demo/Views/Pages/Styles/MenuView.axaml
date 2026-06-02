@@ -4,19 +4,10 @@
 			xmlns:v="clr-namespace:ReCap.CommonUI.Demo.Views;assembly=ReCap.CommonUI.Demo"
             xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
 	<UserControl.Styles>
-		<Style Selector=":is(Control)#SeparateWindowDemo:not(.in-main-view)">
-			<Setter Property="IsVisible" Value="False" />
-		</Style>
-		<Style Selector=":is(Control)#SeparateWindowDemo.in-main-view > Button#SeparateWindowDemoButton">
-			<Setter Property="IsEnabled" Value="False" />
-		</Style>
-
-
 		<Style Selector="MenuItem">
 			<Setter Property="Command" Value="{Binding $parent[UserControl].DataContext.ExecuteCommand, Mode=OneWay}" />
 			<Setter Property="CommandParameter" Value="{Binding $self, Mode=OneWay}" />
 		</Style>
-
 
 		<Style Selector="MenuItem > MenuItem.auto-group">
 			<Setter Property="ToggleType" Value="Radio" />
@@ -39,7 +30,7 @@
 	<DockPanel HorizontalSpacing="8"
 			VerticalSpacing="8">
 		<Menu DockPanel.Dock="Top">
-			<MenuItem Header="File">
+			<MenuItem Header="_File">
 				<MenuItem Header="_Open"
 						InputGesture="Ctrl+O" />
 				<MenuItem Header="Open _recent..." >
@@ -55,13 +46,16 @@
 				<MenuItem Header="-" />
 				<MenuItem Header="Self-_Destruct"
 						InputGesture="Ctrl+Alt+Shift+Delete"
-						IsEnabled="False" />
+						IsEnabled="False">
+					<MenuItem Header="Immediately" />
+					<MenuItem Header="On timer..." />
+				</MenuItem>
 				<MenuItem Header="_Close"
 						InputGesture="Ctrl+Q" />
 			</MenuItem>
-			<MenuItem Header="Edit"
+			<MenuItem Header="_Edit"
 					Classes="sample-items" />
-			<MenuItem Header="View">
+			<MenuItem Header="_View">
 				<MenuItem Header="View A"
 						Classes="auto-group" />
 				<MenuItem Header="View B"
@@ -72,31 +66,28 @@
 				<MenuItem Header="Show checkmark (1)"
 						ToggleType="CheckBox" />
 			</MenuItem>
-			<MenuItem Header="Tools">
+			<MenuItem Header="_Tools">
 				<MenuItem Header="Show checkmark (2)"
 						ToggleType="CheckBox" />
+				<MenuItem Header="Show checkmark (3)"
+						ToggleType="CheckBox">
+					<MenuItem.Icon>
+						<Image Source="{DynamicResource TestIcon}"
+							Width="16"
+							Height="16" />
+					</MenuItem.Icon>
+				</MenuItem>
 			</MenuItem>
-			<MenuItem Header="Help"
+			<MenuItem Header="_Help"
 					IsEnabled="False" />
 		</Menu>
-		<DockPanel DockPanel.Dock="Top">
-			<HeaderedContentControl x:Name="SeparateWindowDemo"
-									Header="Separate window"
-									Classes.in-main-view="{Binding $parent[v:UITestView], Converter={x:Static rcui:NullComparisonConverters.NotNull}, Mode=OneWay}">
-				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Show in a separate window" />
-					<Button x:Name="SeparateWindowDemoButton"
-							Content="Show"
-							Click="SeparateWindowDemoButton_Click" />
-				</StackPanel>
-			</HeaderedContentControl>
-			<HeaderedContentControl Header="Context Menu">
-				<HeaderedContentControl.ContextMenu>
-					<ContextMenu Classes="sample-items" />
-				</HeaderedContentControl.ContextMenu>
-				<TextBlock Text="Right-click or long-press here." />
-			</HeaderedContentControl>
-		</DockPanel>
+		<HeaderedContentControl Header="Context Menu"
+								DockPanel.Dock="Top">
+			<HeaderedContentControl.ContextMenu>
+				<ContextMenu Classes="sample-items" />
+			</HeaderedContentControl.ContextMenu>
+			<TextBlock Text="Right-click or long-press here." />
+		</HeaderedContentControl>
 		<Panel>
 			<TextBlock Text="{Binding SampleText, Mode=OneWay}"
 					HorizontalAlignment="Stretch"

@@ -26,6 +26,10 @@
 
 
 
+    <x:Double x:Key="Menu.TopLevelItem.Popup.HorizontalOffset">-8</x:Double>
+    <x:Double x:Key="Menu.TopLevelItem.Popup.VerticalOffset">-8</x:Double>
+
+
     <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Idle" Color="#E0FFFFFF" />
 
 

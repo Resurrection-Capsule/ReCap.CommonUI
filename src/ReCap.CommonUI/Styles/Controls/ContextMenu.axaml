@@ -10,7 +10,8 @@
         <Setter Property="BorderThickness" Value="{DynamicResource ContextMenu.BorderThickness}" />
         <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Idle}" />
-
+		<Setter Property="FontFamily" Value="{DynamicResource ContextMenu.FontFamily}" />
+		<Setter Property="FontSize" Value="{DynamicResource ContextMenu.FontSize}" />
         <Setter Property="Focusable" Value="True" />
         <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
         <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />

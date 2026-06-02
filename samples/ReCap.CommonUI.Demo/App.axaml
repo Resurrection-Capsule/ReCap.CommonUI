@@ -21,6 +21,7 @@
         </Style>
     </Application.Styles>
     <Application.Resources>
+		<Bitmap x:Key="TestIcon">avares://ReCap.CommonUI.Demo/Assets/Icon/Test.png</Bitmap>
         <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Assets/Font/Monospace#Ubuntu Mono</FontFamily>
 
 

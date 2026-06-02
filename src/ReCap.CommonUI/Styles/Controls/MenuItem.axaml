@@ -36,15 +36,17 @@
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGT" />
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
                             </Grid.ColumnDefinitions>
-                            <ContentControl x:Name="PART_ToggleIconPresenter"
-                                            Theme="{DynamicResource ReCapMenuItemIconTheme}"
-                                            Margin="{DynamicResource MenuItem.IconPresenter.Margin}"
-                                            IsVisible="False"
-                                            Grid.Column="0" />
-
-                            <ContentControl x:Name="PART_IconPresenter"
-                                            Theme="{DynamicResource ReCapMenuItemIconTheme}"
-                                            Margin="{DynamicResource MenuItem.IconPresenter.Margin}"
+                            <Panel x:Name="ToggleGlyphContainer"
+                                Classes="icon-container"
+                                IsVisible="False"
+                                Grid.Column="0">
+                                <Path x:Name="ToggleGlyph"
+                                    Classes="glyph"
+                                    Fill="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}" />
+                            </Panel>
+                            <ContentControl x:Name="IconPresenter"
+                                            Classes="icon-container"
+                                            Foreground="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
                                             Content="{TemplateBinding Icon}"
                                             IsVisible="False"
                                             Grid.Column="1" />
@@ -55,21 +57,20 @@
                                             Foreground="{TemplateBinding Foreground}"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Center"
+                                            RecognizesAccessKey="True"
                                             Grid.Column="2" />
                             <TextBlock x:Name="PART_InputGestureText"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    Margin="{DynamicResource MenuItem.InputGestureText.Margin}"
                                     Text="{TemplateBinding InputGesture, Converter={x:Static rcui:PlatformKeyGestureConverter.Instance}}"
-                                    Foreground="{DynamicResource MenuItem.Accelerator.Foreground.Idle}"
+                                    Opacity="0.75"
+                                    Foreground="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
+                                    Margin="{DynamicResource MenuItem.InputGestureText.Margin}"
                                     Grid.Column="3" />
-                            <Path x:Name="PART_ChevronPath"
-                                Data="{DynamicResource MenuItem.Arrow.Geometry}"
-                                Stretch="Uniform"
-                                Fill="{DynamicResource MenuItem.Foreground.Idle}"
-                                Width="8"
-                                Height="8"
-                                VerticalAlignment="Center"
+                            <Path x:Name="ChevronPath"
+                                Classes="glyph"
+                                Data="{DynamicResource MenuItem.Chevron.Geometry}"
+                                Fill="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
                                 Margin="{DynamicResource MenuItem.Chevron.Margin}"
                                 Grid.Column="4" />
                         </Grid>
@@ -81,8 +82,9 @@
 
                         IsLightDismissEnabled="False"
                         Placement="RightEdgeAlignedTop"
+                        HorizontalOffset="{DynamicResource MenuItem.Popup.HorizontalOffset}"
+                        VerticalOffset="{DynamicResource MenuItem.Popup.VerticalOffset}"
 
-                        HorizontalOffset="{DynamicResource MenuFlyoutSubItemPopupHorizontalOffset}"
                         MinWidth="16">
                         <ScrollViewer Theme="{DynamicResource ReCapMenuScrollViewer}">
                             <ItemsPresenter x:Name="PART_ItemsPresenter"
@@ -95,13 +97,30 @@
                 </Panel>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^ /template/ :is(Control).icon-container">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="{DynamicResource MenuItem.ToggleGlyph.Margin}" />
+        </Style>
+        <Style Selector="^ /template/ Path.glyph">
+            <Setter Property="Width" Value="9" />
+            <Setter Property="Height" Value="9" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ ContentControl#IconPresenter">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                    Content="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Setter>
+        </Style>
 
-
-        <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
-            <Setter Property="RecognizesAccessKey" Value="True" />
-        </Style> 
-
-        <Style Selector="^:icon /template/ ContentControl#PART_IconPresenter">
+        <Style Selector="^:icon /template/ ContentControl#IconPresenter">
             <Setter Property="IsVisible" Value="True" />
         </Style>
 
@@ -118,12 +137,6 @@
             <Style Selector="^ ContentPresenter#PART_HeaderPresenter">
                 <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Hover}" />
             </Style>
-            <Style Selector="^ TextBlock#PART_InputGestureText">
-                <Setter Property="Foreground" Value="{DynamicResource MenuItem.Accelerator.Foreground.Hover}" />
-            </Style>
-            <Style Selector="^ Path#PART_ChevronPath">
-                <Setter Property="Fill" Value="{DynamicResource MenuItem.Foreground.Hover}" />
-            </Style>
             <Style Selector="^ Border#OuterGlow">
                 <Setter Property="BoxShadow" Value="0 0 4 0 #FFFFFFFF" />
             </Style>
@@ -138,16 +151,10 @@
             <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
                 <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Disabled}" />
             </Style>
-            <Style Selector="^ /template/ TextBlock#PART_InputGestureText">
-                <Setter Property="Foreground" Value="{DynamicResource MenuItem.Accelerator.Foreground.Disabled}" />
-            </Style>
-            <Style Selector="^ /template/ Path#PART_ChevronPath">
-                <Setter Property="Fill" Value="{DynamicResource MenuItem.Foreground.Disabled}" />
-            </Style>
         </Style>
 
 
-        <Style Selector="^:empty /template/ Path#PART_ChevronPath">
+        <Style Selector="^:empty /template/ Path#ChevronPath">
             <Setter Property="IsVisible" Value="False" />
         </Style>
 
@@ -161,30 +168,16 @@
             </Setter>
         </Style>
         
-        <Style Selector="^ /template/ Image#PART_ToggleIconImage">
-            <Setter Property="IsVisible" Value="True" />
+        <Style Selector="^:toggle, ^:radio">
+            <Style Selector="^:checked /template/ Panel#ToggleGlyphContainer">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
         </Style>
-
-        <Style Selector="^:checked:toggle /template/ ContentControl#PART_ToggleIconPresenter">
-            <Setter Property="IsVisible" Value="True" />
-            <Setter Property="Content">
-                <Template>
-                    <Path Width="16"
-                        Fill="{Binding $parent[MenuItem].Foreground}"
-                        Data="{DynamicResource CheckMarkPathData}" />
-                </Template>
-            </Setter>
+        <Style Selector="^:checked:toggle /template/ Path#ToggleGlyph">
+            <Setter Property="Data" Value="{DynamicResource CheckMarkPathData}" />
         </Style>
-        <Style Selector="^:checked:radio /template/ ContentControl#PART_ToggleIconPresenter">
-            <Setter Property="IsVisible" Value="True" />
-            <Setter Property="Content">
-                <Template>
-                    <Ellipse Margin="4"
-                            Width="8"
-                            Height="8"
-                            Fill="{Binding $parent[MenuItem].Foreground}" />
-                </Template>
-            </Setter>
+        <Style Selector="^:checked:radio /template/ Path#ToggleGlyph">
+            <Setter Property="Data" Value="{DynamicResource MenuItem.Radio.Geometry}" />
         </Style>
     </ControlTheme>
 
@@ -194,19 +187,5 @@
                 BasedOn="{StaticResource ReCapTopLevelMenuItem}">
         <Setter Property="Padding" Value="{DynamicResource HorizontalMenuFlyoutItemThemePaddingNarrow}" />
         <Setter Property="Margin" Value="{DynamicResource HorizontalMenuFlyoutItemMargin}" />
-    </ControlTheme>
-
-    <ControlTheme x:Key="ReCapMenuItemIconTheme"
-                TargetType="{x:Type ContentControl}">
-        <Setter Property="Width" Value="16" />
-        <Setter Property="Height" Value="16" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Template">
-            <ControlTemplate>
-                <ContentPresenter x:Name="PART_ContentPresenter"
-                                Content="{TemplateBinding Content}" />
-            </ControlTemplate>
-        </Setter>
     </ControlTheme>
 </ResourceDictionary>

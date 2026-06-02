@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Controls;
 
 namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 {
     public class MenuViewModel
-        : ViewModelBase
+        : PageViewModelBase
     {
         readonly IEnumerable<SampleMenuItemViewModel> _sampleItems = SampleItemFactory.CreateSampleItems<SampleMenuItemViewModel>(4);
         public IEnumerable<SampleMenuItemViewModel> SampleItems
@@ -26,14 +27,14 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 
         public void ExecuteCommand(object parameter)
         {
-            if (parameter is SampleMenuItemViewModel vm)
+            if (parameter is SampleItemViewModel vm)
                 ExecuteItemVM(vm);
             else if (parameter is MenuItem item)
                 ExecuteItem(item);
         }
 
 
-        public void ExecuteItemVM(SampleMenuItemViewModel item)
+        public void ExecuteItemVM(SampleItemViewModel item)
         {
             if (item != null)
                 SampleText = item.ToString(extended: true);
@@ -46,16 +47,18 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
                 return;
 
             var dc = item.DataContext;
-            if (dc is SampleMenuItemViewModel vm)
+            if (dc is SampleItemViewModel vm)
             {
                 ExecuteItemVM(vm);
                 return;
             }
+            /*
             else if (dc != null)
             {
                 SampleText = dc.ToString();
                 return;
             }
+            */
 
 
             var header = item.Header;
@@ -67,6 +70,16 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
             {
                 SampleText = item.ToString();
             }
+        }
+
+
+
+
+        static readonly Thickness _POPOUT_PADDING = new(2d);
+        protected override void CustomizePopOutWindow(ref Window window)
+        {
+            base.CustomizePopOutWindow(ref window);
+            window.Padding = _POPOUT_PADDING;
         }
     }
 }
