@@ -28,52 +28,59 @@
                                     InnerGlowColor="{DynamicResource MenuItem.Glow.Idle}"
                                     InnerGlowSize="0.5"
                                     Margin="4">
-                        <Grid Margin="{TemplateBinding Padding}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="ToggleIcon" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIcon" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGT" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
-                            </Grid.ColumnDefinitions>
-                            <Panel x:Name="ToggleGlyphContainer"
-                                Classes="icon-container"
-                                IsVisible="False"
-                                Grid.Column="0">
-                                <Path x:Name="ToggleGlyph"
-                                    Classes="glyph"
-                                    Fill="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}" />
-                            </Panel>
-                            <ContentControl x:Name="IconPresenter"
-                                            Classes="icon-container"
-                                            Foreground="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
-                                            Content="{TemplateBinding Icon}"
+                        <Panel>
+                            <rcui:AngledBorder x:Name="Flash"
+                                            Background="{DynamicResource MenuItem.Flash.Hover}"
+                                            CornerRadius="{Binding #LayoutRoot.CornerRadius, Mode=OneWay}"
                                             IsVisible="False"
-                                            Grid.Column="1" />
+                                            StrokeThickness="{Binding #LayoutRoot.StrokeThickness, Mode=OneWay}" />
+                            <Grid Margin="{TemplateBinding Padding}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ToggleIcon" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIcon" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGT" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
+                                </Grid.ColumnDefinitions>
+                                <Panel x:Name="ToggleGlyphContainer"
+                                    Classes="icon-container"
+                                    IsVisible="False"
+                                    Grid.Column="0">
+                                    <Path x:Name="ToggleGlyph"
+                                        Classes="glyph"
+                                        Fill="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}" />
+                                </Panel>
+                                <ContentControl x:Name="IconPresenter"
+                                                Classes="icon-container"
+                                                Foreground="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
+                                                Content="{TemplateBinding Icon}"
+                                                IsVisible="False"
+                                                Grid.Column="1" />
 
-                            <ContentPresenter x:Name="PART_HeaderPresenter"
-                                            Content="{TemplateBinding Header}"
-                                            ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                            Foreground="{TemplateBinding Foreground}"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Center"
-                                            RecognizesAccessKey="True"
-                                            Grid.Column="2" />
-                            <TextBlock x:Name="PART_InputGestureText"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Text="{TemplateBinding InputGesture, Converter={x:Static rcui:PlatformKeyGestureConverter.Instance}}"
-                                    Opacity="0.75"
-                                    Foreground="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
-                                    Margin="{DynamicResource MenuItem.InputGestureText.Margin}"
-                                    Grid.Column="3" />
-                            <Path x:Name="ChevronPath"
-                                Classes="glyph"
-                                Data="{DynamicResource MenuItem.Chevron.Geometry}"
-                                Fill="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
-                                Margin="{DynamicResource MenuItem.Chevron.Margin}"
-                                Grid.Column="4" />
-                        </Grid>
+                                <ContentPresenter x:Name="PART_HeaderPresenter"
+                                                Content="{TemplateBinding Header}"
+                                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center"
+                                                RecognizesAccessKey="True"
+                                                Grid.Column="2" />
+                                <TextBlock x:Name="PART_InputGestureText"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Text="{TemplateBinding InputGesture, Converter={x:Static rcui:PlatformKeyGestureConverter.Instance}}"
+                                        Opacity="0.75"
+                                        Foreground="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
+                                        Margin="{DynamicResource MenuItem.InputGestureText.Margin}"
+                                        Grid.Column="3" />
+                                <Path x:Name="ChevronPath"
+                                    Classes="glyph"
+                                    Data="{DynamicResource MenuItem.Chevron.Geometry}"
+                                    Fill="{Binding #PART_HeaderPresenter.Foreground, Mode=OneWay}"
+                                    Margin="{DynamicResource MenuItem.Chevron.Margin}"
+                                    Grid.Column="4" />
+                            </Grid>
+                        </Panel>
                     </rcui:AngledBorder>
                     <Popup x:Name="PART_Popup"
                         WindowManagerAddShadowHint="False"
@@ -82,8 +89,9 @@
 
                         IsLightDismissEnabled="False"
                         Placement="RightEdgeAlignedTop"
-                        HorizontalOffset="{DynamicResource MenuItem.Popup.HorizontalOffset}"
-                        VerticalOffset="{DynamicResource MenuItem.Popup.VerticalOffset}"
+                        rcui:PopupOffset.UseInversion="True"
+                        rcui:PopupOffset.HorizontalDistance="{DynamicResource MenuItem.Popup.HorizontalOffset}"
+                        rcui:PopupOffset.VerticalDistance="{DynamicResource MenuItem.Popup.VerticalOffset}"
 
                         MinWidth="16">
                         <ScrollViewer Theme="{DynamicResource ReCapMenuScrollViewer}">
@@ -119,6 +127,21 @@
                 </ControlTemplate>
             </Setter>
         </Style>
+        <Style Selector="^ /template/ rcui|AngledBorder#LayoutRoot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="{DynamicResource MenuItem.Transition.Duration}" />
+                    <BrushTransition Property="BorderBrush" Duration="{DynamicResource MenuItem.Transition.Duration}" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="{DynamicResource MenuItem.Transition.Duration}" />
+                </Transitions>
+            </Setter>
+        </Style>
 
         <Style Selector="^:icon /template/ ContentControl#IconPresenter">
             <Setter Property="IsVisible" Value="True" />
@@ -127,15 +150,47 @@
 
 
 
-        <!--  Listen for LayoutRoot:pointerover, so it will not be triggered when subitem is pressed  -->
-        <Style Selector="^:selected /template/ rcui|AngledBorder#LayoutRoot,
-                        ^ /template/ rcui|AngledBorder#LayoutRoot:pointerover">
+        <!-- Listen for :pointerover on #LayoutRoot instead of the MenuItem itself here, otherwise hovering over e.g. #PART_Popup would also be included. -->
+        <Style Selector="^ /template/ rcui|AngledBorder#LayoutRoot:pointerover">
             <Setter Property="Background" Value="{DynamicResource MenuItem.Background.Hover}" />
             <Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Hover}" />
             <Setter Property="InnerGlowColor" Value="{DynamicResource MenuItem.Glow.Hover}" />
 
             <Style Selector="^ ContentPresenter#PART_HeaderPresenter">
                 <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Hover}" />
+            </Style>
+            <Style Selector="^ Border#OuterGlow">
+                <Setter Property="BoxShadow" Value="0 0 4 0 #FFFFFFFF" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ /template/ rcui|AngledBorder#LayoutRoot:pointerover rcui|AngledBorder#Flash">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsVisible" Value="True" />
+            <Style.Animations>
+                <Animation Duration="{StaticResource MenuItem.Transition.Duration}"
+                        FillMode="None">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="25%">
+                        <Setter Property="Opacity" Value="1" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
+
+        <Style Selector="^:selected /template/ rcui|AngledBorder#LayoutRoot">
+            <Setter Property="Background" Value="{DynamicResource MenuItem.Background.Selected}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MenuItem.BorderBrush.Selected}" />
+            <Setter Property="InnerGlowColor" Value="{DynamicResource MenuItem.Glow.Selected}" />
+
+            <Style Selector="^ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Selected}" />
             </Style>
             <Style Selector="^ Border#OuterGlow">
                 <Setter Property="BoxShadow" Value="0 0 4 0 #FFFFFFFF" />

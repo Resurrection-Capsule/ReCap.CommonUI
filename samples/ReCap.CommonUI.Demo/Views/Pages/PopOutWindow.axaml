@@ -1,12 +1,14 @@
 <Window x:Class="ReCap.CommonUI.Demo.Views.Pages.PopOutWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vp="using:ReCap.CommonUI.Demo.Views.Pages"
         Width="640"
         Height="480"
         Padding="8">
     <Window.ContentTemplate>
         <DataTemplate>
-            <ScrollViewer Padding="24,12"
+            <ScrollViewer Width="{Binding Bounds.Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Panel}}, Mode=OneWay}"
+                        Height="{Binding Bounds.Height, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Panel}}, Mode=OneWay}"
                         HorizontalScrollBarVisibility="{Binding Path=Child.(ScrollViewer.HorizontalScrollBarVisibility), ElementName=PageContentPresenter, Mode=OneWay, FallbackValue=Disabled}"
                         VerticalScrollBarVisibility="{Binding Path=Child.(ScrollViewer.VerticalScrollBarVisibility), ElementName=PageContentPresenter, Mode=OneWay, FallbackValue=Auto}"
                         HorizontalContentAlignment="Stretch"
@@ -15,7 +17,7 @@
                                 Content="{Binding Mode=OneWay}"
                                 Focusable="False"
                                 IsTabStop="False"
-                                Margin="0"
+                                Margin="{Binding $parent[Window].Padding, Mode=OneWay}"
                                 Padding="0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"

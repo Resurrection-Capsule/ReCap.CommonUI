@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <x:Double x:Key="MenuItem.Popup.HorizontalOffset">-12</x:Double>
-    <x:Double x:Key="MenuItem.Popup.VerticalOffset">-4</x:Double>
+    <x:Double x:Key="MenuItem.Popup.HorizontalOffset">12</x:Double>
+    <x:Double x:Key="MenuItem.Popup.VerticalOffset">4</x:Double>
 
     <Thickness x:Key="MenuItem.ToggleGlyph.Margin">0,0,8,0</Thickness>
     <Thickness x:Key="MenuItem.InputGestureText.Margin">24,0,0,0</Thickness>
@@ -16,12 +16,6 @@
 		L 30 16
 		L 14 32 H 0
 		L 16 16 Z
-		<!--
-		M 0 0 H 11 L 24 13 L 11 26 H 0 L 13 13 Z
-		-->
-		<!--
-		M 1,0 10,10 l -9,10 -1,-1 L 8,10 -0,1 Z
-		-->
 	</StreamGeometry>
 	<EllipseGeometry x:Key="MenuItem.Radio.Geometry"
 					RadiusX="9"
@@ -29,6 +23,7 @@
 
 
 	<Thickness x:Key="MenuItem.Padding">4</Thickness>
+	<x:TimeSpan x:Key="MenuItem.Transition.Duration">0:0:0.2</x:TimeSpan>
 
 
 
@@ -36,25 +31,28 @@
 	<Color x:Key="MenuItem.BorderBrush.Idle">#E0C0C0C0</Color>
 	<Color x:Key="MenuItem.Glow.Idle">#40FFFFFF</Color>
 	<Color x:Key="MenuItem.Foreground.Idle">#FFA0B0BC</Color>
-	<Color x:Key="MenuItem.Accelerator.Foreground.Idle">#C0A0B0BC</Color>
 
 
 	<Color x:Key="MenuItem.Background.Hover">#FF8A9CAC</Color>
 	<Color x:Key="MenuItem.BorderBrush.Hover">#FFFFFFFF</Color>
 	<Color x:Key="MenuItem.Glow.Hover">#80FFFFFF</Color>
 	<Color x:Key="MenuItem.Foreground.Hover">#FFFDFDFD</Color>
-	<Color x:Key="MenuItem.Accelerator.Foreground.Hover">#C0FDFDFD</Color>
+	<Color x:Key="MenuItem.Flash.Hover">#80FFFFFF</Color>
+
+
+	<StaticResource x:Key="MenuItem.Background.Selected" ResourceKey="MenuItem.Background.Hover" />
+	<StaticResource x:Key="MenuItem.BorderBrush.Selected" ResourceKey="MenuItem.BorderBrush.Hover" />
+	<StaticResource x:Key="MenuItem.Glow.Selected" ResourceKey="MenuItem.Glow.Hover" />
+	<StaticResource x:Key="MenuItem.Foreground.Selected" ResourceKey="MenuItem.Foreground.Hover" />
 
 
 	<Color x:Key="MenuItem.Background.Pressed">#FF558CBA</Color>
 	<Color x:Key="MenuItem.BorderBrush.Pressed">#E0888888</Color>
 	<Color x:Key="MenuItem.Glow.Pressed">#9092EDFF</Color>
 	<Color x:Key="MenuItem.Foreground.Pressed">#FFFDFDFD</Color>
-	<Color x:Key="MenuItem.Accelerator.Foreground.Pressed">#C0FDFDFD</Color>
 
 
 	<Color x:Key="MenuItem.Background.Disabled">#FF595959</Color>
 	<Color x:Key="MenuItem.BorderBrush.Disabled">#E0B0B0B0</Color>
 	<Color x:Key="MenuItem.Foreground.Disabled">#FFAAAAAA</Color>
-	<Color x:Key="MenuItem.Accelerator.Foreground.Disabled">#C0AAAAAA</Color>
 </ResourceDictionary>

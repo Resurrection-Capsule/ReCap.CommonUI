@@ -13,14 +13,19 @@
             <ControlTemplate>
                 <Panel x:Name="LayoutRoot"
                     Background="#01000000">
-                    <Panel x:Name="Insetter">
+                    <Panel x:Name="Insetter"
+                        Classes.opened-upwards="{Binding (rcui:PopupOffset.IsVerticalInverted), ElementName=PART_Popup, Mode=OneWay}">
                         <Panel Margin="0,6,0,4">
                             <rcui:AngledBorder x:Name="BG"
                                             Background="{TemplateBinding Background}"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             StrokeThickness="1"
-                                            CornerRadius="{TemplateBinding CornerRadius}">
-                            </rcui:AngledBorder>
+                                            CornerRadius="{TemplateBinding CornerRadius}" />
+                            <rcui:AngledBorder x:Name="Flash"
+                                            IsVisible="False"
+                                            Opacity="0"
+                                            StrokeThickness="1"
+                                            CornerRadius="{TemplateBinding CornerRadius}" />
                             <ContentPresenter x:Name="PART_HeaderPresenter"
                                             Content="{TemplateBinding Header}"
                                             ContentTemplate="{TemplateBinding HeaderTemplate}"
@@ -36,8 +41,9 @@
 
                                 IsLightDismissEnabled="True"
                                 Placement="BottomEdgeAlignedLeft"
-                                HorizontalOffset="{DynamicResource Menu.TopLevelItem.Popup.HorizontalOffset}"
-                                VerticalOffset="{DynamicResource Menu.TopLevelItem.Popup.VerticalOffset}"
+                                rcui:PopupOffset.UseInversion="True"
+                                rcui:PopupOffset.HorizontalDistance="{DynamicResource Menu.TopLevelItem.Popup.HorizontalOffset}"
+                                rcui:PopupOffset.VerticalDistance="{DynamicResource Menu.TopLevelItem.Popup.VerticalOffset}"
 
                                 OverlayInputPassThroughElement="{Binding $parent[Menu], Mode=OneWay}"
                                 MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
@@ -56,13 +62,30 @@
         </Setter>
 
 
-        <Style Selector="^:selected /template/ Panel#LayoutRoot:pointerover">
+        <Style Selector="^:selected:not(:open) /template/ Panel#LayoutRoot:pointerover">
             <Style Selector="^ rcui|AngledBorder#BG">
                 <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Background.Hover}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource Menu.TopLevelItem.BorderBrush.Hover}" />
             </Style>
             <Style Selector="^ ContentPresenter#PART_HeaderPresenter">
                 <Setter Property="Foreground" Value="{DynamicResource Menu.TopLevelItem.Foreground.Hover}" />
+            </Style>
+            <Style Selector="^ rcui|AngledBorder#Flash">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Flash.Hover}" />
+                <Style.Animations>
+                    <Animation Duration="0:0:1"
+                            FillMode="None"
+                            IterationCount="Infinite"
+                            PlaybackDirection="Alternate">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="0" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
             </Style>
         </Style>
 
@@ -71,6 +94,26 @@
             <Style Selector="^ /template/ rcui|AngledBorder#BG">
                 <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Background.Open}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource Menu.TopLevelItem.BorderBrush.Open}" />
+            </Style>
+            <Style Selector="^ /template/ rcui|AngledBorder#Flash">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ Panel#Insetter:not(.opened-upwards)">
+                <Style Selector="^ > Panel > rcui|AngledBorder">
+                    <Setter Property="CornerRadius" Value="4,0,0,0" />
+                </Style>
+                <Style Selector="^ > Panel > rcui|AngledBorder#Flash">
+                    <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Flash.Open.Downward}" />
+                </Style>
+            </Style>
+            <Style Selector="^ /template/ Panel#Insetter.opened-upwards">
+                <Style Selector="^ > Panel > rcui|AngledBorder">
+                    <Setter Property="CornerRadius" Value="0,0,4,0" />
+                </Style>
+                <Style Selector="^ > Panel > rcui|AngledBorder#Flash">
+                    <Setter Property="Background" Value="{DynamicResource Menu.TopLevelItem.Flash.Open.Upward}" />
+                </Style>
             </Style>
             <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
                 <Setter Property="Foreground" Value="{DynamicResource Menu.TopLevelItem.Foreground.Open}" />

@@ -3,6 +3,9 @@
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			xmlns:v="clr-namespace:ReCap.CommonUI.Demo.Views;assembly=ReCap.CommonUI.Demo"
             xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<UserControl.Resources>
+		<x:String x:Key="ContextMenuText">Right-click or long-press here.</x:String>
+	</UserControl.Resources>
 	<UserControl.Styles>
 		<Style Selector="MenuItem">
 			<Setter Property="Command" Value="{Binding $parent[UserControl].DataContext.ExecuteCommand, Mode=OneWay}" />
@@ -15,8 +18,11 @@
 		</Style>
 
 
-		<Style Selector=":is(ItemsControl).sample-items">
+		<Style Selector=":is(ItemsControl).sample-items:not(.plenty)">
 			<Setter Property="ItemsSource" Value="{Binding SampleItems, Mode=OneWay}" />
+		</Style>
+		<Style Selector=":is(ItemsControl).sample-items.plenty">
+			<Setter Property="ItemsSource" Value="{Binding SamplePlentyOfItems, Mode=OneWay}" />
 		</Style>
 		<Style Selector=":is(ItemsControl).sample-items > MenuItem">
 			<Setter Property="IsEnabled" Value="{Binding $self.DataContext.Enabled, Mode=OneWay}" />
@@ -25,6 +31,11 @@
 			<Setter Property="ToggleType" Value="{Binding $self.DataContext.ToggleType, Mode=OneWay}" />
 			<Setter Property="IsChecked" Value="{Binding $self.DataContext.IsChecked, Mode=TwoWay}" />
 			<Setter Property="GroupName" Value="{Binding $self.DataContext.GroupName, Mode=TwoWay}" />
+		</Style>
+
+
+		<Style Selector="UniformGrid#ContextMenus > HeaderedContentControl">
+			<Setter Property="Content" Value="{DynamicResource ContextMenuText}" />
 		</Style>
 	</UserControl.Styles>
 	<DockPanel HorizontalSpacing="8"
@@ -53,8 +64,27 @@
 				<MenuItem Header="_Close"
 						InputGesture="Ctrl+Q" />
 			</MenuItem>
-			<MenuItem Header="_Edit"
-					Classes="sample-items" />
+			<MenuItem Header="_Edit">
+				<MenuItem Header="Undo"
+						InputGesture="Ctrl+Z" />
+				<MenuItem Header="Redo"
+						InputGesture="Ctrl+Y" />
+				<MenuItem Header="-" />
+				<MenuItem Header="Cut"
+						InputGesture="Ctrl+X"
+						IsEnabled="False" />
+				<MenuItem Header="Copy"
+						InputGesture="Ctrl+C"
+						IsEnabled="False" />
+				<MenuItem Header="Paste"
+						InputGesture="Ctrl+V" />
+				<MenuItem Header="Clear clipboard" />
+				<MenuItem Header="-" />
+				<MenuItem Header="Delete"
+						InputGesture="Delete" />
+				<MenuItem Header="-" />
+				<MenuItem Header="Open in Hero Editor" />
+			</MenuItem>
 			<MenuItem Header="_View">
 				<MenuItem Header="View A"
 						Classes="auto-group" />
@@ -81,13 +111,51 @@
 			<MenuItem Header="_Help"
 					IsEnabled="False" />
 		</Menu>
-		<HeaderedContentControl Header="Context Menu"
-								DockPanel.Dock="Top">
-			<HeaderedContentControl.ContextMenu>
-				<ContextMenu Classes="sample-items" />
-			</HeaderedContentControl.ContextMenu>
-			<TextBlock Text="Right-click or long-press here." />
-		</HeaderedContentControl>
+		<StackPanel Orientation="Vertical"
+					Spacing="8"
+					DockPanel.Dock="Top">
+			<HeaderedContentControl Header="Options">
+				<UniformGrid Columns="2"
+							ColumnSpacing="8"
+							RowSpacing="8">
+					<CheckBox Content="Show item quantity tests"
+							IsChecked="{Binding ShowPlentyOfItems, Mode=TwoWay}"
+							HorizontalAlignment="Left" />
+
+					<DockPanel HorizontalSpacing="8"
+							HorizontalAlignment="Left"
+							IsVisible="{Binding ShowPlentyOfItems, Mode=OneWay}">
+						<NumericUpDown Value="{Binding HowManyItemsIsPlenty, Mode=TwoWay}"
+									Minimum="0"
+									DockPanel.Dock="Right" />
+						<TextBlock Text="Item quantity test item count:"
+								VerticalAlignment="Center"
+								TextAlignment="Left" />
+					</DockPanel>
+				</UniformGrid>
+			</HeaderedContentControl>
+			<UniformGrid x:Name="ContextMenus"
+						RowSpacing="8"
+						ColumnSpacing="8"
+						DockPanel.Dock="Top">
+				<HeaderedContentControl Header="Context Menu">
+					<HeaderedContentControl.ContextMenu>
+						<ContextMenu Classes="sample-items" />
+					</HeaderedContentControl.ContextMenu>
+				</HeaderedContentControl>
+				<HeaderedContentControl Header="Comically-long Context Menu"
+										IsVisible="{Binding ShowPlentyOfItems, Mode=OneWay}">
+					<HeaderedContentControl.ContextMenu>
+						<ContextMenu Classes="sample-items plenty" />
+					</HeaderedContentControl.ContextMenu>
+				</HeaderedContentControl>
+			</UniformGrid>
+		</StackPanel>
+		<Menu DockPanel.Dock="Bottom"
+			IsVisible="{Binding ShowPlentyOfItems, Mode=OneWay}">
+			<MenuItem Header="Quantity"
+					Classes="sample-items plenty" />
+		</Menu>
 		<Panel>
 			<TextBlock Text="{Binding SampleText, Mode=OneWay}"
 					HorizontalAlignment="Stretch"

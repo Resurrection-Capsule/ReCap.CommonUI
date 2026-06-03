@@ -9,6 +9,8 @@
         <Setter Property="Foreground" Value="{DynamicResource MenuItem.Foreground.Idle}" />
 		<Setter Property="FontFamily" Value="{DynamicResource ContextMenu.FontFamily}" />
 		<Setter Property="FontSize" Value="{DynamicResource ContextMenu.FontSize}" />
+        <Setter Property="Margin" Value="4,0" />
+        <Setter Property="Padding" Value="{DynamicResource MenuItem.Padding}" />
 		<Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate>
@@ -88,6 +90,7 @@
         <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
         <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
         <Setter Property="IsScrollChainingEnabled" Value="False" />
+        <Setter Property="TextBlock.LineHeight" Value="23" />
         <Setter Property="Template">
             <ControlTemplate>
                 <rcui:DetectRootTransparencyControl>
@@ -98,7 +101,6 @@
                             CornerRadius="{TemplateBinding CornerRadius}">
                         <DockPanel>
                             <RepeatButton Command="{Binding LineUp, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Margin="4,4,4,8"
                                         DockPanel.Dock="Top">
                                 <RepeatButton.IsVisible>
                                     <MultiBinding Converter="{x:Static converters:MenuScrollingVisibilityConverter.Instance}"
@@ -112,7 +114,6 @@
                                 <Path RenderTransform="rotate(-90deg)" />
                             </RepeatButton>
                             <RepeatButton Command="{Binding LineDown, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Margin="4,8,4,4"
                                         DockPanel.Dock="Bottom">
                                 <RepeatButton.IsVisible>
                                     <MultiBinding Converter="{x:Static converters:MenuScrollingVisibilityConverter.Instance}"
@@ -142,9 +143,9 @@
             <Setter Property="RenderTransform" Value="{x:Null}" />
         </Style>
         <Style Selector="^ /template/ RepeatButton > Path">
-            <Setter Property="Data" Value="{DynamicResource MenuItem.Arrow.Geometry}" />
-            <Setter Property="Width" Value="12" />
-            <Setter Property="Height" Value="12" />
+            <Setter Property="Data" Value="{DynamicResource MenuItem.Chevron.Geometry}" />
+            <Setter Property="Width" Value="9" />
+            <Setter Property="Height" Value="9" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Stretch" Value="Uniform" />

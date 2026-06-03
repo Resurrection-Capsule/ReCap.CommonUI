@@ -1,9 +1,5 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<!--
-    <StaticResource x:Key="Menu.Background" ResourceKey="RowBelowTabs.Background" />
-    <StaticResource x:Key="Menu.BorderBrush" ResourceKey="RowBelowTabs.BorderBrush" />
-    -->
     <LinearGradientBrush x:Key="Menu.Background"
 						StartPoint="0%,0%"
 						EndPoint="0%,100%">
@@ -13,10 +9,6 @@
 	<LinearGradientBrush x:Key="Menu.BorderBrush"
 						StartPoint="0%,0%"
 						EndPoint="0%,100%">
-		<!--
-        <GradientStop Offset="0" Color="#1AFFFFFF" />
-		<GradientStop Offset="1" Color="#33FFFFFF" />
-        -->
         <GradientStop Offset="0" Color="#40FFFFFF" />
 		<GradientStop Offset="1" Color="#80FFFFFF" />
 	</LinearGradientBrush>
@@ -24,31 +16,44 @@
 
 
 
-    <x:Double x:Key="Menu.TopLevelItem.Popup.HorizontalOffset">-8</x:Double>
-    <x:Double x:Key="Menu.TopLevelItem.Popup.VerticalOffset">-8</x:Double>
+    <x:Double x:Key="Menu.TopLevelItem.Popup.HorizontalOffset">8</x:Double>
+    <x:Double x:Key="Menu.TopLevelItem.Popup.VerticalOffset">8</x:Double>
 
 
     <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Idle" Color="#E0FFFFFF" />
 
 
-    <SolidColorBrush x:Key="Menu.TopLevelItem.Background.Hover" Color="#4D000000" />
-    <SolidColorBrush x:Key="Menu.TopLevelItem.BorderBrush.Hover" Color="#27FFFFFF" />
-    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Hover" Color="#FFFFFFFF" />
-
-
-    <LinearGradientBrush x:Key="Menu.TopLevelItem.Background.Open"
+    <LinearGradientBrush x:Key="Menu.TopLevelItem.Background.Hover"
                         StartPoint="0%,0%"
                         EndPoint="0%,100%">
         <GradientStop Offset="0" Color="#64D5E1FE" />
         <GradientStop Offset="0" Color="#3596B5FD" />
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="Menu.TopLevelItem.BorderBrush.Open"
+    <LinearGradientBrush x:Key="Menu.TopLevelItem.BorderBrush.Hover"
                         StartPoint="0%,0%"
                         EndPoint="0%,100%">
         <GradientStop Offset="0" Color="#A4AAB1BF" />
         <GradientStop Offset="0" Color="#887A859C" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Open" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Hover" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="Menu.TopLevelItem.Flash.Hover" Color="#40FFFFFF" />
+
+
+    <StaticResource x:Key="Menu.TopLevelItem.Background.Open" ResourceKey="Menu.TopLevelItem.Background.Hover" />
+    <StaticResource x:Key="Menu.TopLevelItem.BorderBrush.Open" ResourceKey="Menu.TopLevelItem.BorderBrush.Hover" />
+    <StaticResource x:Key="Menu.TopLevelItem.Foreground.Open" ResourceKey="Menu.TopLevelItem.Foreground.Hover" />
+    <GradientStops x:Key="Menu.TopLevelItem.Flash.Open.Stops">
+        <GradientStop Offset="0.5" Color="#00FFFFFF" />
+        <GradientStop Offset="1" Color="#40FFFFFF" />
+    </GradientStops>
+    <LinearGradientBrush x:Key="Menu.TopLevelItem.Flash.Open.Downward"
+                        StartPoint="0%,0%"
+                        EndPoint="0%,100%"
+                        GradientStops="{StaticResource Menu.TopLevelItem.Flash.Open.Stops}" />
+    <LinearGradientBrush x:Key="Menu.TopLevelItem.Flash.Open.Upward"
+                        StartPoint="0%,100%"
+                        EndPoint="0%,0%"
+                        GradientStops="{StaticResource Menu.TopLevelItem.Flash.Open.Stops}" />
 
 
     <SolidColorBrush x:Key="Menu.TopLevelItem.Foreground.Disabled" Color="#80FFFFFF" />
