@@ -1,14 +1,15 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.MenuView"
+			x:Name="Root"
 			xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			xmlns:v="clr-namespace:ReCap.CommonUI.Demo.Views;assembly=ReCap.CommonUI.Demo"
             xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
-	<UserControl.Resources>
-		<x:String x:Key="ContextMenuText">Right-click or long-press here.</x:String>
-	</UserControl.Resources>
 	<UserControl.Styles>
-		<Style Selector="MenuItem">
-			<Setter Property="Command" Value="{Binding $parent[UserControl].DataContext.ExecuteCommand, Mode=OneWay}" />
+		<Style Selector=":is(UserControl)#Root :is(ItemsControl).sample-items MenuItem">
+			<Setter Property="ToggleType" Value="{Binding ToggleType, Mode=OneWay}" />
+			<Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+			<Setter Property="GroupName" Value="{Binding GroupName, Mode=TwoWay}" />
+			<Setter Property="Command" Value="{Binding #Root.DataContext.ExecuteCommand, Mode=OneWay, FallbackValue={x:Null}}" />
 			<Setter Property="CommandParameter" Value="{Binding $self, Mode=OneWay}" />
 		</Style>
 
@@ -18,29 +19,19 @@
 		</Style>
 
 
-		<Style Selector=":is(ItemsControl).sample-items:not(.plenty)">
-			<Setter Property="ItemsSource" Value="{Binding SampleItems, Mode=OneWay}" />
-		</Style>
 		<Style Selector=":is(ItemsControl).sample-items.plenty">
 			<Setter Property="ItemsSource" Value="{Binding SamplePlentyOfItems, Mode=OneWay}" />
-		</Style>
-		<Style Selector=":is(ItemsControl).sample-items > MenuItem">
-			<Setter Property="IsEnabled" Value="{Binding $self.DataContext.Enabled, Mode=OneWay}" />
-			<Setter Property="SelectingItemsControl.IsSelected" Value="{Binding $self.DataContext.Selected, Mode=OneWayToSource}" />
-			<Setter Property="ItemsSource" Value="{Binding $self.DataContext.ChildItems, Mode=OneWay}" />
-			<Setter Property="ToggleType" Value="{Binding $self.DataContext.ToggleType, Mode=OneWay}" />
-			<Setter Property="IsChecked" Value="{Binding $self.DataContext.IsChecked, Mode=TwoWay}" />
-			<Setter Property="GroupName" Value="{Binding $self.DataContext.GroupName, Mode=TwoWay}" />
 		</Style>
 
 
 		<Style Selector="UniformGrid#ContextMenus > HeaderedContentControl">
-			<Setter Property="Content" Value="{DynamicResource ContextMenuText}" />
+			<Setter Property="Content" Value="{DynamicResource RightClickCallToActionText}" />
 		</Style>
 	</UserControl.Styles>
 	<DockPanel HorizontalSpacing="8"
 			VerticalSpacing="8">
-		<Menu DockPanel.Dock="Top">
+		<Menu DockPanel.Dock="Top"
+			Classes="toggle">
 			<MenuItem Header="_File">
 				<MenuItem Header="_Open"
 						InputGesture="Ctrl+O" />

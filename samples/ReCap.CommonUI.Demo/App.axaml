@@ -29,10 +29,44 @@
             <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="0" />
         </Style>
+
+
+		<Style Selector="HeaderedContentControl.no-body">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="BorderBrush" Value="Transparent" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="Padding" Value="0" />
+		</Style>
+
+
+
+
+		<Style Selector=":is(ItemsControl).sample-items">
+			<Setter Property="ItemsSource" Value="{Binding SampleItems, Mode=OneWay}" />
+
+
+            <Style Selector="^ > :is(TemplatedControl):not(ScrollViewer),
+                            ^ > :is(ItemsControl) :is(TemplatedControl):not(ScrollViewer)">
+                <Setter Property="IsEnabled" Value="{Binding DataContext.IsEnabled, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}" />
+                <Setter Property="SelectingItemsControl.IsSelected" Value="{Binding DataContext.IsSelected, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}" />
+            </Style>
+
+            <Style Selector="^ > :is(ContentControl):not(ScrollViewer),
+                            ^ > :is(ItemsControl) :is(ContentControl):not(ScrollViewer)">
+                <Setter Property="Content" Value="{Binding Title, Mode=OneWay}" />
+            </Style>
+
+            <Style Selector="^ :is(ItemsControl)">
+                <Setter Property="ItemsSource" Value="{Binding ChildItems, Mode=OneWay}" />
+            </Style>
+		</Style>
     </Application.Styles>
     <Application.Resources>
 		<Bitmap x:Key="TestIcon">avares://ReCap.CommonUI.Demo/Assets/Icon/Test.png</Bitmap>
         <FontFamily x:Key="MonospaceFont">avares://ReCap.CommonUI.Demo/Assets/Font/Monospace#Ubuntu Mono</FontFamily>
+
+
+		<x:String x:Key="RightClickCallToActionText">Right-click or long-press here.</x:String>
 
 
         <ControlTheme x:Key="HeaderlessGroupBox"
@@ -47,12 +81,12 @@
                 <ControlTemplate>
                     <rcui:AngledBorderEx Theme="{DynamicResource GroupBoxBodyBackground}"
                                         Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        Padding="{TemplateBinding Padding}">
+                                        BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter x:Name="PART_ContentPresenter"
                                             Background="Transparent"
                                             BorderBrush="Transparent"
                                             BorderThickness="0"
+                                            Margin="{TemplateBinding Padding}"
                                             Content="{TemplateBinding Content}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
                                             Foreground="{TemplateBinding Foreground}"

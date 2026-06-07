@@ -41,7 +41,7 @@ namespace ReCap.CommonUI.Demo.ViewModels
             => new()
             {
                 Title = title,
-                Enabled = true,
+                IsEnabled = true,
             };
 
         static T CreateDisabledItem<T>(string title)
@@ -51,7 +51,7 @@ namespace ReCap.CommonUI.Demo.ViewModels
             => new()
             {
                 Title = title,
-                Enabled = false,
+                IsEnabled = false,
             };
 
 

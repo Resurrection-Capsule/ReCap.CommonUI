@@ -14,19 +14,19 @@ namespace ReCap.CommonUI.Demo.ViewModels
         }
 
 
-        bool _enabled = true;
-        public bool Enabled
+        bool _isEnabled = true;
+        public bool IsEnabled
         {
-            get => _enabled;
-            set => RASIC(ref _enabled, value);
+            get => _isEnabled;
+            set => RASIC(ref _isEnabled, value);
         }
 
 
-        bool _selected = false;
-        public bool Selected
+        bool _isSelected = false;
+        public bool IsSelected
         {
-            get => _selected;
-            set => RASIC(ref _selected, value);
+            get => _isSelected;
+            set => RASIC(ref _isSelected, value);
         }
 
 
@@ -59,8 +59,8 @@ namespace ReCap.CommonUI.Demo.ViewModels
 
         protected virtual void GetPropertiesForToString()
         {
-            AddPropertyIf(!Enabled, $"!{nameof(Enabled)}");
-            AddPropertyIf(Selected, nameof(Selected));
+            AddPropertyIf(!IsEnabled, $"!{nameof(IsEnabled)}");
+            AddPropertyIf(IsSelected, nameof(IsSelected));
         }
 
 

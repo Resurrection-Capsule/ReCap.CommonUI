@@ -3,14 +3,6 @@
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels">
 	<UserControl.Styles>
-		<Style Selector="ComboBox.sample-items">
-			<Setter Property="ItemsSource" Value="{Binding SampleItems, Mode=OneWay}" />
-		</Style>
-		<Style Selector="ComboBox.sample-items > ComboBoxItem">
-			<Setter Property="IsEnabled" Value="{Binding $self.DataContext.Enabled, Mode=OneWay}" />
-			<Setter Property="SelectingItemsControl.IsSelected" Value="{Binding $self.DataContext.Selected, Mode=OneWayToSource}" />
-		</Style>
-
 		<Style Selector="UniformGrid > HeaderedContentControl">
 			<Setter Property="Content" Value="{Binding $parent[UserControl].DataContext, Mode=OneWay}" />
 			<Setter Property="ContentTemplate">

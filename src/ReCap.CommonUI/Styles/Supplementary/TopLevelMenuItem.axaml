@@ -49,7 +49,7 @@
                                 MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
 								<ScrollViewer Theme="{StaticResource ReCapMenuScrollViewer}">
 									<ItemsPresenter x:Name="PART_ItemsPresenter"
-													Margin="{DynamicResource ContextMenu.ScrollViewer.Content.Margin}"
+													Margin="{DynamicResource ContextMenu.Padding}"
 													ItemsPanel="{TemplateBinding ItemsPanel}"
 													Grid.IsSharedSizeScope="True"
 													ClipToBounds="False" />

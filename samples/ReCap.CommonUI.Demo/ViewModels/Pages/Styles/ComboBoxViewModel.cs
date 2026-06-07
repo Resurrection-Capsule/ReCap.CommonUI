@@ -11,5 +11,13 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         {
             get => _sampleItems;
         }
+
+
+        int _selectedIndex = 0;
+        public int SelectedIndex
+        {
+            get => _selectedIndex;
+            set => RASIC(ref _selectedIndex, value);
+        }
     }
 }

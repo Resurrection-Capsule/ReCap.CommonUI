@@ -1,7 +1,13 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Thickness x:Key="ContextMenu.ScrollViewer.Content.Margin">0</Thickness>
+	<Thickness x:Key="ContextMenu.Padding">0</Thickness>
 	<Thickness x:Key="ContextMenu.BorderThickness">0</Thickness>
+
+	<x:Double x:Key="ContextMenu.MinWidth">16</x:Double>
+	<x:Double x:Key="ContextMenu.MinHeight">32</x:Double>
+	<x:Double x:Key="ContextMenu.MaxWidth">448</x:Double>
+
+	<StaticResource x:Key="ContextMenu.MinWidth.Horizontal" ResourceKey="ContextMenu.MinHeight"	/>
 
 
 	<ItemsPanelTemplate x:Key="ContextMenu.ItemsPanel">

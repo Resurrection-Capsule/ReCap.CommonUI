@@ -13,10 +13,10 @@
 		<Setter Property="FontFamily" Value="{DynamicResource ContextMenu.FontFamily}" />
 		<Setter Property="FontSize" Value="{DynamicResource ContextMenu.FontSize}" />
         <Setter Property="Focusable" Value="True" />
-        <Setter Property="MaxWidth" Value="{DynamicResource FlyoutThemeMaxWidth}" />
-        <Setter Property="MinHeight" Value="{DynamicResource MenuFlyoutThemeMinHeight}" />
-        <Setter Property="MinWidth" Value="16" />
-        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinWidth" Value="{DynamicResource ContextMenu.MinWidth}" />
+        <Setter Property="MinHeight" Value="{DynamicResource ContextMenu.MinHeight}" />
+        <Setter Property="MaxWidth" Value="{DynamicResource ContextMenu.MaxWidth}" />
+        <Setter Property="Padding" Value="{DynamicResource ContextMenu.Padding}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="WindowManagerAddShadowHint" Value="False" />
         <Setter Property="ItemsPanel" Value="{DynamicResource ContextMenu.ItemsPanel}" />
@@ -30,7 +30,7 @@
                             MaxWidth="{TemplateBinding MaxWidth}"
                             MinHeight="{TemplateBinding MinHeight}">
                     <ItemsPresenter x:Name="PART_ItemsPresenter"
-                                    Margin="{DynamicResource ContextMenu.ScrollViewer.Content.Margin}"
+                                    Margin="{TemplateBinding Padding}"
                                     ItemsPanel="{TemplateBinding ItemsPanel}"
                                     Grid.IsSharedSizeScope="True"
                                     ClipToBounds="False"

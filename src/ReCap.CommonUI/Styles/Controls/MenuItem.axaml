@@ -93,10 +93,10 @@
                         rcui:PopupOffset.HorizontalDistance="{DynamicResource MenuItem.Popup.HorizontalOffset}"
                         rcui:PopupOffset.VerticalDistance="{DynamicResource MenuItem.Popup.VerticalOffset}"
 
-                        MinWidth="16">
+                        MinWidth="{DynamicResource ContextMenu.MinWidth}">
                         <ScrollViewer Theme="{DynamicResource ReCapMenuScrollViewer}">
                             <ItemsPresenter x:Name="PART_ItemsPresenter"
-                                            Margin="{DynamicResource ContextMenu.ScrollViewer.Content.Margin}"
+                                            Margin="{DynamicResource ContextMenu.Padding}"
                                             ItemsPanel="{TemplateBinding ItemsPanel}"
                                             Grid.IsSharedSizeScope="True"
                                             ClipToBounds="False" />
@@ -242,5 +242,8 @@
                 BasedOn="{StaticResource ReCapTopLevelMenuItem}">
         <Setter Property="Padding" Value="{DynamicResource HorizontalMenuFlyoutItemThemePaddingNarrow}" />
         <Setter Property="Margin" Value="{DynamicResource HorizontalMenuFlyoutItemMargin}" />
+        <Style Selector="^ /template/ Popup#PART_Popup">
+            <Setter Property="MinWidth" Value="{DynamicResource ContextMenu.MinWidth.Horizontal}" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

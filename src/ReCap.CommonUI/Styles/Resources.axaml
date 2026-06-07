@@ -11,6 +11,7 @@
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ComboBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ComboBoxItem.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ContextMenu.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/FlyoutPresenter.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/GroupBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/ListBoxItem.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Menu.axaml" />

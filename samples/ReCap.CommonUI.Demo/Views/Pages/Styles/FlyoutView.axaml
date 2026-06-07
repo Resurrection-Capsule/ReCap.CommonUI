@@ -1,0 +1,122 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.FlyoutView"
+			x:Name="Root"
+			xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:v="clr-namespace:ReCap.CommonUI.Demo.Views;assembly=ReCap.CommonUI.Demo"
+            xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+    <UserControl.Styles>
+		<Style Selector=":is(UserControl)#Root :is(ItemsControl).sample-items MenuItem">
+			<Setter Property="ToggleType" Value="{Binding $self.DataContext.ToggleType, Mode=OneWay}" />
+			<Setter Property="IsChecked" Value="{Binding $self.DataContext.IsChecked, Mode=TwoWay}" />
+			<Setter Property="GroupName" Value="{Binding $self.DataContext.GroupName, Mode=TwoWay}" />
+			<Setter Property="Command" Value="{Binding #Root.DataContext.ExecuteCommand, Mode=OneWay, FallbackValue={x:Null}}" />
+			<Setter Property="CommandParameter" Value="{Binding $self, Mode=OneWay}" />
+		</Style>
+
+
+		<Style Selector="HeaderedContentControl > TextBlock,
+						StackPanel > TextBlock">
+			<Setter Property="TextWrapping" Value="Wrap" />
+		</Style>
+    </UserControl.Styles>
+    <UserControl.Resources>
+        <ControlTheme x:Key="SampleFlyoutContent"
+					TargetType="{x:Type ContentControl}">
+			<Setter Property="Background" Value="#40FF00FF" />
+			<Setter Property="BorderBrush" Value="Red" />
+			<Setter Property="BorderThickness" Value="4" />
+			<Setter Property="CornerRadius" Value="12" />
+			<Setter Property="Padding" Value="12" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<ContentPresenter x:Name="PART_ContentPresenter"
+									Content="{TemplateBinding Content}"
+									ContentTemplate="{TemplateBinding ContentTemplate}"
+									Margin="0"
+									Padding="0"
+									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+									HorizontalContentAlignment="Stretch"
+									VerticalContentAlignment="Stretch" />
+				</ControlTemplate>
+			</Setter>
+			<Setter Property="ContentTemplate">
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal"
+								Spacing="4">
+						<Border x:Name="ContentBorder"
+								Background="{Binding #Ctx.DataContext.Background, Mode=OneWay}"
+								BorderBrush="{Binding #Ctx.DataContext.BorderBrush, Mode=OneWay}"
+								BorderThickness="{Binding #Ctx.DataContext.BorderThickness, Mode=OneWay}"
+								CornerRadius="{Binding #Ctx.DataContext.CornerRadius, Mode=OneWay}"
+								Padding="{Binding #Ctx.DataContext.Padding, Mode=OneWay}">
+							<TextBlock Text="{Binding Mode=OneWay}"
+									TextWrapping="Wrap" />
+						</Border>
+						<Ellipse x:Name="Ctx"
+								DataContext="{Binding $parent[ContentControl], Mode=OneWay}"
+								Width="20"
+								VerticalAlignment="Stretch"
+								Stretch="Fill"
+								Fill="{Binding Background, Mode=OneWay}"
+								Stroke="{Binding BorderBrush, Mode=OneWay}"
+								StrokeThickness="4" />
+					</StackPanel>
+				</DataTemplate>
+			</Setter>
+		</ControlTheme>
+
+
+		<Flyout x:Key="SampleFlyout">
+			<ContentControl Content="Sample flyout"
+							Theme="{DynamicResource SampleFlyoutContent}" />
+		</Flyout>
+		<MenuFlyout x:Key="SampleMenuFlyoutWithInlineItems">
+            <MenuItem Header="Item 1">
+                <MenuItem Header="Subitem 1" />
+                <MenuItem Header="Subitem 2" />
+                <MenuItem Header="Subitem 3" />
+            </MenuItem>
+            <MenuItem Header="Item 2" InputGesture="Ctrl+A" />
+            <MenuItem Header="Item 3" />
+        </MenuFlyout>
+		<MenuFlyout x:Key="SampleMenuFlyoutWithBoundItems"
+					FlyoutPresenterClasses="sample-items"
+					ItemsSource="{Binding SampleItems, Mode=OneWay}" />
+    </UserControl.Resources>
+
+
+
+
+	<StackPanel Orientation="Vertical"
+				Spacing="20">
+		<HeaderedContentControl Header="Flyout"
+								ContextFlyout="{DynamicResource SampleFlyout}">
+			<TextBlock Text="{DynamicResource RightClickCallToActionText}" />
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="MenuFlyout"
+								Classes="no-body">
+			<HeaderedContentControl.Styles>
+				<Style Selector="UniformGrid > ContentControl">
+					<Setter Property="Theme" Value="{DynamicResource HeaderlessGroupBox}" />
+				</Style>
+			</HeaderedContentControl.Styles>
+			<UniformGrid Rows="1"
+						ColumnSpacing="1"
+						RowSpacing="1">
+				<ContentControl ContextFlyout="{DynamicResource SampleMenuFlyoutWithInlineItems}">
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="{DynamicResource RightClickCallToActionText}" />
+						<TextBlock Text="This MenuFlyout has items defined inline." />
+					</StackPanel>
+				</ContentControl>
+				<ContentControl ContextFlyout="{DynamicResource SampleMenuFlyoutWithBoundItems}">
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="{DynamicResource RightClickCallToActionText}" />
+						<TextBlock Text="This MenuFlyout has its ItemsSource property bound to a property of the ViewModel." />
+					</StackPanel>
+				</ContentControl>
+			</UniformGrid>
+		</HeaderedContentControl>
+	</StackPanel>
+</UserControl>

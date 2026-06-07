@@ -1,0 +1,50 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:ClassModifier="internal"
+                    x:CompileBindings="True">
+    <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}"
+                TargetType="{x:Type MenuFlyoutPresenter}">
+        <Setter Property="Background" Value="{DynamicResource ContextMenu.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ContextMenu.BorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ContextMenu.BorderThickness}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="{DynamicResource ContextMenu.Padding}" />
+        <Setter Property="MinHeight" Value="{DynamicResource FlyoutPresenter.MinHeight}" />
+        <Setter Property="MaxWidth" Value="{DynamicResource FlyoutPresenter.MaxWidth}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ItemsPanel" Value="{DynamicResource ContextMenu.ItemsPanel}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ScrollViewer Theme="{StaticResource ReCapMenuScrollViewer}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            MaxWidth="{TemplateBinding MaxWidth}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                            VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                    <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    Margin="{TemplateBinding Padding}"
+                                    Grid.IsSharedSizeScope="True"
+                                    KeyboardNavigation.TabNavigation="Continue"
+                                    ClipToBounds="False" />
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+
+    <ControlTheme x:Key="HorizontalMenuFlyoutPresenter"
+                TargetType="{x:Type MenuFlyoutPresenter}"
+                BasedOn="{StaticResource {x:Type MenuFlyoutPresenter}}">
+        <Setter Property="MinWidth" Value="{DynamicResource ContextMenu.MinWidth.Horizontal}" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
