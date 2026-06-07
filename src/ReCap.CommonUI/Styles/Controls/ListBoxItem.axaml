@@ -4,8 +4,9 @@
 	<ControlTheme x:Key="{x:Type ListBoxItem}"
 				TargetType="{x:Type ListBoxItem}">
 		<Setter Property="Background" Value="{DynamicResource ListBoxItem.Background.Idle}" />
-		<Setter Property="Padding" Value="8" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ListBoxItem.BorderBrush.Idle}" />
+		<Setter Property="Foreground" Value="{DynamicResource ListBoxItem.Foreground.Idle}" />
+		<Setter Property="Padding" Value="8" />
 		<Setter Property="CornerRadius" Value="4,0,4,0" />
 		<Setter Property="Template">
 			<ControlTemplate>
@@ -22,7 +23,7 @@
 											StrokeThickness="2"
 											CornerRadius="{TemplateBinding CornerRadius}"
 											InnerGlowSize="2"
-											InnerGlowColor="{DynamicResource ListBoxItem.Glow.Idle}"
+											InnerGlowColor="{DynamicResource ListBoxItem.InnerGlow.Idle}"
 											Margin="2" />
 							<ContentPresenter x:Name="PART_ContentPresenter"
 											Background="Transparent"
@@ -43,16 +44,43 @@
 			<Style Selector="^ /template/ rcui|AngledBorder#Edge">
 				<Setter Property="BorderBrush" Value="{DynamicResource ListBoxItem.BorderBrush.Hover}" />
 			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource ListBoxItem.Foreground.Hover}" />
+			</Style>
 		</Style>
 
 
 		<Style Selector="^:selected">
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource ListBoxItem.Background.Selected}" />
+				<Setter Property="InnerGlowColor" Value="{DynamicResource ListBoxItem.InnerGlow.Selected}" />
+			</Style>
 			<Style Selector="^:not(:pointerover) /template/ rcui|AngledBorder#Edge">
 				<Setter Property="BorderBrush" Value="{DynamicResource ListBoxItem.BorderBrush.Selected}" />
 			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource ListBoxItem.Foreground.Selected}" />
+			</Style>
+		</Style>
+
+
+		<Style Selector="^:disabled">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
-				<Setter Property="Background" Value="{DynamicResource ListBoxItem.Background.Selected}" />
-				<Setter Property="InnerGlowColor" Value="{DynamicResource ListBoxItem.Glow.Selected}" />
+				<Setter Property="Background" Value="{DynamicResource ListBoxItem.Background.Disabled}" />
+				<Setter Property="InnerGlowColor" Value="{DynamicResource ListBoxItem.InnerGlow.Disabled}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource ListBoxItem.Foreground.Disabled}" />
+			</Style>
+
+			<Style Selector="^:selected">
+				<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+					<Setter Property="Background" Value="{DynamicResource ListBoxItem.Background.Selected.Disabled}" />
+					<Setter Property="InnerGlowColor" Value="{DynamicResource ListBoxItem.InnerGlow.Selected.Disabled}" />
+				</Style>
+				<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+					<Setter Property="Foreground" Value="{DynamicResource ListBoxItem.Foreground.Selected.Disabled}" />
+				</Style>
 			</Style>
 		</Style>
 

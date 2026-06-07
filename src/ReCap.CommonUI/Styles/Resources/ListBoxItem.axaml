@@ -1,12 +1,35 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Color x:Key="ListBoxItem.Background.Idle">#FF0A121D</Color>
-	<Color x:Key="ListBoxItem.Glow.Idle">#9038566B</Color>
 	<Color x:Key="ListBoxItem.BorderBrush.Idle">#40FFFFFF</Color>
+	<Color x:Key="ListBoxItem.InnerGlow.Idle">#9038566B</Color>
+	<Color x:Key="ListBoxItem.Foreground.Idle">#C0FFFFFF</Color>
 
-	<Color x:Key="ListBoxItem.Background.Selected">#FF558CBA</Color>
-	<Color x:Key="ListBoxItem.Glow.Selected">#9092EDFF</Color>
-	<Color x:Key="ListBoxItem.BorderBrush.Selected">#80FFFFFF</Color>
+
+
 
 	<Color x:Key="ListBoxItem.BorderBrush.Hover">#C0FFFFFF</Color>
+	<Color x:Key="ListBoxItem.Foreground.Hover">#FFFFFFFF</Color>
+
+
+
+
+	<Color x:Key="ListBoxItem.Background.Selected">#FF558CBA</Color>
+	<Color x:Key="ListBoxItem.BorderBrush.Selected">#80FFFFFF</Color>
+	<Color x:Key="ListBoxItem.InnerGlow.Selected">#9092EDFF</Color>
+	<Color x:Key="ListBoxItem.Foreground.Selected">#FFFFFFFF</Color>
+
+
+
+
+	<Color x:Key="ListBoxItem.Background.Disabled">#FF181818</Color>
+	<Color x:Key="ListBoxItem.InnerGlow.Disabled">#90404040</Color>
+	<Color x:Key="ListBoxItem.Foreground.Disabled">#80FFFFFF</Color>
+
+
+
+
+	<Color x:Key="ListBoxItem.Background.Selected.Disabled">#FF4C4C4C</Color>
+	<Color x:Key="ListBoxItem.InnerGlow.Selected.Disabled">#90888888</Color>
+	<Color x:Key="ListBoxItem.Foreground.Selected.Disabled">#C0FFFFFF</Color>
 </ResourceDictionary>
