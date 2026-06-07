@@ -1,21 +1,86 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.ListBoxView"
             xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<StackPanel Orientation="Vertical" Spacing="20">
-		<ListBox SelectedIndex="0">
-			<ListBoxItem Content="Item 0" />
-			<ListBoxItem Content="Item 1" />
-			<ListBoxItem Content="Item 2" />
-			<ListBoxItem Content="Item 3" />
-			<ListBoxItem Content="Item 4 but disabled" IsEnabled="False" />
-		</ListBox>
-		<ListBox />
-		<ListBox SelectedIndex="0"
-				IsEnabled="False">
-			<ListBoxItem Content="Disabled item 0" />
-			<ListBoxItem Content="Disabled item 1" />
-			<ListBoxItem Content="Disabled item 2" />
-		</ListBox>
-		<ListBox IsEnabled="False" />
-	</StackPanel>
+	<UniformGrid Rows="2"
+				RowSpacing="20"
+				ColumnSpacing="20">
+		<UniformGrid.Styles>
+			<Style Selector="HeaderedContentControl > UniformGrid">
+				<Setter Property="Rows" Value="1" />
+				<Setter Property="RowSpacing" Value="8" />
+				<Setter Property="ColumnSpacing" Value="8" />
+
+				<Style Selector="^ > ContentControl">
+					<Setter Property="Theme" Value="{DynamicResource HeaderlessGroupBox}" />
+
+					<Style Selector="^ > StackPanel">
+						<Setter Property="Spacing" Value="8" />
+
+						<Style Selector="^ > TextBlock:nth-child(1)">
+							<Style Selector="^:not(:disabled)">
+								<Setter Property="Text" Value="Enabled" />
+							</Style>
+
+							<Style Selector="^:disabled">
+								<Setter Property="Text" Value="Disabled" />
+							</Style>
+						</Style>
+					</Style>
+				</Style>
+			</Style>
+		</UniformGrid.Styles>
+		<HeaderedContentControl Header="Inline items"
+								Classes="no-body">
+			<UniformGrid>
+				<ContentControl>
+					<StackPanel>
+						<TextBlock />
+						<ListBox SelectedIndex="0">
+							<ListBoxItem Content="Item 0" />
+							<ListBoxItem Content="Item 1" />
+							<ListBoxItem Content="Item 2" />
+							<ListBoxItem Content="Item 3" />
+							<ListBoxItem Content="Item 4 but disabled"
+										IsEnabled="False" />
+						</ListBox>
+					</StackPanel>
+				</ContentControl>
+				<ContentControl IsEnabled="False">
+					<StackPanel>
+						<TextBlock />
+						<ListBox SelectedIndex="0">
+							<ListBoxItem Content="Item 0" />
+							<ListBoxItem Content="Item 1" />
+							<ListBoxItem Content="Item 2" />
+							<ListBoxItem Content="Item 3" />
+							<ListBoxItem Content="Item 4 but disabled"
+										IsEnabled="False" />
+						</ListBox>
+					</StackPanel>
+				</ContentControl>
+			</UniformGrid>
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="Bound items"
+								Classes="no-body">
+			<UniformGrid>
+				<UniformGrid.Styles>
+					<Style Selector="ListBox">
+						<Setter Property="SelectedIndex" Value="{Binding SelectedIndex, Mode=TwoWay}" />
+					</Style>
+				</UniformGrid.Styles>
+				<ContentControl>
+					<StackPanel>
+						<TextBlock />
+						<ListBox Classes="sample-items selection" />
+					</StackPanel>
+				</ContentControl>
+				<ContentControl IsEnabled="False">
+					<StackPanel>
+						<TextBlock />
+						<ListBox Classes="sample-items selection" />
+					</StackPanel>
+				</ContentControl>
+			</UniformGrid>
+		</HeaderedContentControl>
+	</UniformGrid>
 </UserControl>
