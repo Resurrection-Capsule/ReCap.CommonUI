@@ -12,7 +12,9 @@
 		<ListBox />
 		<ListBox SelectedIndex="0"
 				IsEnabled="False">
-			<ListBoxItem Content="Disabled item" />
+			<ListBoxItem Content="Disabled item 0" />
+			<ListBoxItem Content="Disabled item 1" />
+			<ListBoxItem Content="Disabled item 2" />
 		</ListBox>
 		<ListBox IsEnabled="False" />
 	</StackPanel>
