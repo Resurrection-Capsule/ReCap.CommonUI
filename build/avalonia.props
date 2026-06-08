@@ -3,11 +3,16 @@
 		<AvVer>11.3.2</AvVer>
 	</PropertyGroup>
 
+	<!-- Library-safe Avalonia deps (ship in the ReCap.CommonUI package). -->
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvVer)" />
-		<PackageReference Include="Avalonia.Desktop" Version="$(AvVer)" />
-		<PackageReference Include="Avalonia.Diagnostics" Version="$(AvVer)" />
 		<PackageReference Include="Avalonia.ReactiveUI" Version="$(AvVer)" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvVer)" />
+	</ItemGroup>
+
+	<!-- App-host + dev tooling: executables only, never a dependency of the library package. -->
+	<ItemGroup Condition="'$(OutputType)' == 'Exe' or '$(OutputType)' == 'WinExe'">
+		<PackageReference Include="Avalonia.Desktop" Version="$(AvVer)" />
+		<PackageReference Include="Avalonia.Diagnostics" Version="$(AvVer)" />
 	</ItemGroup>
 </Project>
