@@ -27,6 +27,6 @@
 	<Import Project="../../build/editorconfig.props" />
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);WINDOWS_USE_SETWINDOWCOMPOSITIONATTRIBUTE;TITLEBAR2_CAPTIONBUTTONS;SEPARATE_INSET_PROPERTIES</DefineConstants>
+		<DefineConstants>$(DefineConstants);WINDOWS_USE_SETWINDOWCOMPOSITIONATTRIBUTE</DefineConstants>
 	</PropertyGroup>
 </Project>
