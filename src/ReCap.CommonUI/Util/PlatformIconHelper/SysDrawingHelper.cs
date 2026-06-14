@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Avalonia.Controls;
-using ReCap.CommonUI.Util.Win32;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 using AvBitmap = Avalonia.Media.Imaging.Bitmap;
 
@@ -47,7 +47,7 @@ namespace ReCap.CommonUI.Util
 
         public static bool TryGetIconInfo(IntPtr hIcon, out ICONINFO iconInfo)
         {
-            if ((hIcon != IntPtr.Zero) && Win32Methods.GetIconInfo(hIcon, out iconInfo))
+            if ((hIcon != IntPtr.Zero) && User32.GetIconInfo(hIcon, out iconInfo))
                 return true;
 
             iconInfo = default;
@@ -64,7 +64,7 @@ namespace ReCap.CommonUI.Util
 
         public static bool TryGetHIconViaMessage(IntPtr hWnd, WindowIconFromMessageParam size, double renderScaling, out IntPtr hIcon)
         {
-            hIcon = Win32Methods.SendMessage(hWnd, WindowMessage.GETICON, (IntPtr)size, (IntPtr)Helpers.RoundToInt(renderScaling * 96));
+            hIcon = User32.SendMessage(hWnd, WindowMessage.GETICON, (IntPtr)size, (IntPtr)Helpers.RoundToInt(renderScaling * 96));
             return IsIconValid(hIcon);
         }
 

@@ -5,7 +5,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using ReCap.CommonUI.Util;
-using ReCap.CommonUI.Util.Win32;
+using ReCap.CommonUI.Util.OperatingSystem;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -47,14 +48,25 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         static readonly bool _ACTUALLY_USE_WIN8_TRANSPARENCY_HACK = Win8_ActuallyUseTransparencyHack();
         static bool Win8_ActuallyUseTransparencyHack()
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!OSInfo.IsWindows)
+            {
+                // Not even running on Windows
                 return false;
+            }
 
             Version osVersion = OSInfo.Version;
-            if (osVersion.Major > 6)
+            if (osVersion.Major != 6)
+            {
+                // Windows 10 and 11 are both NT 10.0
+                // Windows Server 2003 and older are NT 5.x or lower
                 return false;
+            }
 
-            return osVersion >= (OSInfo.IsVersionDefinitelyAccurate ? _WIN8_0 : _WIN8_1);
+            Version win8xCompare = OSInfo.IsVersionDefinitelyAccurate
+                ? _WIN8_0
+                : _WIN8_1
+            ;
+            return osVersion >= win8xCompare;
         }
         static void EnableHackHintProperty_Changed(Window sender, AvaloniaPropertyChangedEventArgs e)
         {
@@ -84,8 +96,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 cxRightWidth = 0,
                 cyBottomHeight = 0,
             };
-            var ret = Win32Methods.DwmExtendFrameIntoClientArea(hWnd, ref margins);
-            Debug.WriteLine($"{nameof(Win32Methods.DwmExtendFrameIntoClientArea)}: {ret}");
+            var ret = DwmApi.DwmExtendFrameIntoClientArea(hWnd, ref margins);
+            Debug.WriteLine($"{nameof(DwmApi.DwmExtendFrameIntoClientArea)}: {ret}");
         }
         static void OnActualIsTransparentPropertyChanged(Window sender, bool newValue)
         {
@@ -121,7 +133,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             return SafeSetWindowCompositionAttribute(hWnd, ref data);
         }
         static bool SafeSetWindowCompositionAttribute(IntPtr hWnd, ref WindowCompositionAttributeData data)
-            => Win32Methods.SetWindowCompositionAttribute(hWnd, ref data) > 0;
+            => User32.SetWindowCompositionAttribute(hWnd, ref data) > 0;
 #endif
     }
 }

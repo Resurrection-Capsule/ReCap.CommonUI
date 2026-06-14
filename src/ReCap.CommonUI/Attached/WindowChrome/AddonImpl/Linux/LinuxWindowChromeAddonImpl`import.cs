@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using Avalonia.Controls;
 using Microsoft.Extensions.Configuration.Ini;
 using ReCap.CommonUI.Util;
 
@@ -92,7 +89,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 CaptionButtonRoles captionButtonsRolesL = ParseRolesGTK3(gtkCaptionButtonsStrL);
                 CaptionButtonRoles captionButtonsRolesR = ParseRolesGTK3(gtkCaptionButtonsStrR);
                 rolesPair = new(captionButtonsRolesL, captionButtonsRolesR);
-                Debug.WriteLine("CaptionButtons imported from GTK3!");
+                Console.WriteLine("CaptionButtons imported from GTK3!");
                 return true;
             }
 
@@ -155,7 +152,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                         }
                     ;
                     rolesPair = new(leftButtons, rightButtons);
-                    Debug.WriteLine("CaptionButtons imported from kwin!");
+                    Console.WriteLine("CaptionButtons imported from kwin!");
                     return true;
                 }
             }
@@ -166,7 +163,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        bool TryImportCaptionButtons(out CaptionButtonRolesPair imported)
+        public static bool TryImportCaptionButtons(out CaptionButtonRolesPair imported)
         {
 #if NO //DEBUG
             imported = DefaultWindowChromeAddonImpl.DefaultCaptionButtons_Default(this);

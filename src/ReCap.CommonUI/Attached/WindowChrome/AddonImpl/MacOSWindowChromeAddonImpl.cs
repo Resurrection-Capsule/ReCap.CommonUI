@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -46,12 +47,18 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             };
 
 
-        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
+        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
         {
             window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
+            bool useManagedChrome = default;
             DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
-                this, window, desiredManagedChrome, ref useManagedChrome
+                this, window, desiredManagedChrome
                 , fallbackToSystemDecorationsProperty: true
+                , value =>
+                {
+                    useManagedChrome = value;
+                    applyUseManagedChrome(value);
+                }
             );
 
             window.ExtendClientAreaChromeHints = useManagedChrome

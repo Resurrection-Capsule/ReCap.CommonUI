@@ -8,7 +8,7 @@ using Avalonia.Input;
 using Avalonia.VisualTree;
 using ReCap.CommonUI.Attached.WindowChrome;
 using ReCap.CommonUI.Util;
-using ReCap.CommonUI.Util.Win32;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {

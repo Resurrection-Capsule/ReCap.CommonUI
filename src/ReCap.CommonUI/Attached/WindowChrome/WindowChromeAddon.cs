@@ -1,30 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using ReCap.CommonUI.Util;
-using ReCap.CommonUI.Util.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
     public partial class WindowChromeAddon
         : AvaloniaObject
     {
-        static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatform<IWindowChromeAddonImpl>();
+        static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeAddonImpl>();
         static WindowChromeAddon()
         {
             EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
             ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
-            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(DesiredManagedChromeProperty_Changed);
-
             _IMPL.Init();
 
-#if WINDOWCHROMEADDON_PRINT_PROPERTY_CHANGES
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-
-            ManagedShowTitleProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-#endif
+            Dbg.DoChangedDebugOutput<Window>(EnableHackHintProperty, ManagedChromeHintProperty, ManagedShowTitleProperty);
             CaptionButtonsInit();
         }
 
@@ -86,16 +78,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        internal static readonly AttachedProperty<bool> DesiredManagedChromeProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("DesiredManagedChrome", false);
-        internal static bool GetDesiredManagedChrome(Window control)
-            => control.GetValue(DesiredManagedChromeProperty);
-        internal static void SetDesiredManagedChrome(Window control, bool value)
-            => control.SetValue(DesiredManagedChromeProperty, value);
-
-
-
-
         public static readonly AttachedProperty<bool> IsUsingManagedChromeProperty =
             AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("IsUsingManagedChrome", false);
         public static bool GetIsUsingManagedChrome(Window control)
@@ -130,31 +112,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        static void WindowChromeCosmeticProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
-        {
-#if WINDOWCHROMEADDON_PRINT_PROPERTY_CHANGES
-            Console.WriteLine($"WINDOW '{window.Title}' PROPERTY '{e.Property.Name}' CHANGED:");
-            Console.WriteLine($"    '{e.OldValue}' ==> '{e.NewValue}'");
-#endif
-        }
-
-
         static void EnableHackHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
             => UpdateManagedChrome(window);
 
 
         static void ManagedChromeHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
             => UpdateManagedChrome(window, e.GetNewValue<ManagedChromeMode>());
-
-
-        static void DesiredManagedChromeProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
-        {
-            bool newValue = e.GetNewValue<bool>();
-            bool isUsingManagedChrome = newValue;
-            _IMPL.ApplyDesiredManagedChrome(window, newValue, ref isUsingManagedChrome);
-
-            SetIsUsingManagedChrome(window, newValue);
-        }
 
 
 
@@ -165,7 +128,43 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         internal static void UpdateManagedChrome(Window window, ManagedChromeMode chromeMode)
         {
             bool useManagedChrome = _IMPL.GetDesiredManagedChrome(window, chromeMode);
-            SetDesiredManagedChrome(window, useManagedChrome);
+            SetDesiresManagedChrome(window, useManagedChrome);
+        }
+
+
+
+
+        static readonly Dictionary<Window, bool> _desiresManagedChrome = new();
+        static bool GetDesiresManagedChrome(Window window)
+            => _desiresManagedChrome[window];
+
+
+        static bool TryGetDesiresManagedChrome(Window window, out bool desiresManagedChrome)
+            => _desiresManagedChrome.TryGetValue(window, out desiresManagedChrome);
+
+
+        static void SetDesiresManagedChrome(Window window, bool desiresManagedChrome)
+        {
+            if (!_desiresManagedChrome.ContainsKey(window))
+                window.Closed += Window_Closed;
+
+            _desiresManagedChrome[window] = desiresManagedChrome;
+
+            _IMPL.ApplyDesiredManagedChrome(window, desiresManagedChrome
+                , v => SetIsUsingManagedChrome(window, v)
+            );
+        }
+
+
+        static void ClearChromeDesire(Window window)
+            => _desiresManagedChrome.Remove(window);
+
+
+        static void Window_Closed(object sender, EventArgs e)
+        {
+            Window window = (Window)sender;
+            window.Closed -= Window_Closed;
+            ClearChromeDesire(window);
         }
     }
 }

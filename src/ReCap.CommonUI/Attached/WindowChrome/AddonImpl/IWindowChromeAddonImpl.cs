@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
@@ -37,7 +38,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         bool GetDesiredManagedChrome(Window window, ManagedChromeMode chromeMode);
-        void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome);
+        void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome);
         void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e);
     }
 
@@ -61,6 +62,34 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         public static void ApplyDesiredManagedChrome_Default(
+            IWindowChromeAddonImpl impl, Window window, bool desiredManagedChrome
+            , bool fallbackToSystemDecorationsProperty
+            , Action<bool> applyUseManagedChrome
+        )
+        {
+            bool oldIsExtendedIntoWindowDecorations = window.IsExtendedIntoWindowDecorations;
+
+
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                if (fallbackToSystemDecorationsProperty)
+                {
+                    if (desiredManagedChrome && !window.IsExtendedIntoWindowDecorations)
+                        window.SystemDecorations = SystemDecorations.None;
+                    else if ((!desiredManagedChrome) && !oldIsExtendedIntoWindowDecorations)
+                        window.SystemDecorations = SystemDecorations.Full;
+                }
+
+
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    applyUseManagedChrome(window.IsExtendedIntoWindowDecorations || desiredManagedChrome);
+                });
+            });
+        }
+
+
+        public static void ApplyDesiredManagedChrome_Default_Old(
             IWindowChromeAddonImpl impl, Window window, bool desiredManagedChrome, ref bool useManagedChrome
             , bool fallbackToSystemDecorationsProperty
         )

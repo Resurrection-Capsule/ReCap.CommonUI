@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ReCap.CommonUI.Util;
-using ReCap.CommonUI.Util.Win32;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -145,14 +141,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         static void ExecuteWindowMenuDefaultItem(IntPtr hWnd)
         {
             //GetWindowMenu(hWnd);
-            Win32Methods.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)SystemCommand.DEFAULT, IntPtr.Zero);
+            User32.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)SystemCommand.DEFAULT, IntPtr.Zero);
         }
 
         static IntPtr GetWindowMenu(IntPtr hWnd)
         {
-            IntPtr hMenu = Win32Methods.GetSystemMenu(hWnd, false);
+            IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
             /*
-            Win32Methods.EnableMenuItem(hMenu, 5, MenuItemEnablementFlags.BYPOSITION | MenuItemEnablementFlags.ENABLED);
+            User32.EnableMenuItem(hMenu, 5, MenuItemEnablementFlags.BYPOSITION | MenuItemEnablementFlags.ENABLED);
             */
             return hMenu;
         }
@@ -167,13 +163,13 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static void ShowWindowMenu(IntPtr hWnd, PixelPoint pxPoint)
         {
-            //Win32Methods.SendMessage(hWnd, WindowMessage.SYSCOMMAND, new(0xF090), MakeParam(pxPoint));
+            //User32.SendMessage(hWnd, WindowMessage.SYSCOMMAND, new(0xF090), MakeParam(pxPoint));
 
             IntPtr hMenu = GetWindowMenu(hWnd);
-            int menuIdentifier = Win32Methods.TrackPopupMenu(hMenu, _MENU_FLAGS, pxPoint.X, pxPoint.Y, 0, hWnd, IntPtr.Zero);
+            int menuIdentifier = User32.TrackPopupMenu(hMenu, _MENU_FLAGS, pxPoint.X, pxPoint.Y, 0, hWnd, IntPtr.Zero);
 
             if (menuIdentifier != 0)
-                Win32Methods.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)menuIdentifier, IntPtr.Zero);
+                User32.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)menuIdentifier, IntPtr.Zero);
         }
 
 
@@ -295,12 +291,24 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         */
 
 
-        public void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
+        public void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
         {
             window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
+            /*
             DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
                 this, window, desiredManagedChrome, ref useManagedChrome
                 , fallbackToSystemDecorationsProperty: false
+            );
+            */
+            bool useManagedChrome = default;
+            DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
+                this, window, desiredManagedChrome
+                , fallbackToSystemDecorationsProperty: false
+                , value =>
+                {
+                    useManagedChrome = value;
+                    applyUseManagedChrome(value);
+                }
             );
 
             if (useManagedChrome)

@@ -12,7 +12,7 @@ namespace ReCap.CommonUI.Util
 {
     public static partial class PlatformIconHelper
     {
-        static readonly IPlatformIconHelperImpl _IMPL = PlatformUtils.GetForPlatform<IPlatformIconHelperImpl>();
+        static readonly IPlatformIconHelperImpl _IMPL = PlatformUtils.GetForPlatformByNameMatch<IPlatformIconHelperImpl>();
 
 
         public static bool TryGetIconVariants(this Window window, out IAvBitmapsEnumerable variants, bool fallbackToAppIcon = true)

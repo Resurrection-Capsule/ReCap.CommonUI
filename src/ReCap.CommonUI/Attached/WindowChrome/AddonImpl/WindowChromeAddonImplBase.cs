@@ -54,7 +54,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => DefaultWindowChromeAddonImpl.GetDesiredManagedChrome_Default(this, window, chromeMode);
 
 
-        public abstract void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome);
+        public abstract void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome);
 
 
 
@@ -64,15 +64,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         {
             get => _validCaptionButtonRoles;
         }
-        /*
-        protected virtual IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles()
-            => new List<CaptionButtonRole>()
-            {
-                CaptionButtonRole.Minimize,
-                CaptionButtonRole.Maximize,
-                CaptionButtonRole.Close,
-            };
-        */
         protected abstract IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles();
         public virtual void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e)
         {

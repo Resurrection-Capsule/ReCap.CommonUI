@@ -146,19 +146,45 @@ namespace ReCap.CommonUI.Util.Reflection
         */
 
 
-        internal static T CreateInstance<T>(Type implType)
+        internal const bool DEFAULT_CreateInstance_nonPublic = false;
+        internal static T CreateInstance<T>(Type type, bool nonPublic = DEFAULT_CreateInstance_nonPublic)
         {
-            object implObj = Activator.CreateInstance(implType);
-            if (implObj is T tImpl)
-                return tImpl;
+            object obj;
+            Exception exception;
+            try
+            {
+                obj = Activator.CreateInstance(type, nonPublic);
+                if (obj is T typedObj)
+                    return typedObj;
 
-            string implTypeName
-                //= implObj?.GetType().FullName ?? "null";
-                = (implObj != null)
-                    ? implObj.GetType().FullName
-                    : "null"
-                ;
-            throw new InvalidCastException($"'{implTypeName}' is not assignable to '{typeof(T).FullName}'!");
+                exception = null;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                obj = null;
+            }
+
+
+            string paramTypeName = typeof(T).FullName;
+            string msg;
+            if (obj == null)
+            {
+                msg = $"Could not create instance of type {paramTypeName}!";
+                if (exception != null)
+                    throw new NullReferenceException(msg, exception);
+                else
+                    throw new NullReferenceException(msg);
+            }
+            else
+            {
+                string objTypeName = obj.GetType().FullName;
+                msg = $"'{objTypeName}' is not assignable to '{paramTypeName}'!";
+                if (exception != null)
+                    throw new InvalidCastException(msg, exception);
+                else
+                    throw new InvalidCastException(msg);
+            }
         }
     }
 }

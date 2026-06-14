@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.VisualTree;
 using ReCap.CommonUI.Util;
-using ReCap.CommonUI.Util.Win32;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {

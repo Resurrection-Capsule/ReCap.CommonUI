@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.VisualTree;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -37,11 +37,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         public static double GetLeftCaptionButtonsWidth(Window control)
             => control.GetValue(LeftCaptionButtonsWidthProperty);
         internal static void SetLeftCaptionButtonsWidth(Window control, double value)
-        {
-            double prev = GetLeftCaptionButtonsWidth(control);
-            control.SetValue(LeftCaptionButtonsWidthProperty, value);
-            Debug.WriteLine($"{nameof(SetLeftCaptionButtonsWidth)}() {prev} => {value}");
-        }
+            => control.SetValue(LeftCaptionButtonsWidthProperty, value);
 
 
         public static readonly AttachedProperty<double> RightCaptionButtonsWidthProperty =
@@ -63,10 +59,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static void CaptionButtonsInit()
         {
-#if WINDOWCHROMEADDON_PRINT_PROPERTY_CHANGES
-            LeftCaptionButtonsProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            RightCaptionButtonsProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-#endif
+            Dbg.DoChangedDebugOutput<Window>(LeftCaptionButtonsProperty, RightCaptionButtonsProperty);
         }
 
 
@@ -129,7 +122,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        //public CaptionButtonClickEventArgs(CaptionButton captionButton, PointerEventArgs baseArgs)
         public CaptionButtonClickEventArgs(Visual visual, CaptionButtonRole role, bool pressed, PointerEventArgs baseArgs)
         {
             Visual = visual;

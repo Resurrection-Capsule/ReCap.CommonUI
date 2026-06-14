@@ -6,7 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Linq;
 using Avalonia.Controls;
-using ReCap.CommonUI.Util.Win32;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 using Avalonia;
 
 using AvBitmap = Avalonia.Media.Imaging.Bitmap;
@@ -83,7 +83,7 @@ namespace ReCap.CommonUI.Util
                 throw new FileNotFoundException("Executable not found!", fileName: exePath);
 #endif
 
-            uint extractIconExResult = Win32Methods.ExtractIconEx(exePath, 0, out hLargeIcon, out hSmallIcon, 1);
+            uint extractIconExResult = Shell32.ExtractIconEx(exePath, 0, out hLargeIcon, out hSmallIcon, 1);
             return extractIconExResult > 0; // ?????
         }
         /*
@@ -181,7 +181,7 @@ namespace ReCap.CommonUI.Util
                 int lastWin32Error = Marshal.GetLastWin32Error();
                 string message = string.Join("\n", new[]
                 {
-                    $"{nameof(Win32Methods.ExtractIconEx)} => {extractIconExResult}",
+                    $"{nameof(Shell32.ExtractIconEx)} => {extractIconExResult}",
                     $"{nameof(hIcon)} == {nameof(IntPtr)}.{nameof(IntPtr.Zero)}",
                     $"{nameof(Marshal)}.{nameof(Marshal.GetLastWin32Error)}() => {lastWin32Error}",
                 });

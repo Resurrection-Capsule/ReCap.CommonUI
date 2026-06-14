@@ -1,22 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
 
-
-namespace ReCap.CommonUI.Util.Win32
+namespace ReCap.CommonUI.Util.OperatingSystem.Win32
 {
-    internal static partial class Win32Structures
+    internal static partial class StructExtensions
     {
-        internal static readonly Guid IID_IMAGE_LIST = new("46EB5926-582E-4017-9FDF-E8998DAA0950");
-
-
-
-
         public static IntPtr ToWMParam(this POINT point)
         {
             //https://social.msdn.microsoft.com/Forums/vstudio/en-US/d9965d14-34ac-48ee-ae4f-85cee689cc33/how-to-make-lparam?forum=vbgeneral
