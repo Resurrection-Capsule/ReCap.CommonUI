@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.Styles.TabStripView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels"
+			xmlns:vps="using:ReCap.CommonUI.Demo.Views.Pages.Styles">
+	<UserControl.Styles>
+		<Style Selector="TabStrip">
+			<Setter Property="ItemsSource" Value="{Binding Tabs, Mode=OneWay}" />
+			<Setter Property="SelectedIndex" Value="{Binding SelectedIndex, Mode=TwoWay}" />
+
+			<Setter Property="ItemTemplate">
+				<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+					<TextBlock Text="{Binding Title, Mode=OneWay}" />
+				</DataTemplate>
+			</Setter>
+		</Style>
+	</UserControl.Styles>
+	<DockPanel VerticalSpacing="20">
+		<TabStrip DockPanel.Dock="Top" />
+
+		<!-- NYI -->
+		<StackPanel Orientation="Vertical"
+					Spacing="20"
+					IsVisible="False">
+			<StackPanel.Styles>
+				<Style Selector="TabStrip.supplementaryStyle">
+					<Setter Property="ItemTemplate">
+						<DataTemplate DataType="{x:Type vm:PageTabViewModel}">
+							<TextBlock Text="{Binding Title, Mode=OneWay}" />
+						</DataTemplate>
+					</Setter>
+				</Style>
+
+				<Style Selector="ContentControl.demoBelowTabs">
+					<Setter Property="Theme" Value="{DynamicResource RowBelowTabs}" />
+					<Setter Property="DockPanel.Dock" Value="Top" />
+					<Setter Property="ContentTemplate">
+						<DataTemplate>
+							<DockPanel IsHitTestVisible="False"
+									LastChildFill="False">
+								<Button Content="Sample content"
+										Focusable="False"
+										IsTabStop="False"
+										Classes="right"
+										DockPanel.Dock="Left" />
+								<Button Content="Sample content"
+										Focusable="False"
+										IsTabStop="False"
+										Classes="left"
+										DockPanel.Dock="Right" />
+							</DockPanel>
+						</DataTemplate>
+					</Setter>
+				</Style>
+			</StackPanel.Styles>
+
+
+			<HeaderedContentControl Header="Helix-style tabs">
+				<TabStrip Theme="{DynamicResource HelixTabStrip}"
+						Classes="supplementaryStyle">
+					<TabStrip.Resources>
+						<x:String x:Key="ThemeKey">HelixTabStrip</x:String>
+					</TabStrip.Resources>
+				</TabStrip>
+			</HeaderedContentControl>
+
+			<HeaderedContentControl Header="Inventory-style tabs">
+				<TabStrip Theme="{DynamicResource InventoryTabStrip}"
+						Classes="supplementaryStyle">
+					<TabStrip.Resources>
+						<x:String x:Key="ThemeKey">InventoryTabStrip</x:String>
+					</TabStrip.Resources>
+				</TabStrip>
+			</HeaderedContentControl>
+		</StackPanel>
+	</DockPanel>
+</UserControl>

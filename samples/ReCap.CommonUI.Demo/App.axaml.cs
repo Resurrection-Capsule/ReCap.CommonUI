@@ -83,10 +83,12 @@ namespace ReCap.CommonUI.Demo
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
-                desktop.MainWindow = new MainWindow()
+                MainWindow mainWindow = new()
                 {
                     DataContext = MainVM,
                 };
+                desktop.MainWindow = mainWindow;
+                PopOutWindowManager.Instance.MainWindow = mainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

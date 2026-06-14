@@ -3,7 +3,7 @@ using System;
 namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 {
     public class ScrollViewerViewModel
-        : ViewModelBase
+        : PageViewModelBase
     {
         bool _autoHideScrollBars = false;
         public bool AutoHideScrollBars

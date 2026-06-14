@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+    <ControlTheme x:Key="{x:Type TabStrip}"
+                TargetType="{x:Type TabStrip}">
+        <Setter Property="Background" Value="{DynamicResource TabControl.Header.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TabControl.Header.BorderBrush}" />
+        <Setter Property="Padding" Value="24,2,24,0" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel x:Name="HeaderArea">
+                    <rcui:AngledBorderEx x:Name="HeaderBg"
+                                        Theme="{DynamicResource TabControlHeaderBackground}"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}" />
+                    <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                    Margin="{TemplateBinding Padding}"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <WrapPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

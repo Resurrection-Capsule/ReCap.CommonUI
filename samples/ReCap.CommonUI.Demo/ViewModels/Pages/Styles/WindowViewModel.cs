@@ -8,7 +8,7 @@ using Sortable.Avalonia;
 namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 {
     public partial class WindowViewModel
-        : ViewModelBase
+        : PageViewModelBase
     {
         ManagedChromeMode _managedChromeHint = App.Current.ManagedChromeHint;
         public ManagedChromeMode ManagedChromeHint

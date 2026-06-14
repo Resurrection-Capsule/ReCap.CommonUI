@@ -2,11 +2,11 @@ using System;
 
 namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 {
-    public class TabControlViewModel
+    public class TabStripViewModel
         : TabsViewModelBase
         , IPopOutWindowProvider
     {
-        public TabControlViewModel()
+        public TabStripViewModel()
             : base()
         {
             AddTabs(new PageTabViewModel[]

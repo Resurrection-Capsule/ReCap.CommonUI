@@ -3,10 +3,13 @@
 		<OutputType>Library</OutputType>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-		<!--
-		<LangVersion>8.0</LangVersion>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-		-->
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<IsPackable>true</IsPackable>
+		<PackageId>ReCap.CommonUI</PackageId>
+		<Description>Shared Avalonia controls, styles, theme and fonts for ReCap desktop applications (Hub, tools).</Description>
+		<PackageTags>avalonia;ui;controls;theme;recap;darkspore</PackageTags>
 	</PropertyGroup>
 	
 	<Import Project="../../build/avalonia.props" />

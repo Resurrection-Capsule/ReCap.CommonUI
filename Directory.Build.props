@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-    <PropertyGroup>
-        <AssemblyVersion>0.0.1</AssemblyVersion>
-        <FileVersion>$(AssemblyVersion)</FileVersion>
-    </PropertyGroup>
-    <PropertyGroup>
-        <LangVersion>10.0</LangVersion>
-    </PropertyGroup>
+
+  <!-- Org build defaults (see Resurrection-Capsule/.github/templates). Versioning via MinVer
+       from the nearest `vX.Y.Z` tag — no static <Version>/<AssemblyVersion>.
+       TFM stays per-project (library = netstandard2.0, demo = its own). -->
+
+  <PropertyGroup>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Splitwirez</Authors>
+    <Company>Resurrection-Capsule</Company>
+    <Product>ReCap</Product>
+    <Copyright>Copyright (c) Splitwirez</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Resurrection-Capsule/ReCap.CommonUI</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <IncludeSymbols>false</IncludeSymbols>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="Exists('$(MSBuildThisFileDirectory)README.md')">
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)README.md')">
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="5.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>

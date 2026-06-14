@@ -6,7 +6,7 @@ using Control = Avalonia.Controls.Control;
 namespace ReCap.CommonUI.Demo.ViewModels.Pages.Controls
 {
     public class CloseableViewModel
-        : ViewModelBase
+        : PageViewModelBase
     {
         bool _showCloseButton = true;
         public bool ShowCloseButton

@@ -10,8 +10,15 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
         {}
         public UITestSubViewModel(IEnumerable<PageTabViewModel> tabs)
             : base(tabs)
+        {}
+
+
+        public bool PopOutCurrentTab()
         {
-            SelectedIndex = Tabs.Count - 1;
+            if (TryGetTabContentAt(SelectedIndex, out ViewModelBase tabContent))
+                return PopOutWindowManager.Instance.PopOutViewModel(tabContent);
+            else
+                return false;
         }
     }
 }

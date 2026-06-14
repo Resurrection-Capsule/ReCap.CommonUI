@@ -36,15 +36,27 @@
 					</Setter>
 				</Style>
 			</HeaderedContentControl.Styles>
-			<UniformGrid Rows="1">
-				<TabControl TabStripPlacement="Top" />
-				
-				<TabControl TabStripPlacement="Bottom" />
-
-				<TabControl TabStripPlacement="Left" />
-				
-				<TabControl TabStripPlacement="Right" />
-			</UniformGrid>
+			<Grid ColumnDefinitions="*,2*,2*,*"
+				RowDefinitions="Auto,Auto,Auto"
+				ColumnSpacing="8"
+				RowSpacing="8">
+				<TabControl TabStripPlacement="Top"
+							Grid.Column="1"
+							Grid.Row="0"
+							Grid.ColumnSpan="2" />
+				<TabControl TabStripPlacement="Left"
+							Grid.Column="0"
+							Grid.Row="1"
+							Grid.ColumnSpan="2" />
+				<TabControl TabStripPlacement="Right"
+							Grid.Column="2"
+							Grid.Row="1"
+							Grid.ColumnSpan="2" />
+				<TabControl TabStripPlacement="Bottom"
+							Grid.Column="1"
+							Grid.Row="2"
+							Grid.ColumnSpan="2" />
+			</Grid>
 		</HeaderedContentControl>
 
 
