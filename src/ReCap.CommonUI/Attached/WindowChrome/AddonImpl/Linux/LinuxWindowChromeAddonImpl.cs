@@ -25,8 +25,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 #if WAYLAND
         bool _waylandNeedsInit = false;
-        WaylandWindowChromeAddonImpl _wayland = null;
-        WaylandWindowChromeAddonImpl WaylandImpl
+        WaylandWindowChromeAddonSubImpl _wayland = null;
+        WaylandWindowChromeAddonSubImpl WaylandImpl
         {
             get => EnsureSubImpl(ref _wayland, ref _waylandNeedsInit, () => new(_DETAILS));
         }
