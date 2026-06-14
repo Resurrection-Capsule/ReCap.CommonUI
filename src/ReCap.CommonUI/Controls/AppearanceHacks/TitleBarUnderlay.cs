@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
@@ -10,119 +12,60 @@ using ReCap.CommonUI.Util;
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
     [PseudoClasses(_PSEUD_FILLS_SCREEN)]
-    public class TitleBarUnderlay
+    public sealed class TitleBarUnderlay
         : TemplatedControl
     {
         const string _PSEUD_FILLS_SCREEN = ":fills_screen";
 
-        /// <summary>
-        /// Defines the <see cref="TitleBarHeight"/> property.
-        /// </summary>
-        public static readonly StyledProperty<double> TitleBarHeightProperty =
-            AvaloniaProperty.Register<TitleBarUnderlay, double>(nameof(TitleBarHeight), double.NaN);
-
-        /// <summary>
-        /// Represents the Height of the containing Window's TitleBar.
-        /// </summary>
-        public double TitleBarHeight
-        {
-            get => GetValue(TitleBarHeightProperty);
-            set => SetValue(TitleBarHeightProperty, value);
-        }
 
 
-        /// <summary>
-        /// Defines the <see cref="DefaultTitleBarHeight"/> property.
-        /// </summary>
-        public static readonly StyledProperty<double> DefaultTitleBarHeightProperty =
-            AvaloniaProperty.Register<TitleBarUnderlay, double>(nameof(DefaultTitleBarHeight), 30);
-
-        /// <summary>
-        /// Gets or sets the default Height of the element.
-        /// </summary>
-        public double DefaultTitleBarHeight
-        {
-            get => GetValue(DefaultTitleBarHeightProperty);
-            set => SetValue(DefaultTitleBarHeightProperty, value);
-        }
-        
-
-        /// <summary>
-        /// Defines the <see cref="IsTitleBarHeightValid"/> property.
-        /// </summary>
-        public static readonly StyledProperty<bool> IsTitleBarHeightValidProperty =
-            AvaloniaProperty.Register<TitleBarUnderlay, bool>(nameof(IsTitleBarHeightValid), false);
-
-        /// <summary>
-        /// Gets or sets the IsTitleBarHeightValid of the element.
-        /// </summary>
-        public bool IsTitleBarHeightValid
-        {
-            get => GetValue(IsTitleBarHeightValidProperty);
-            set => SetValue(IsTitleBarHeightValidProperty, value);
-        }
-        
-
-        /// <summary>
-        /// Defines the <see cref="IsTitleBarVisible"/> property.
-        /// </summary>
-        public static readonly StyledProperty<bool> IsTitleBarVisibleProperty =
-            AvaloniaProperty.Register<TitleBarUnderlay, bool>(nameof(IsTitleBarVisible), false);
-
-        /// <summary>
-        /// Gets or sets the IsTitleBarVisible of the element.
-        /// </summary>
+#region Properties
+        public static readonly DirectProperty<TitleBarUnderlay, bool> IsTitleBarVisibleProperty =
+            AvaloniaProperty.RegisterDirect<TitleBarUnderlay, bool>(
+                nameof(IsTitleBarVisible)
+                , s => s.IsTitleBarVisible
+            );
+        bool _isTitleBarVisible = false;
         public bool IsTitleBarVisible
         {
-            get => GetValue(IsTitleBarVisibleProperty);
-            set => SetValue(IsTitleBarVisibleProperty, value);
+            get => _isTitleBarVisible;
+            internal set => SetAndRaise(IsTitleBarVisibleProperty, ref _isTitleBarVisible, value);
         }
 
 
-        protected override void OnPointerPressed(PointerPressedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            if (TopLevel.GetTopLevel(this) is Window window)
-                window.BeginMoveDrag(e);
-        }
-
-
-        /// <summary>
-        /// Defines the <see cref="IsWindowActive"/> property.
-        /// </summary>
-        public static readonly StyledProperty<bool> IsWindowActiveProperty =
-            AvaloniaProperty.Register<TitleBarUnderlay, bool>(nameof(IsWindowActive), false);
-
-        /// <summary>
-        /// Gets or sets the IsWindowActive of the element.
-        /// </summary>
+        public static readonly DirectProperty<TitleBarUnderlay, bool> IsWindowActiveProperty =
+            AvaloniaProperty.RegisterDirect<TitleBarUnderlay, bool>(
+                nameof(IsWindowActive)
+                , s => s.IsWindowActive
+            );
+        bool _isWindowActive = false;
         public bool IsWindowActive
         {
-            get => GetValue(IsWindowActiveProperty);
-            set => SetValue(IsWindowActiveProperty, value);
+            get => _isWindowActive;
+            internal set => SetAndRaise(IsWindowActiveProperty, ref _isWindowActive, value);
         }
 
 
-        /// <summary>
-        /// Defines the <see cref="IsWindowMaximizedOrFullScreen"/> property.
-        /// </summary>
-        public static readonly StyledProperty<bool> IsWindowMaximizedOrFullScreenProperty =
-            AvaloniaProperty.Register<TitleBarUnderlay, bool>(nameof(IsWindowMaximizedOrFullScreen), false);
-
-        /// <summary>
-        /// Gets or sets the IsWindowMaximizedOrFullScreen of the element.
-        /// </summary>
+        public static readonly DirectProperty<TitleBarUnderlay, bool> IsWindowMaximizedOrFullScreenProperty =
+            AvaloniaProperty.RegisterDirect<TitleBarUnderlay, bool>(
+                nameof(IsWindowMaximizedOrFullScreen)
+                , s => s.IsWindowMaximizedOrFullScreen
+            );
+        bool _isWindowMaximizedOrFullScreen = false;
         public bool IsWindowMaximizedOrFullScreen
         {
-            get => GetValue(IsWindowMaximizedOrFullScreenProperty);
-            set => SetValue(IsWindowMaximizedOrFullScreenProperty, value);
+            get => _isWindowMaximizedOrFullScreen;
+            internal set => SetAndRaise(IsWindowMaximizedOrFullScreenProperty, ref _isWindowMaximizedOrFullScreen, value);
         }
+#endregion
 
 
 
 
         Window _window = null;
         TitleBar _titleBar = null;
+        IDisposable _windowDisposable = null;
+        IDisposable _titleBarDisposable = null;
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
@@ -130,13 +73,24 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 return;
             
             _window = window;
-            //this[!HeightProperty] = window[!Window.ExtendClientAreaTitleBarHeightHintProperty];
-            //this[!IsVisibleProperty] = window[!Window.IsExtendedIntoWindowDecorationsProperty];
-
+            _windowDisposable = new CompositeDisposable()
+            {
+                _window
+                    .GetObservable(Window.WindowStateProperty)
+                    .Subscribe(RefreshIsWindowMaximizedOrFullScreen)
+                ,
+                _window
+                    .GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
+                    .Subscribe(_ => RefreshHeight())
+                ,
+                _window
+                    .GetObservable(WindowBase.IsActiveProperty)
+                    .Subscribe(isActive => IsWindowActive = isActive)
+                ,
+            };
             RefreshIsWindowMaximizedOrFullScreen(_window.WindowState);
-            _window.PropertyChanged += Window_PropertyChanged;
-            this[!TitleBarHeightProperty] = _window[!Window.ExtendClientAreaTitleBarHeightHintProperty];
-            this[!IsWindowActiveProperty] = _window[!Window.IsActiveProperty];
+            RefreshHeight();
+            IsWindowActive = _window.IsActive;
 
             var chromeOverlay = ChromeOverlayLayer.GetOverlayLayer(_window.Presenter);
             if (chromeOverlay == null)
@@ -145,13 +99,28 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             var chromeChildren = chromeOverlay.Children;
             foreach (var chromeChild in chromeChildren)
             {
-                if (chromeChild is TitleBar titleBar)
+                if (chromeChild is not TitleBar titleBar)
+                    continue;
+
+                _titleBar = titleBar;
+                _titleBarDisposable = new CompositeDisposable()
                 {
-                    _titleBar = titleBar;
-                    //_titleBar.PropertyChanged += TitleBar_PropertyChanged;
-                    this[!IsTitleBarVisibleProperty] = _titleBar[!TitleBar.IsVisibleProperty];
-                    break;
-                }
+                    _titleBar
+                        .GetObservable(IsVisibleProperty)
+                        .Subscribe(isVisible =>
+                        {
+                            IsTitleBarVisible = isVisible;
+                            RefreshHeight();
+                        })
+                    ,
+                    _titleBar
+                        .GetObservable(BoundsProperty)
+                        .Subscribe(_ => RefreshHeight())
+                    ,
+                };
+                RefreshHeight();
+                IsTitleBarVisible = _titleBar.IsVisible;
+                break;
             }
         }
 
@@ -159,25 +128,32 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         {
             base.OnDetachedFromVisualTree(e);
             
+            _windowDisposable?.Dispose();
+            _windowDisposable = null;
+
             if (_window != null)
             {
-                _window.PropertyChanged -= Window_PropertyChanged;
                 IsWindowMaximizedOrFullScreen = false;
                 _window = null;
             }
 
-            if (_titleBar != null)
-            {
-                //_titleBar.PropertyChanged -= TitleBar_PropertyChanged;
-                _titleBar = null;
-            }
+
+            _titleBarDisposable?.Dispose();
+            _titleBarDisposable = null;
+
+            _titleBar = null;
         }
-        
-        void Window_PropertyChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+
+
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
-            if (e.Property == Window.WindowStateProperty)
-                RefreshIsWindowMaximizedOrFullScreen(e.GetNewValue<WindowState>());
+            base.OnPointerPressed(e);
+            if (e.ClickCount > 1)
+                return;
+            else if (TopLevel.GetTopLevel(this) is Window window)
+                window.BeginMoveDrag(e);
         }
+
 
         void RefreshIsWindowMaximizedOrFullScreen(WindowState winState)
             => IsWindowMaximizedOrFullScreen =
@@ -185,20 +161,22 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 ||
                 (winState == WindowState.FullScreen)
             ;
-        /*
-        void TitleBar_PropertyChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        void RefreshHeight()
         {
-            if (e.Property == TitleBar.IsVisibleProperty)
-            {
-                var isVisible = e.GetNewValue<bool>();
-            }
-        }
+            if (_window == null)
+                return;
+            
+            if (_titleBar == null)
+                return;
 
-        void ValidateHeightProperties(double titleBarHeight, bool isTitleBarVisible)
-        {
+            // [TODO: account for negative margins on TitleBarUnderlay?]
+            double height = _window.ExtendClientAreaTitleBarHeightHint;
+            if (height < 0d)
+                height = _titleBar.Bounds.Height;
 
+            if (height >= 0d)
+                Height = height;
         }
-        */
 
 
 
@@ -206,10 +184,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         static TitleBarUnderlay()
         {
             Extensions.MakeControlTypeNonInteractive<TitleBarUnderlay>();
-
-            AffectsMeasure<TitleBarUnderlay>(TitleBarHeightProperty);
-
-            TitleBarHeightProperty.Changed.AddClassHandler<TitleBarUnderlay>(TitleBarHeightProperty_Changed);
             IsWindowMaximizedOrFullScreenProperty.Changed.AddClassHandler<TitleBarUnderlay>(IsWindowMaximizedOrFullScreenProperty_Changed);
         }
 
@@ -218,16 +192,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             underlay.PseudoClasses.Set(_PSEUD_FILLS_SCREEN, args.GetNewValue<bool>());
         }
 
-        static void TitleBarHeightProperty_Changed(TitleBarUnderlay underlay, AvaloniaPropertyChangedEventArgs args)
-        {
-            var newHeight = args.GetNewValue<double>();
-            underlay.IsTitleBarHeightValid = newHeight >= 0;
-        }
-
-        protected override Type StyleKeyOverride => typeof(TitleBarUnderlay);
-        static void WrLine(string line)
-        {
-            Console.WriteLine(line);
-        }
+        protected override Type StyleKeyOverride
+            => typeof(TitleBarUnderlay);
     }
 }

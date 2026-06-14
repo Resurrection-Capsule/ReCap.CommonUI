@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using ReactiveUI;
+
+using MatchFunc = System.Func<System.Type, bool>;
 
 namespace ReCap.CommonUI.Demo.Reflection
 {
@@ -15,28 +14,34 @@ namespace ReCap.CommonUI.Demo.Reflection
             => GetTypesInNamespace(assembly, ns, TypeFilterOptions.DEFAULT);
         public static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, string ns, TypeFilterOptions opts)
         {
-            TypeFilterTypeFlags includeTypes = opts.IncludeTypes;
-            TypeFilterModifierFlags includeModifiers = opts.IncludeModifiers;
+            TypeFilterKindFlags typeKinds = opts.IncludeTypeKinds;
+            TypeFilterModifierFlags accessModifiers = opts.IncludeModifiers;
 
 
-            IEnumerable<Type> types = includeModifiers.HasFlag(TypeFilterModifierFlags.NonPublic)
+            IEnumerable<Type> types = (accessModifiers.HasFlag(TypeFilterModifierFlags.Internal) || accessModifiers.HasFlag(TypeFilterModifierFlags.Protected) || accessModifiers.HasFlag(TypeFilterModifierFlags.Private))
                 ? assembly.GetTypes()
                 : assembly.GetExportedTypes()
             ;
 
 
-            Func<Type, bool> match = opts.SearchRecursive
+            MatchFunc match = opts.SearchRecursive
                 ? (t => MatchNamespaceRecursive(ns, t.Namespace))
                 : (t => ns == t.Namespace)
             ;
+            if (!opts.IncludeNested)
+            {
+                var prevMatch = match;
+                match = t => prevMatch(t) && !t.IsNested;
+            }
+
 #if NO
-            if (!includeTypes.HasFlag(TypeFilterTypeFlags.Interface))
+            if (!typeKinds.HasFlag(TypeFilterKindFlags.Interface))
                 match = t => match(t) && !t.IsInterface;
 
 
-            if (!includeTypes.HasFlag(TypeFilterTypeFlags.Struct))
+            if (!typeKinds.HasFlag(TypeFilterKindFlags.Struct))
             {
-                if (!includeTypes.HasFlag(TypeFilterTypeFlags.Enum))
+                if (!typeKinds.HasFlag(TypeFilterKindFlags.Enum))
                 {
                     match = t => match(t) && (t.IsEnum || !t.IsValueType);
                 }
@@ -45,17 +50,17 @@ namespace ReCap.CommonUI.Demo.Reflection
                     match = t => match(t) && !t.IsValueType;
                 }
             }
-            else if (!includeTypes.HasFlag(TypeFilterTypeFlags.Enum))
+            else if (!typeKinds.HasFlag(TypeFilterKindFlags.Enum))
             {
                 match = t => match(t) && !t.IsEnum;
             }
 
 
-            if (!includeModifiers.HasFlag(TypeFilterModifierFlags.Abstract))
+            if (!opts.IncludeAbstract)
                 match = t => match(t) && !t.IsAbstract;
 
 
-            if (!includeModifiers.HasFlag(TypeFilterModifierFlags.Generic))
+            if (!opts.IncludeGeneric)
                 match = t => match(t) && !(t.IsGenericTypeDefinition || t.IsGenericType);
 
             Type baseType = opts.BaseType;

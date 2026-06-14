@@ -6,10 +6,12 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
         : TabsViewModel
     {
         public UITestSubViewModel(params PageTabViewModel[] tabs)
-            : base((IEnumerable<PageTabViewModel>)tabs)
+            : this((IEnumerable<PageTabViewModel>)tabs)
         {}
         public UITestSubViewModel(IEnumerable<PageTabViewModel> tabs)
             : base(tabs)
-        {}
+        {
+            SelectedIndex = Tabs.Count - 1;
+        }
     }
 }

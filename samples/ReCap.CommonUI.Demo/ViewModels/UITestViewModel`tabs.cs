@@ -51,6 +51,7 @@ namespace ReCap.CommonUI.Demo.ViewModels
                 new("New controls", new UITestSubViewModel(
                     GetFromNamespace($"{_NS_PREFIX}.Controls")
                 )),
+                new("Diagnostics", new DiagnosticsViewModel()),
             });
         }
     }

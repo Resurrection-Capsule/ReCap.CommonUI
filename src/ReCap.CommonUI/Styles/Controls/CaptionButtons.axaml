@@ -1,12 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
-	<PathGeometry x:Key="CloseButtonGlyphGeometry">
-		M 0 0 L 3 0 L 5 2 L 7 0 L 10 0
-		L 10 0.5 L 7 4.5 L 10 8.5 L 10 9
-		L 7 9 L 5 7 L 3 9 L 0 9
-		L 0 8.5 L 3 4.5 L 0 0.5 Z
-	</PathGeometry>
 	<WindowState x:Key="MaxState">Maximized</WindowState>
 	<rcui:CompareToConverter x:Key="IsMaxStateConverter">
 		<rcui:CompareToConverter.CompareTo>
@@ -14,6 +8,7 @@
 		</rcui:CompareToConverter.CompareTo>
 	</rcui:CompareToConverter>
 
+	<!--
 	<ControlTheme x:Key="CaptionButton"
 				TargetType="{x:Type Button}">
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -47,7 +42,7 @@
 			<Setter Property="Padding" Value="{Binding Padding, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
 		</Style>
 
-		<!-- Hover -->
+		<!- - Hover - ->
 		<Style Selector="^:pointerover:not(:pressed)">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Hover}" />
@@ -59,7 +54,7 @@
 		</Style>
 
 
-		<!-- Pressed -->
+		<!- - Pressed - ->
 		<Style Selector="^:pressed">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Pressed}" />
@@ -71,7 +66,7 @@
 		</Style>
 
 
-		<!-- Pressed -->
+		<!- - Pressed - ->
 		<Style Selector="^:disabled">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Disabled}" />
@@ -82,27 +77,30 @@
 			</Style>
 		</Style>
 
-		<!--
+		<!- -
 		<Style Selector="^:pressed">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
-				<Setter Property="BorderBrush" Value="#FFA00000"/>
+				<Setter Property="BorderBrush" Value="#FFA00000" />
 			</Style>
 			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="#FF120000"/>
+				<Setter Property="Foreground" Value="#FF120000" />
 			</Style>
 		</Style>
-		-->
+		- ->
 	</ControlTheme>
+	-->
 
-	<ControlTheme x:Key="{x:Type rcui:CaptionButton}"
+	<ControlTheme x:Key="CaptionButton"
 				  TargetType="{x:Type rcui:CaptionButton}"
-				  BasedOn="{StaticResource CaptionButton}">
+				  BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
+		<!--
 		<Setter Property="IsActive" Value="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=True}" />
+		-->
 		<Setter Property="Padding" Value="0,8,0,0" />
 		<Setter Property="VerticalAlignment" Value="Top" />
 		
 		<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
-			<Setter Property="Width" Value="43" />
+			<Setter Property="Width" Value="{DynamicResource CaptionButton.MinWidth}" />
 			<Setter Property="VerticalAlignment" Value="Top" />
 			<Setter Property="Height" Value="{Binding Bounds.Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
 			<Setter Property="MaxHeight" Value="23" />
@@ -112,7 +110,7 @@
 			<Setter Property="Padding" Value="0" />
 		</Style>
 
-		<Style Selector="^[IsActive=False]:not(:pointerover):not(:pressed):not(:disabled)">
+		<Style Selector="^:windowactive:not(:pointerover):not(:pressed):not(:disabled)">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
@@ -120,11 +118,12 @@
 			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle.Inactive}" />
 			</Style>
-	</Style>
+		</Style>
 	</ControlTheme>
 
 
-	<ControlTheme x:Key="{x:Type CaptionButtons}" TargetType="CaptionButtons">
+	<ControlTheme x:Key="{x:Type CaptionButtons}"
+				TargetType="{x:Type CaptionButtons}">
 		<Setter Property="ClipToBounds" Value="False" />
     	<Setter Property="Template">
       		<ControlTemplate>
@@ -156,7 +155,7 @@
 						<Path Name="RestoreButtonPath"
 							Stretch="UniformToFill"
 							Fill="{TemplateBinding Foreground}"
-							Data="M2048 2048v-2048h-2048v2048h2048zM1843 1843h-1638v-1638h1638v1638z"/>
+							Data="M2048 2048v-2048h-2048v2048h2048zM1843 1843h-1638v-1638h1638v1638z" />
 					</Viewbox>
 				</Button>
 				<Button x:Name="PART_CloseButton"
@@ -185,21 +184,24 @@
 								Spacing="2"
 								Orientation="Horizontal"
 								VerticalAlignment="Stretch"
-								Classes.max-before-min="{Binding Path=(rcui:WindowChromeAddon.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}">
+								>
+					<!--
+								Classes.max-before-min="{Binding Path=(rcui:WindowChromeAddon.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}"
+					-->
 						<rcui:CaptionButton x:Name="PART_MinimizeButton"
 											Win32Properties.NonClientHitTestResult="MinButton">
-							<Path Data="M 0 0 L 13 0 L 13 4 L 0 4 Z"/>
+							<Path Data="{DynamicResource CaptionButtons.GlyphGeometry.Minimize}" />
 						</rcui:CaptionButton>
 						<rcui:CaptionButton x:Name="PART_RestoreButton"
 											Win32Properties.NonClientHitTestResult="MaxButton">
 							<Path Classes="maxRestoreIcon"
 								Classes.maximized="{Binding WindowState, Converter={StaticResource IsMaxStateConverter}}"
-								Data="M 0 8 H 11 V -1 H 0 Z M 2 1 H 9 V 6 H 2 Z"/>
+								Data="CaptionButtons.GlyphGeometry.Maximize" />
 						</rcui:CaptionButton>
 					</StackPanel>
 					<rcui:CaptionButton x:Name="PART_CloseButton"
 										Win32Properties.NonClientHitTestResult="Close">
-						<Path Data="{DynamicResource CloseButtonGlyphGeometry}" />
+						<Path Data="{DynamicResource CaptionButtons.GlyphGeometry.Close}" />
 								<!--M 0 0 L 4 0 L 5.5 2 L 7 0 L 11 0
 											L 9 4.5 L 11 9
 											L 7 9 L 5.5 7 L 4 9 L 0 9
@@ -213,10 +215,57 @@
 			<Setter Property="RenderTransform" Value="scale(-1,1)" />
 		</Style>
 
+		<!--
 		<Style Selector="^ /template/ StackPanel#MinMax.max-before-min,
 						^ /template/ StackPanel#MinMax.max-before-min > :is(Button)">
 			<Setter Property="RenderTransform" Value="scale(-1,1)" />
 		</Style>
+		-->
+
+
+
+		<Style Selector="^ /template/ rcui|CaptionButton">
+			<Setter Property="Theme" Value="{DynamicResource CaptionButton}" />
+		</Style>
+		<Style Selector="^ /template/ rcui|CaptionButton > Path">
+			<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
+		</Style>
+		<!--Style Selector="^ /template/ Button > Path.maxRestoreIcon">
+			<Setter Property="Fill" Value="Transparent" />
+			<Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
+			<Setter Property="StrokeThickness" Value="2" />
+			<!- -M 0 0 L 11 0 L 11 9 L 0 9 L 0 2 L 2 2 L 2 7 L 9 7 L 9 2 L 0 2 Z- ->
+		</Style-->
+
+		<!--Style Selector="Window[WindowState=Maximized] ^ /template/ Button#PART_RestoreButton > Path"-->
+		<Style Selector="^ /template/ Path.maxRestoreIcon.maximized">
+			<!--Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}"/-->
+			<!--Setter Property="Data" Value="M 1 4 L 7 4 L 7 8 L 1 8 Z
+											M 3 1 L 10 1 L 10 6"/-->
+			<!--Setter Property="Data" Value="M 0 9 L 8 9 L 8 3 L 0 3
+										M 2 5 L 6 5 L 6 7 L 2 7 Z
+										
+										M 3 0 L 11 0 L 11 6 L 9 6 L 9 2 L 3 2 Z"/-->
+
+
+			<!--
+			<Setter Property="Data" Value="m 3 0 v 2 h 6 v 4 h 2 V 0 Z M 0 3 V 9 H 8 V 3 Z M 2 5 H 6 V 7 H 2 Z" />
+			-->
+			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
+		</Style>
+
+		<Style Selector="^ /template/ Path.maxRestoreIcon:not(.maximized)">
+			<!--Setter Property="Data" Value="M 1 0 L 10 0 L 10 7 L 1 7 Z"/-->
+			<!--Setter Property="Data" Value="M 0 8 L 11 8 L 1 -1 L 0 -1
+											M 2 1 L 9 1 L 9 6 L 2 6 Z"/-->
+			<!--Setter Property="Data" Value="M 0 8 H 11 V -1 H 0 Z M 2 1 H 9 V 6 H 2 Z"/-->
+		</Style>
+
+
+		<Style Selector="^ /template/ rcui|CaptionButton#PART_CloseButton">
+			<Setter Property="Padding" Value="0,8,13,0" />
+		</Style>
+
 
 
 
@@ -229,46 +278,6 @@
 		</Style>
 		<Style Selector="^:fullscreen /template/ rcui|CaptionButton#PART_MinimizeButton">
 			<Setter Property="IsVisible" Value="False" />
-		</Style>
-
-		
-
-		<Style Selector="^ /template/ rcui|CaptionButton > Path">
-			<Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}"/>
-		</Style>
-		<!--Style Selector="^ /template/ Button > Path.maxRestoreIcon">
-			<Setter Property="Fill" Value="Transparent" />
-			<Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}"/>
-			<Setter Property="StrokeThickness" Value="2"/>
-			<!- -M 0 0 L 11 0 L 11 9 L 0 9 L 0 2 L 2 2 L 2 7 L 9 7 L 9 2 L 0 2 Z- ->
-		</Style-->
-			
-		<!--Style Selector="Window[WindowState=Maximized] ^ /template/ Button#PART_RestoreButton > Path"-->
-		<Style Selector="^ /template/ Path.maxRestoreIcon.maximized">
-			<!--Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}"/-->
-			<!--Setter Property="Data" Value="M 1 4 L 7 4 L 7 8 L 1 8 Z
-											M 3 1 L 10 1 L 10 6"/-->
-			<!--Setter Property="Data" Value="M 0 9 L 8 9 L 8 3 L 0 3
-										M 2 5 L 6 5 L 6 7 L 2 7 Z
-										
-										M 3 0 L 11 0 L 11 6 L 9 6 L 9 2 L 3 2 Z"/-->
-			
-			
-			<Setter Property="Data" Value="m 3 0 v 2 h 6 v 4 h 2 V 0 Z M 0 3 V 9 H 8 V 3 Z M 2 5 H 6 V 7 H 2 Z"/>
-		</Style>
-			
-		<Style Selector="^ /template/ Path.maxRestoreIcon:not(.maximized)">
-			<!--Setter Property="Data" Value="M 1 0 L 10 0 L 10 7 L 1 7 Z"/-->
-			<!--Setter Property="Data" Value="M 0 8 L 11 8 L 1 -1 L 0 -1
-											M 2 1 L 9 1 L 9 6 L 2 6 Z"/-->
-			<!--Setter Property="Data" Value="M 0 8 H 11 V -1 H 0 Z M 2 1 H 9 V 6 H 2 Z"/-->
-		</Style>
-		
-		
-		
-
-		<Style Selector="^ /template/ rcui|CaptionButton#PART_CloseButton">
-			<Setter Property="Padding" Value="0,8,13,0"/>
 		</Style>
 	</ControlTheme>
 </ResourceDictionary>

@@ -1,0 +1,161 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
+					xmlns:rcwin32="using:ReCap.CommonUI.Util.Win32">
+	<ControlTheme x:Key="WindowIconButton"
+				TargetType="{x:Type rcui:CaptionButton}">
+		<!--
+		<Setter Property="Width" Value="16" />
+		<Setter Property="Height" Value="16" />
+		<Setter Property="Fill" Value="#FFFF00FF" />
+		<Setter Property="Padding" Value="0,0,4,0" />
+		-->
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Panel Background="#01000000">
+					<ContentPresenter x:Name="PART_ContentPresenter"
+									Background="Transparent"
+									BorderBrush="Transparent"
+									BorderThickness="0"
+									Margin="{TemplateBinding Padding}"
+									Content="{TemplateBinding Content}"
+									ContentTemplate="{TemplateBinding ContentTemplate}"
+									HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+									VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+									Foreground="{TemplateBinding Foreground}" />
+				</Panel>
+			</ControlTemplate>
+		</Setter>
+	</ControlTheme>
+
+
+	<ControlTheme x:Key="{x:Type rcui:TitleBar2}"
+				TargetType="{x:Type rcui:TitleBar2}"
+				BasedOn="{StaticResource {x:Type TitleBar}}">
+		<Setter Property="Win32Properties.NonClientHitTestResult" Value="Caption" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Panel VerticalAlignment="Top">
+					<Panel x:Name="MouseTracker"
+						   Height="1"
+						   VerticalAlignment="Top" />
+					<Panel>
+						<Border Background="{TemplateBinding Background}"
+								IsHitTestVisible="False"
+								Win32Properties.NonClientHitTestResult="Caption" />
+						<DockPanel x:Name="TitleClusterContainer">
+							<Control DockPanel.Dock="Left"
+									Width="{Binding $parent[Window].(rcui:WindowChromeAddon.LeftCaptionButtonsWidth), Mode=OneWay}"
+									Margin="0,0,10,0" />
+							<Control DockPanel.Dock="Right"
+									Width="{Binding $parent[Window].(rcui:WindowChromeAddon.RightCaptionButtonsWidth), Mode=OneWay}"
+									Margin="10,0,0,0" />
+							<Panel x:Name="TitleContainer">
+								<StackPanel Orientation="Horizontal"
+											IsHitTestVisible="False"
+											IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.ReserveCaptionArea), Mode=OneWay}">
+									<Control x:Name="IconSpaceFake"
+											Width="{Binding Bounds.Width, ElementName=PART_WindowIconContainer, Mode=OneWay}"
+											MaxWidth="5"
+											Classes.hasMenu="{Binding HasMenuAsLastOnLeft, ElementName=PART_CaptionButtons, Mode=OneWay}"
+											Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
+											Focusable="False"
+											IsTabStop="False" />
+									<TextBlock x:Name="TitleDisplay"
+											Margin="5,0"
+											VerticalAlignment="Center"
+											Text="{Binding $parent[Window].Title, Mode=OneWay}"
+											IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowTitle), Mode=OneWay}">
+									<!--
+										<TextBlock.IsVisible>
+											<MultiBinding>
+												<Binding Path="(rcui:WindowChromeAddon.ManagedShowTitle)"
+														RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+														Mode="OneWay" />
+												<Binding Path="(rcui:WindowChromeAddon.ReserveCaptionArea)"
+														RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+														Mode="OneWay" />
+											</MultiBinding>
+										</TextBlock.IsVisible>
+									-->
+									</TextBlock>
+								</StackPanel>
+								<rcui:CaptionButton x:Name="PART_WindowIconContainer"
+													Theme="{DynamicResource WindowIconButton}"
+													Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
+													HorizontalAlignment="Left"
+													IsVisible="{Binding HasMenuAsLastOnLeft, ElementName=PART_CaptionButtons, Mode=OneWay}"
+													Padding="10,0,5,0"
+													Grid.Column="0">
+								<!--
+										Win32Properties.NonClientHitTestResult="{x:Static rcwin32:NCHitTestResult.SYSMENU}"
+								-->
+									<rcui:ImagePresenter IsHitTestVisible="False"
+														Width="16"
+														Height="16"
+														HorizontalAlignment="Center"
+														VerticalAlignment="Center"
+														Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:WindowIconToMultipleSizesWrapperImageConverter.Instance}, Mode=OneWay, FallbackValue={x:Null}}" />
+								</rcui:CaptionButton>
+							</Panel>
+						</DockPanel>
+						<rcui:CaptionButtons2 x:Name="PART_CaptionButtons"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Top"
+											Foreground="{TemplateBinding Foreground}"
+											Win32Properties.NonClientHitTestResult="Client" />
+					</Panel>
+				</Panel>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^ /template/ :is(Panel)#TitleClusterContainer > Control[Width=0]">
+			<Setter Property="IsVisible" Value="False" />
+		</Style>
+
+
+		<!--
+		<Style Selector="^ /template/ :is(Panel)#TitleContainer:not(.hasMenu)">
+			<Style Selector="^ /template/ :is(Control)#PART_WindowIconContainer">
+				<Setter Property="IsVisible" Value="False" />
+			</Style>
+		</Style>
+		<Style Selector="^ /template/ TextBlock#TitleDisplay.hasMenu:not(.showIcon)">
+			<Setter Property="Margin" Value="31,0,5,0" />
+		</Style>
+		-->
+		<Style Selector="^ /template/ Control#IconSpaceFake.hasMenu.showIcon">
+			<!--
+			<Setter Property="IsVisible" Value="False" />
+			<Setter Property="Width" Value="{Binding $self.DataContext.Bounds.Width, Mode=OneWay}" />
+			-->
+			<Setter Property="MaxWidth" Value="{x:Static x:Double.NaN}" />
+
+		</Style>
+		<Style Selector="^ /template/ :is(Control)#PART_WindowIconContainer:not(.showIcon)">
+			<Setter Property="Opacity" Value="0.01" />
+		</Style>
+		<!--
+		<Style Selector="^ /template/ :is(Panel)#TitleContainer">
+			<Style Selector="^ /template/ TextBlock#TitleDisplay">
+				<!- -
+				<Setter Property="Grid.Column" Value="1" />
+				<Setter Property="Grid.ColumnSpan" Value="1" />
+				- ->
+				<Setter Property="Margin" Value="31,0,5,0" />
+			</Style>
+		</Style>
+		-->
+		<Style Selector="^ /template/ :is(Panel)#TitleContainer.hasMenu:not(.showIcon)">
+			<!--
+			<Style Selector="^ /template/ :is(Control)#PART_WindowIconContainer">
+				<Setter Property="Opacity" Value="0.01" />
+			</Style>
+			<Style Selector="^ /template/ TextBlock#TitleDisplay">
+				<Setter Property="Grid.Column" Value="0" />
+				<Setter Property="Grid.ColumnSpan" Value="2" />
+			</Style>
+			-->
+		</Style>
+	</ControlTheme>
+</ResourceDictionary>

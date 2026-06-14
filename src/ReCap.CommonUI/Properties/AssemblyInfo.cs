@@ -6,7 +6,10 @@ using Avalonia.Metadata;
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Controls.AppearanceHacks")]
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Controls.Decorators")]
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Converters")]
+[assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Data")]
 [assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Easings")]
+[assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Util")]
+[assembly: XmlnsDefinition(RCNS.URL, "ReCap.CommonUI.Util.OperatingSystem")]
 
 internal static class RCNS
 {

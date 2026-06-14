@@ -15,8 +15,13 @@
 	</LinearGradientBrush>
 
 
-	<ControlTheme x:Key="HelixTabItem"
-				TargetType="{x:Type TabItem}">
+	<ItemsPanelTemplate x:Key="HelixTabItemsPanelTemplate">
+		<StackPanel Orientation="Horizontal" />
+	</ItemsPanelTemplate>
+
+
+	<ControlTheme x:Key="HelixTabItemThemeBase"
+				TargetType="{x:Type ContentControl}">
 		<Setter Property="Background" Value="{DynamicResource HelixTabs.Item.Background.Selected}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource HelixTabs.Item.BorderBrush.Selected}" />
 		<Setter Property="Foreground" Value="{DynamicResource Weak2ForegroundBrush}" />
@@ -49,18 +54,19 @@
 								BorderThickness="0,1,0,0"
 								Margin="0,0,0,-1" />
 					</DockPanel>
-					<Rectangle Height="1"
-							   Fill="{DynamicResource RowBelowTabs.BorderBrush.Top}"
-							   VerticalAlignment="Bottom"
-							   IsVisible="{Binding !IsSelected, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+					<Rectangle x:Name="UnselectedLine"
+								Height="1"
+								Fill="{DynamicResource RowBelowTabs.BorderBrush.Top}"
+								VerticalAlignment="Bottom" />
+					<!--
+								IsVisible="False"
+					-->
 					<ContentPresenter Name="PART_ContentPresenter"
                                     Background="Transparent"
                                     BorderBrush="Transparent"
                                     BorderThickness="0"
                                     Margin="{TemplateBinding Padding}"
                                     TextBlock.Foreground="{TemplateBinding Foreground}"
-                                    ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                    Content="{TemplateBinding Header}"
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 				</Panel>
@@ -88,14 +94,61 @@
 			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="TextBlock.Foreground" Value="{DynamicResource StrongForegroundBrush}" />
 			</Style>
+			<Style Selector="^/template/ Rectangle#UnselectedLine">
+				<Setter Property="IsVisible" Value="False" />
+			</Style>
 		</Style>
 	</ControlTheme>
 
 
+
+
+    <ControlTheme x:Key="HelixTabStripItem"
+                TargetType="{x:Type TabStripItem}"
+                BasedOn="{StaticResource HelixTabItemThemeBase}">
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Content" Value="{TemplateBinding Content}" />
+            <Setter Property="ContentTemplate" Value="{TemplateBinding ContentTemplate}" />
+        </Style>
+		<!--
+		<Style Selector="^[IsSelected=False] /template/ Rectangle#UnselectedLine">
+			<Setter Property="IsVisible" Value="True" />
+			<!- -
+				{Binding !IsSelected, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}
+			- ->
+		</Style>
+		-->
+    </ControlTheme>
+
+
+
+
+	<ControlTheme x:Key="HelixTabStrip"
+				TargetType="{x:Type TabStrip}">
+	<!--
+				BasedOn="{StaticResource {x:Type TabStrip}}"
+	-->
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="ItemContainerTheme" Value="{DynamicResource HelixTabStripItem}" />
+		<Setter Property="ItemsPanel" Value="{DynamicResource HelixTabItemsPanelTemplate}" />
+	</ControlTheme>
+
+
+
+
+	<ControlTheme x:Key="HelixTabItem"
+                TargetType="{x:Type TabItem}"
+                BasedOn="{StaticResource HelixTabItemThemeBase}">
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Content" Value="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+            <Setter Property="ContentTemplate" Value="{Binding HeaderTemplate, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+        </Style>
+	</ControlTheme>
 	<ControlTheme x:Key="HelixTabControl"
 				TargetType="{x:Type TabControl}">
-        <Setter Property="ItemContainerTheme" Value="{DynamicResource HelixTabItem}" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="ItemContainerTheme" Value="{DynamicResource HelixTabItem}" />
+		<Setter Property="ItemsPanel" Value="{DynamicResource HelixTabItemsPanelTemplate}" />
 		<Setter Property="Template">
 			<ControlTemplate>
 				<DockPanel>
@@ -111,18 +164,23 @@
 								Grid.Column="1" />
 					</Grid>
 					<ContentPresenter x:Name="PART_SelectedContentHost"
+									IsVisible="False"
 									Margin="{TemplateBinding Padding}"
-									Content="{TemplateBinding SelectedContent}"
-									ContentTemplate="{TemplateBinding SelectedContentTemplate}"
+									Content="{x:Null}"
+									ContentTemplate="{x:Null}"
 									HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
 									VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+					<!--
+									Content="{TemplateBinding SelectedContent}"
+									ContentTemplate="{TemplateBinding SelectedContentTemplate}"
+					-->
 				</DockPanel>
 			</ControlTemplate>
 		</Setter>
-		<Setter Property="ItemsPanel">
-			<ItemsPanelTemplate>
-				<StackPanel Orientation="Horizontal" />
-			</ItemsPanelTemplate>
-		</Setter>
+		<Style Selector="^:not(.no-content) /template/ ContentPresenter#PART_SelectedContentHost">
+			<Setter Property="IsVisible" Value="True" />
+			<Setter Property="Content" Value="{TemplateBinding SelectedContent}" />
+			<Setter Property="ContentTemplate" Value="{TemplateBinding SelectedContentTemplate}" />
+		</Style>
 	</ControlTheme>
 </ResourceDictionary>

@@ -1,0 +1,87 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="{x:Type rcui:CaptionButton}"
+				TargetType="{x:Type rcui:CaptionButton}">
+		<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle}" />
+		<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle}" />
+		<Setter Property="CornerRadius" Value="0,5,0,5" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="MinWidth" Value="{DynamicResource CaptionButton.MinWidth}" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Panel x:Name="LayoutRoot">
+					<rcui:AngledBorder x:Name="BgElement"
+									StrokeThickness="2"
+									CornerRadius="{TemplateBinding CornerRadius}"
+									Background="{TemplateBinding Background}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									Padding="{TemplateBinding Padding}">
+						<ContentPresenter x:Name="PART_ContentPresenter"
+										Background="Transparent"
+										BorderBrush="Transparent"
+										BorderThickness="0"
+										Padding="0"
+										Content="{TemplateBinding Content}"
+										ContentTemplate="{TemplateBinding ContentTemplate}"
+										HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+										VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+										Foreground="{TemplateBinding Foreground}" />
+					</rcui:AngledBorder>
+				</Panel>
+			</ControlTemplate>
+		</Setter>
+
+		<!-- Idle (inactive window) -->
+		<Style Selector="^:not(:windowactive)">
+		<!--
+			:not(:pointerover):not(:pressed):not(:disabled)
+		-->
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle.Inactive}" />
+			</Style>
+		</Style>
+
+		<!-- Hover -->
+		<Style Selector="^:pointerover:not(:pressed)">
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Hover}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Hover}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Hover}" />
+			</Style>
+		</Style>
+
+
+		<!-- Pressed -->
+		<Style Selector="^:pressed">
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Pressed}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Pressed}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Pressed}" />
+			</Style>
+		</Style>
+
+
+		<!-- Disabled -->
+		<Style Selector="^:disabled">
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Disabled}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Disabled}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Disabled}" />
+			</Style>
+		</Style>
+	</ControlTheme>
+</ResourceDictionary>

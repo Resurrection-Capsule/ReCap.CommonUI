@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.Pages.DiagnosticsView"
+            xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
+			xmlns:vmp="using:ReCap.CommonUI.Demo.ViewModels.Pages">
+	<UserControl.Resources>
+		<rcui:CompareToConverter x:Key="IsSeparatorConverter"
+								CompareTo="{x:Static vmp:DiagnosticsViewModel.SEPARATOR_HEADER}" />
+	</UserControl.Resources>
+	<UserControl.Styles>
+		<Style Selector="ContentPresenter#EntryPresenter">
+			<Style Selector="^:not(.separator)">
+				<Setter Property="ContentTemplate">
+					<DataTemplate>
+						<Grid Classes="data-display"
+							ColumnSpacing="4">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"
+												SharedSizeGroup="OperatingSystemInformationKey" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+							<TextBlock Text="{Binding Key, Mode=OneWay}"
+									FontWeight="Bold"
+									Grid.Column="0" />
+							<Rectangle Width="1"
+									VerticalAlignment="Stretch"
+									Grid.Column="2" />
+							<TextBlock Text="{Binding Value, Mode=OneWay}"
+									Grid.Column="2" />
+						</Grid>
+					</DataTemplate>
+				</Setter>
+			</Style>
+			<Style Selector="^.separator">
+				<Setter Property="ContentTemplate">
+					<DataTemplate>
+						<Rectangle Height="1"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Stretch"
+								Margin="0,8"
+								Fill="{Binding $parent[ContentPresenter].Foreground, Mode=OneWay}"
+								Opacity="0.5" />
+					</DataTemplate>
+				</Setter>
+			</Style>
+		</Style>
+
+
+		<Style Selector="ItemsControl.os-info-display">
+			<Setter Property="ItemTemplate">
+				<DataTemplate>
+					<ContentPresenter x:Name="EntryPresenter"
+									Content="{Binding}"
+									Classes.separator="{Binding Key, Converter={StaticResource IsSeparatorConverter}, Mode=OneWay}" />
+				</DataTemplate>
+			</Setter>
+			<Setter Property="Grid.IsSharedSizeScope" Value="True" />
+		</Style>
+	</UserControl.Styles>
+	<UniformGrid Rows="1"
+				ColumnSpacing="8"
+				RowSpacing="8">
+		<HeaderedContentControl Header="General Operating System Info">
+			<ItemsControl Classes="os-info-display"
+						ItemsSource="{Binding OperatingSystemGeneralInformation, Mode=OneWay}" />
+		</HeaderedContentControl>
+		<HeaderedContentControl Header="Platform-specific details">
+			<ItemsControl Classes="os-info-display"
+						ItemsSource="{Binding OperatingSystemPlatformSpecificInformation, Mode=OneWay}" />
+		</HeaderedContentControl>
+	</UniformGrid>
+</UserControl>

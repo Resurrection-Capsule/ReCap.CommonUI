@@ -11,11 +11,11 @@ namespace ReCap.CommonUI.Demo.Reflection
         } = false;
 
 
-        public TypeFilterTypeFlags IncludeTypes
+        public TypeFilterKindFlags IncludeTypeKinds
         {
             get;
             init;
-        } = TypeFilterTypeFlags.Class;
+        } = TypeFilterKindFlags.Class;
 
 
         public TypeFilterModifierFlags IncludeModifiers
@@ -23,6 +23,27 @@ namespace ReCap.CommonUI.Demo.Reflection
             get;
             init;
         } = TypeFilterModifierFlags.Public;
+
+
+        public bool IncludeNested
+        {
+            get;
+            init;
+        } = false;
+
+
+        public bool IncludeAbstract
+        {
+            get;
+            init;
+        } = false;
+
+
+        public bool IncludeGeneric
+        {
+            get;
+            init;
+        } = false;
 
 
         public Type BaseType

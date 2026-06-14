@@ -18,6 +18,17 @@
             "stopAtEntry": false
         },
         {
+            "name": "Test Helix Window",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build_testhelixwindow",
+            "program": "${workspaceFolder}/samples/TestHelixWindow/bin/Debug/net5.0/TestHelixWindow.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/samples/TestHelixWindow",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"

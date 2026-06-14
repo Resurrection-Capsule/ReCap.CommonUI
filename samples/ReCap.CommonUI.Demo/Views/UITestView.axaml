@@ -1,8 +1,10 @@
 ﻿<UserControl x:Class="ReCap.CommonUI.Demo.Views.UITestView"
             xmlns="https://github.com/avaloniaui"
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
 			xmlns:local="using:ReCap.CommonUI.Demo"
-			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels">
+			xmlns:vm="using:ReCap.CommonUI.Demo.ViewModels"
+			Padding="12,8">
 	<UserControl.Resources>
 		<local:MultiplierToPercentageConverter x:Key="MultiplierToPercentageConverter" />
 	</UserControl.Resources>

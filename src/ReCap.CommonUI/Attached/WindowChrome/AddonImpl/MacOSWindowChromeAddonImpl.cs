@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Platform;
 
@@ -18,22 +20,46 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public override bool PrefersLeftSideButtons
-        {
-            get => true;
-        }
+        protected override IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles()
+            => new List<CaptionButtonRole>()
+            {
+                CaptionButtonRole.Minimize,
+                CaptionButtonRole.Maximize,
+                CaptionButtonRole.FullScreen,
+                CaptionButtonRole.Close,
+                CaptionButtonRole.Menu,
+            };
 
 
-        public override CaptionButtonsOrder PreferredCaptionButtonsOrder
-        {
-            get => CaptionButtonsOrder.MaxMinClose;
-        }
+        protected override CaptionButtonRolesPair CreateDefaultCaptionButtons()
+            => new()
+            {
+                Left = new()
+                {
+                    CaptionButtonRole.Close,
+                    CaptionButtonRole.Minimize,
+                    CaptionButtonRole.Maximize,
+                    CaptionButtonRole.Menu,
+                },
+                Right = new()
+                {
+                },
+            };
 
 
-        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
+        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
         {
             window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
-            base.ApplyDesiredManagedChrome(window, desiredManagedChrome, ref useManagedChrome);
+            bool useManagedChrome = default;
+            DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
+                this, window, desiredManagedChrome
+                , fallbackToSystemDecorationsProperty: true
+                , value =>
+                {
+                    useManagedChrome = value;
+                    applyUseManagedChrome(value);
+                }
+            );
 
             window.ExtendClientAreaChromeHints = useManagedChrome
                 ? ExtendClientAreaChromeHints.NoChrome

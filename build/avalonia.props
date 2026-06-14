@@ -1,13 +1,16 @@
 ﻿<Project>
 	<PropertyGroup>
-		<AvVer>11.3.2</AvVer>
+		<AvVer>11.3.12</AvVer>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvVer)" />
 		<PackageReference Include="Avalonia.Desktop" Version="$(AvVer)" />
-		<PackageReference Include="Avalonia.Diagnostics" Version="$(AvVer)" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="$(AvVer)" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvVer)" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
+		<!--
+		<PackageReference Include="ReactiveUI.Avalonia" Version="$(AvVer)" />
+		-->
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvVer)" />
 	</ItemGroup>
 </Project>

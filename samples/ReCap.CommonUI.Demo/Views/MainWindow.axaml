@@ -1,9 +1,11 @@
 <Window x:Class="ReCap.CommonUI.Demo.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
         xmlns:v="using:ReCap.CommonUI.Demo.Views"
         Title="ReCap Common UI Tests"
         Width="1020" Height="572"
-        Padding="12,8">
+        Icon="avares://ReCap.CommonUI.Demo/Assets/icon.ico"
+        rcui:WindowChromeAddon.ReserveCaptionArea="{Binding UseReservedCaptionArea, Mode=OneWay}">
     <v:UITestView />
 </Window>

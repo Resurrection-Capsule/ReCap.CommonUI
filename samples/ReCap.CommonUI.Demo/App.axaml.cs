@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReCap.CommonUI.Attached.WindowChrome;
@@ -33,21 +34,33 @@ namespace ReCap.CommonUI.Demo
         }
 
 
-        public static readonly StyledProperty<bool> LeftSideButtonsProperty =
-            AvaloniaProperty.Register<App, bool>(nameof(LeftSideButtons));
-        public bool LeftSideButtons
+        public static readonly StyledProperty<CaptionButtonRoles> LeftCaptionButtonsProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(LeftCaptionButtons));
+        public CaptionButtonRoles LeftCaptionButtons
         {
-            get => GetValue(LeftSideButtonsProperty);
-            set => SetValue(LeftSideButtonsProperty, value);
+            get => GetValue(LeftCaptionButtonsProperty);
+            set => SetValue(LeftCaptionButtonsProperty, value);
         }
 
 
-        public static readonly StyledProperty<CaptionButtonsOrder> ButtonsOrderProperty =
-            AvaloniaProperty.Register<App, CaptionButtonsOrder>(nameof(ButtonsOrder));
-        public CaptionButtonsOrder ButtonsOrder
+        public static readonly StyledProperty<CaptionButtonRoles> RightCaptionButtonsProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(RightCaptionButtons));
+        public CaptionButtonRoles RightCaptionButtons
         {
-            get => GetValue(ButtonsOrderProperty);
-            set => SetValue(ButtonsOrderProperty, value);
+            get => GetValue(RightCaptionButtonsProperty);
+            set => SetValue(RightCaptionButtonsProperty, value);
+        }
+
+
+        public static readonly DirectProperty<App, UITestViewModel> MainVMProperty
+            = AvaloniaProperty.RegisterDirect<App, UITestViewModel>(nameof(MainVM)
+                , getter: x => x.MainVM
+            );
+        UITestViewModel _mainVM = null;
+        public UITestViewModel MainVM
+        {
+            get => _mainVM;
+            private set => SetAndRaise(MainVMProperty, ref _mainVM, value);
         }
 
 
@@ -62,14 +75,17 @@ namespace ReCap.CommonUI.Demo
         public override void OnFrameworkInitializationCompleted()
         {
             ManagedChromeHint = ManagedChromeMode.Auto;
-            LeftSideButtons = WindowChromeAddon.PlatformPrefersLeftSideButtons;
-            ButtonsOrder = WindowChromeAddon.PlatformPreferredCaptionButtonsOrder;
+            var captionButtons = WindowChromeAddon.PlatformDefaultCaptionButtons;
+            LeftCaptionButtons = captionButtons.Left;
+            RightCaptionButtons = captionButtons.Right;
+            MainVM = new UITestViewModel();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
                 desktop.MainWindow = new MainWindow()
                 {
-                    DataContext = new UITestViewModel(),
+                    DataContext = MainVM,
                 };
             }
 

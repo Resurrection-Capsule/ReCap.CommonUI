@@ -35,6 +35,7 @@
 									   Margin="{TemplateBinding Padding}"
 									   IsVisible="{Binding Path=(rcui:WindowChromeAddon.ManagedShowTitle), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 									   />
+						<!--
 						<rcui:CaptionButtonsSizeBridge x:Name="SizeBridge"
 													HorizontalAlignment="Right"
 													VerticalAlignment="Top">
@@ -42,12 +43,18 @@
 											Foreground="{TemplateBinding Foreground}"
 											Win32Properties.NonClientHitTestResult="Client" />
 						</rcui:CaptionButtonsSizeBridge>
+						-->
+						<CaptionButtons x:Name="PART_CaptionButtons"
+										HorizontalAlignment="Right"
+										VerticalAlignment="Top"
+										Foreground="{TemplateBinding Foreground}"
+										Win32Properties.NonClientHitTestResult="Client" />
 					</Panel>
 				</Panel>
 			</ControlTemplate>
 		</Setter>
 		<Style Selector="^:left-side-buttons">
-			<Style Selector="^ /template/ rcui|CaptionButtonsSizeBridge#SizeBridge">
+			<Style Selector="^ /template/ CaptionButtons#PART_CaptionButtons">
 				<Setter Property="HorizontalAlignment" Value="Left" />
 				<Setter Property="DockPanel.Dock" Value="Left" />
 			</Style>

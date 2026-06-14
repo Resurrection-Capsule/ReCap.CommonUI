@@ -1,29 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    public enum CaptionButtonsOrder
-    {
-        MinMaxClose,
-        MaxMinClose,
-    }
-
-
-    public enum ManagedChromeMode
-    {
-        Never = 0,
-        Auto,
-        WheneverPossible,
-    }
-
-
     public partial class WindowChromeAddon
         : AvaloniaObject
     {
-        static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatform<IWindowChromeAddonImpl>();
+        static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeAddonImpl>();
+        static WindowChromeAddon()
+        {
+            EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
+            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
+            _IMPL.Init();
+
+            Dbg.DoChangedDebugOutput<Window>(EnableHackHintProperty, ManagedChromeHintProperty, ManagedShowTitleProperty);
+            CaptionButtonsInit();
+        }
+
+
+
 
 #region Decorations Customization
         public static readonly AttachedProperty<bool> ManagedShowTitleProperty =
@@ -34,20 +32,28 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => control.SetValue(ManagedShowTitleProperty, value);
 
 
-        public static readonly AttachedProperty<bool> LeftSideButtonsProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("LeftSideButtons", PlatformPrefersLeftSideButtons);
-        public static bool GetLeftSideButtons(Window control)
-            => control.GetValue(LeftSideButtonsProperty);
-        public static void SetLeftSideButtons(Window control, bool value)
-            => control.SetValue(LeftSideButtonsProperty, value);
+        public static readonly AttachedProperty<bool> ManagedShowIconProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ManagedShowIcon", _IMPL.DefaultIconInTitleBar);
+        public static bool GetManagedShowIcon(Window control)
+            => control.GetValue(ManagedShowIconProperty);
+        public static void SetManagedShowIcon(Window control, bool value)
+            => control.SetValue(ManagedShowIconProperty, value);
 
 
-        public static readonly AttachedProperty<CaptionButtonsOrder> ButtonsOrderProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, CaptionButtonsOrder>("ButtonsOrder", PlatformPreferredCaptionButtonsOrder);
-        public static CaptionButtonsOrder GetButtonsOrder(Window control)
-            => control.GetValue(ButtonsOrderProperty);
-        public static void SetButtonsOrder(Window control, CaptionButtonsOrder value)
-            => control.SetValue(ButtonsOrderProperty, value);
+        public static readonly AttachedProperty<bool> ReserveCaptionAreaProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ReserveCaptionArea", true);
+        public static bool GetReserveCaptionArea(Window control)
+            => control.GetValue(ReserveCaptionAreaProperty);
+        public static void SetReserveCaptionArea(Window control, bool value)
+            => control.SetValue(ReserveCaptionAreaProperty, value);
+
+
+        public static readonly AttachedProperty<double> DefaultTitleBarHeightProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, double>("DefaultTitleBarHeight", 1d);
+        public static double GetDefaultTitleBarHeight(Window control)
+            => control.GetValue(DefaultTitleBarHeightProperty);
+        public static void SetDefaultTitleBarHeight(Window control, double value)
+            => control.SetValue(DefaultTitleBarHeightProperty, value);
 #endregion
 
 
@@ -66,18 +72,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, ManagedChromeMode>("ManagedChromeHint", ManagedChromeMode.Auto);
         public static ManagedChromeMode GetManagedChromeHint(Window control)
             => control.GetValue(ManagedChromeHintProperty);
-        internal static void SetManagedChromeHint(Window control, ManagedChromeMode value)
+        public static void SetManagedChromeHint(Window control, ManagedChromeMode value)
             => control.SetValue(ManagedChromeHintProperty, value);
-
-
-
-
-        internal static readonly AttachedProperty<bool> DesiredManagedChromeProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("DesiredManagedChrome", false);
-        internal static bool GetDesiredManagedChrome(Window control)
-            => control.GetValue(DesiredManagedChromeProperty);
-        internal static void SetDesiredManagedChrome(Window control, bool value)
-            => control.SetValue(DesiredManagedChromeProperty, value);
 
 
 
@@ -90,6 +86,15 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => control.SetValue(IsUsingManagedChromeProperty, value);
 #endregion
 
+
+
+
+        public static readonly AttachedProperty<NCHitTestResult> NonClienHitTestResultProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Visual, NCHitTestResult>("NonClienHitTestResult", NCHitTestResult.CLIENT, inherits: true);
+        public static NCHitTestResult GetNonClienHitTestResult(Visual control)
+            => control.GetValue(NonClienHitTestResultProperty);
+        public static void SetNonClienHitTestResult(Visual control, NCHitTestResult value)
+            => control.SetValue(NonClienHitTestResultProperty, value);
 
 
         
@@ -105,45 +110,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public static bool PlatformPrefersLeftSideButtons
-        {
-            get => _IMPL.PrefersLeftSideButtons;
-        }
-
-
-        public static CaptionButtonsOrder PlatformPreferredCaptionButtonsOrder
-        {
-            get => _IMPL.PreferredCaptionButtonsOrder;
-        }
-
-
-
-
-        static WindowChromeAddon()
-        {
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
-            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
-            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(DesiredManagedChromeProperty_Changed);
-
-            _IMPL.Init();
-
-#if DEBUG
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            ManagedChromeHintProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            DesiredManagedChromeProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-
-            ManagedShowTitleProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            LeftSideButtonsProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-            ButtonsOrderProperty.Changed.AddClassHandler<Window>(WindowChromeCosmeticProperty_Changed);
-#endif
-        }
-
-
-        static void WindowChromeCosmeticProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
-        {
-            Console.WriteLine($"WINDOW '{window.Title}' PROPERTY '{e.Property.Name}' CHANGED:");
-            Console.WriteLine($"    '{e.OldValue}' ==> '{e.NewValue}'");
-        }
 
 
         static void EnableHackHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
@@ -154,16 +120,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => UpdateManagedChrome(window, e.GetNewValue<ManagedChromeMode>());
 
 
-        static void DesiredManagedChromeProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
-        {
-            bool newValue = e.GetNewValue<bool>();
-            bool isUsingManagedChrome = newValue;
-            _IMPL.ApplyDesiredManagedChrome(window, newValue, ref isUsingManagedChrome);
-
-            SetIsUsingManagedChrome(window, newValue);
-        }
-
-
 
 
 
@@ -172,7 +128,43 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         internal static void UpdateManagedChrome(Window window, ManagedChromeMode chromeMode)
         {
             bool useManagedChrome = _IMPL.GetDesiredManagedChrome(window, chromeMode);
-            SetDesiredManagedChrome(window, useManagedChrome);
+            SetDesiresManagedChrome(window, useManagedChrome);
+        }
+
+
+
+
+        static readonly Dictionary<Window, bool> _desiresManagedChrome = new();
+        static bool GetDesiresManagedChrome(Window window)
+            => _desiresManagedChrome[window];
+
+
+        static bool TryGetDesiresManagedChrome(Window window, out bool desiresManagedChrome)
+            => _desiresManagedChrome.TryGetValue(window, out desiresManagedChrome);
+
+
+        static void SetDesiresManagedChrome(Window window, bool desiresManagedChrome)
+        {
+            if (!_desiresManagedChrome.ContainsKey(window))
+                window.Closed += Window_Closed;
+
+            _desiresManagedChrome[window] = desiresManagedChrome;
+
+            _IMPL.ApplyDesiredManagedChrome(window, desiresManagedChrome
+                , v => SetIsUsingManagedChrome(window, v)
+            );
+        }
+
+
+        static void ClearChromeDesire(Window window)
+            => _desiresManagedChrome.Remove(window);
+
+
+        static void Window_Closed(object sender, EventArgs e)
+        {
+            Window window = (Window)sender;
+            window.Closed -= Window_Closed;
+            ClearChromeDesire(window);
         }
     }
 }

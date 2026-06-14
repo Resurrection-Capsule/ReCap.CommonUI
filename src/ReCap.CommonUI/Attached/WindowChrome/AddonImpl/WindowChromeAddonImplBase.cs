@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
@@ -18,15 +22,24 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public abstract bool PrefersLeftSideButtons
+        public virtual bool DefaultIconInTitleBar
         {
-            get;
+            get => true;
         }
 
 
-        public abstract CaptionButtonsOrder PreferredCaptionButtonsOrder
+        protected abstract CaptionButtonRolesPair CreateDefaultCaptionButtons();
+        public CaptionButtonRolesPair DefaultCaptionButtons
         {
-            get;
+            get => CreateDefaultCaptionButtons();
+        }
+
+
+        public WindowChromeAddonImplBase()
+        {
+            _validCaptionButtonRoles = GetValidCaptionButtonRoles();
+            if (_validCaptionButtonRoles.Any())
+                _validCaptionButtonRoles = _validCaptionButtonRoles.OrderBy(x => x);
         }
 
 
@@ -38,36 +51,69 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         public virtual bool GetDesiredManagedChrome(Window window, ManagedChromeMode chromeMode)
-            => chromeMode switch
-            {
-                ManagedChromeMode.WheneverPossible => CanUseManagedWindowChrome,
-                ManagedChromeMode.Auto => PrefersManagedWindowChrome,
-                _ => false,
-            };
+            => DefaultWindowChromeAddonImpl.GetDesiredManagedChrome_Default(this, window, chromeMode);
 
 
-        public virtual void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, ref bool useManagedChrome)
+        public abstract void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome);
+
+
+
+
+        readonly IEnumerable<CaptionButtonRole> _validCaptionButtonRoles;
+        public IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
         {
-            bool oldIsExtendedIntoWindowDecorations = window.IsExtendedIntoWindowDecorations;
-            bool isUsingManagedChrome = default;
-
-
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                if (desiredManagedChrome && !window.IsExtendedIntoWindowDecorations)
-                    window.SystemDecorations = SystemDecorations.None;
-                else if ((!desiredManagedChrome) && !oldIsExtendedIntoWindowDecorations)
-                    window.SystemDecorations = SystemDecorations.Full;
-
-
-                Dispatcher.UIThread.Invoke(() =>
-                {
-                    isUsingManagedChrome = window.IsExtendedIntoWindowDecorations || desiredManagedChrome;
-                });
-            });
-
-
-            useManagedChrome = isUsingManagedChrome;
+            get => _validCaptionButtonRoles;
         }
+        protected abstract IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles();
+        public virtual void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e)
+        {
+            var role = e.Role;
+            switch (role)
+            {
+                case CaptionButtonRole.Menu:
+                {
+                    ExecuteMenu(window, e);
+                    break;
+                }
+                /*
+
+                case CaptionButtonRole.ApplicationMenu:
+                {
+                    break;
+                }
+
+                case CaptionButtonRole.ShowOnAllDesktops:
+                {
+                    break;
+                }
+
+                case CaptionButtonRole.ContextHelp:
+                {
+                    break;
+                }
+
+                case CaptionButtonRole.Shade:
+                {
+                    break;
+                }
+
+                case CaptionButtonRole.KeepBelow:
+                {
+                    break;
+                }
+
+                */
+                case CaptionButtonRole.KeepAbove:
+                {
+                    ExecuteKeepAbove(window, e);
+                    break;
+                }
+            }
+        }
+
+        protected virtual void ExecuteKeepAbove(Window window, CaptionButtonClickEventArgs e)
+            => window.Topmost = !window.Topmost;
+        protected virtual void ExecuteMenu(Window window, CaptionButtonClickEventArgs e)
+        {}
     }
 }
