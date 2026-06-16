@@ -1,13 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
-using Avalonia.Data;
-using Avalonia.Input;
-using Avalonia.Platform;
-using SColl = System.Collections;
 
 namespace ReCap.CommonUI.Util
 {

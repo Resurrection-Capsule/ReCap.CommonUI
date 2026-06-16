@@ -7,6 +7,7 @@ using Avalonia.Controls.Chrome;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using ReCap.CommonUI.Attached.WindowChrome;
 using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
@@ -69,7 +70,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
-            if (!(e.Root is Window window))
+            if (e.Root is not Window window)
                 return;
             
             _window = window;
@@ -171,11 +172,18 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
             // [TODO: account for negative margins on TitleBarUnderlay?]
             double height = _window.ExtendClientAreaTitleBarHeightHint;
-            if (height < 0d)
+
+            if (!WindowChromeAddon.GetIsUsingManagedChrome(_window))
+                height -= WindowChromeAddon.GetDefaultTitleBarHeight(_window);
+            else if (height < 0d)
                 height = _titleBar.Bounds.Height;
 
-            if (height >= 0d)
-                Height = height;
+
+            height = Math.Max(0d, height);
+#if PRINT_PROPERTY_CHANGES
+            Console.WriteLine($"{nameof(TitleBarUnderlay)}.{nameof(Height)}: '{Height}' => '{height}'");
+#endif
+            Height = height;
         }
 
 

@@ -16,7 +16,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
             _IMPL.Init();
 
-            Dbg.DoChangedDebugOutput<Window>(EnableHackHintProperty, ManagedChromeHintProperty, ManagedShowTitleProperty);
+            Dbg.DoChangedDebugOutput<Window>(EnableHackHintProperty, ManagedChromeHintProperty, ManagedShowTitleProperty, Window.ExtendClientAreaTitleBarHeightHintProperty);
             CaptionButtonsInit();
         }
 

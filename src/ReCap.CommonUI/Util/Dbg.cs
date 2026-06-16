@@ -1,7 +1,3 @@
-#if PRINT_PROPERTY_CHANGES && DEBUG
-#define PRINT_PROP_CHANGES
-#endif
-
 using System;
 using System.Diagnostics;
 using Avalonia;
@@ -21,7 +17,7 @@ namespace ReCap.CommonUI.Util
             where TTarget
                 : AvaloniaObject
         {
-#if PRINT_PROP_CHANGES
+#if PRINT_PROPERTY_CHANGES
             foreach (var property in properties)
             {
                 property.Changed.AddClassHandler<TTarget>(ChangedDebugPropertyChangedHandler);
@@ -30,7 +26,7 @@ namespace ReCap.CommonUI.Util
         }
 
 
-#if PRINT_PROP_CHANGES
+#if PRINT_PROPERTY_CHANGES
         static void ChangedDebugPropertyChangedHandler<TTarget>(TTarget sender, AvaloniaPropertyChangedEventArgs e)
         {
             Console.WriteLine($"{typeof(TTarget).Name} '{sender}' PROPERTY '{e.Property.Name}' CHANGED:");

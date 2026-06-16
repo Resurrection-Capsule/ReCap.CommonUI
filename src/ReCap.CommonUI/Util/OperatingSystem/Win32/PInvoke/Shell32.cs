@@ -12,9 +12,5 @@ namespace ReCap.CommonUI.Util.OperatingSystem.Win32
 
         [DllImport(_SHELL32, CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern uint ExtractIconEx(string szFileName, int nIconIndex, out IntPtr phiconLarge, out IntPtr phiconSmall, uint nIcons);
-
-
-        [DllImport(_SHELL32, EntryPoint = "#727")]
-        public extern static int SHGetImageList(int iImageList, ref Guid riid, out IImageList ppv);
     }
 }
