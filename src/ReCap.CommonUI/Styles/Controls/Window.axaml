@@ -167,7 +167,7 @@
 
             <Style Selector="^[WindowState=Normal]">
                 <Style Selector="^ /template/ rcui|WindowResizer#Resizer">
-                    <Setter Property="IsEnabled" Value="True" />
+                    <Setter Property="IsEnabled" Value="{TemplateBinding CanResize}" />
 		        </Style>
 		    </Style>
 

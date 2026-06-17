@@ -5,89 +5,57 @@
 			xmlns:demo="using:ReCap.CommonUI.Demo"
 			xmlns:v="using:ReCap.CommonUI.Demo.Views"
 			Classes.IsWindowUsingManagedChrome="{Binding Path=(rcui:WindowChromeAddon.IsUsingManagedChrome), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=False}">
-	<!--
-			xmlns:vpart="using:ReCap.CommonUI.Demo.Views.Parts"
-	-->
 	<UserControl.Styles>
 		<StyleInclude Source="avares://ReCap.CommonUI.Demo/Views/Pages/Styles/WindowViewStyles.axaml" />
 	</UserControl.Styles>
 	<StackPanel Orientation="Vertical"
-				Spacing="20">
-		<Grid ColumnDefinitions="*,Auto,Auto"
-				RowDefinitions="Auto,Auto,Auto">
-			<Control Classes="untouchable"
-					Width="4"
-					Height="4"
-					Grid.Column="1"
-					Grid.Row="1" />
-			<HeaderedContentControl Header="Windowing properties"
-									Grid.Column="0"
-									Grid.Row="0">
-				<UniformGrid Columns="2"
-							DataContext="{Binding $parent[Window], Mode=OneWay}">
-					<CheckBox Content="Resizable"
-							IsChecked="{Binding CanResize, Mode=TwoWay}" />
-					<CheckBox Content="Allow minimize"
-							IsChecked="{Binding CanMinimize, Mode=TwoWay}" />
-					<CheckBox Content="Show in taskbar"
-							IsChecked="{Binding ShowInTaskbar, Mode=TwoWay}" />
-					<CheckBox Content="Allow maximize"
-							IsChecked="{Binding CanMaximize, Mode=TwoWay}" />
-				</UniformGrid>
-			</HeaderedContentControl>
-			<!--
-			<HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ExtendClientAreaTitleBarHeightHint}"
-									DataContext="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
-									VerticalAlignment="Top"
-									Grid.Column="0"
-									Grid.Row="2" />
-			<HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ManagedChromeHint}"
-									DataContext="{Binding ManagedChromeHint, Mode=TwoWay}"
-									Grid.Column="2"
-									Grid.Row="0" />
-			-->
-			<!--
-			<vpart:ExtendClientAreaTitleBarHeightHintCustomizationView HeightHint="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
-					VerticalAlignment="Top"
-					Grid.Column="0"
-					Grid.Row="2" />
-			-->
-			<HeaderedContentControl Header="TitleBar Height Hint"
-									VerticalAlignment="Top"
-									Grid.Column="0"
-									Grid.Row="2">
-				<!--
-									VerticalContentAlignment="Top"
-				-->
-				<StackPanel Orientation="Vertical">
-					<Slider Value="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
-							TickFrequency="1"
-							IsSnapToTickEnabled="True"
-							Minimum="-1"
-							Maximum="100" />
-					<Panel>
-						<TextBlock x:Name="AutoLabel"
-								Text="Height:     Auto"
-								IsVisible="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Converter={x:Static rcui:ArithmeticConverters.LessThan}, ConverterParameter=0, Mode=OneWay}" />
-						<TextBlock x:Name="TextLabel"
-								Text="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, StringFormat='Height:     {0:#######0}', Mode=OneWay}"
-								IsVisible="{Binding !#AutoLabel.IsVisible, Mode=OneWay}" />
-					</Panel>
-				</StackPanel>
-			</HeaderedContentControl>
-			<!--
-			<vpart:ManagedChromeHintCustomizationView Mode="{Binding ManagedChromeHint, Mode=TwoWay}"
-					Grid.Column="2"
-					Grid.Row="0" />
-			-->
+				Spacing="8">
+		<UniformGrid Rows="1"
+					ColumnSpacing="8"
+					RowSpacing="8">
+			<StackPanel Orientation="Vertical"
+						Spacing="8">
+				<HeaderedContentControl Header="Windowing properties"
+										Grid.Column="0"
+										Grid.Row="0">
+					<UniformGrid Columns="2"
+								DataContext="{Binding $parent[Window], Mode=OneWay}">
+						<CheckBox Content="Resizable"
+								IsChecked="{Binding CanResize, Mode=TwoWay}" />
+						<CheckBox Content="Allow minimize"
+								IsChecked="{Binding CanMinimize, Mode=TwoWay}" />
+						<CheckBox Content="Show in taskbar"
+								IsChecked="{Binding ShowInTaskbar, Mode=TwoWay}" />
+						<CheckBox Content="Allow maximize"
+								IsChecked="{Binding CanMaximize, Mode=TwoWay}" />
+					</UniformGrid>
+				</HeaderedContentControl>
+				<HeaderedContentControl Header="TitleBar Height Hint"
+										VerticalAlignment="Top"
+										Grid.Column="0"
+										Grid.Row="2">
+					<StackPanel Orientation="Vertical">
+						<Slider Value="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
+								TickFrequency="1"
+								IsSnapToTickEnabled="True"
+								Minimum="-1"
+								Maximum="100" />
+						<Panel>
+							<TextBlock x:Name="AutoLabel"
+									Text="Height:     Auto"
+									IsVisible="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Converter={x:Static rcui:ArithmeticConverters.LessThan}, ConverterParameter=0, Mode=OneWay}" />
+							<TextBlock x:Name="TextLabel"
+									Text="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, StringFormat='Height:     {0:#######0}', Mode=OneWay}"
+									IsVisible="{Binding !#AutoLabel.IsVisible, Mode=OneWay}" />
+						</Panel>
+					</StackPanel>
+				</HeaderedContentControl>
+			</StackPanel>
 			<HeaderedContentControl Header="Window chrome options"
 									VerticalAlignment="Top"
 									Grid.Column="2"
 									Grid.Row="0"
 									Grid.RowSpan="3">
-				<!--
-									VerticalContentAlignment="Top"
-				-->
 				<StackPanel Orientation="Vertical"
 							Spacing="20">
 					<StackPanel Classes="leftButtons">
@@ -97,14 +65,6 @@
 									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Never}, Mode=TwoWay}" />
 						<ToggleButton Content="Managed"
 									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.WheneverPossible}, Mode=TwoWay}" />
-						<!--
-						<ToggleButton Content="Auto"
-									IsChecked="{Binding $parent[HeaderedContentControl].Mode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Auto}, Mode=TwoWay}" />
-						<ToggleButton Content="System"
-									IsChecked="{Binding $parent[HeaderedContentControl].Mode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Never}, Mode=TwoWay}" />
-						<ToggleButton Content="Managed"
-									IsChecked="{Binding $parent[HeaderedContentControl].Mode, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.WheneverPossible}, Mode=TwoWay}" />
-						-->
 					</StackPanel>
 					<StackPanel Orientation="Vertical"
 								IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}">
@@ -119,57 +79,35 @@
 					</StackPanel>
 				</StackPanel>
 			</HeaderedContentControl>
-		</Grid>
+		</UniformGrid>
 
 
 		<HeaderedContentControl Header="Caption Buttons order">
 			<StackPanel Orientation="Vertical">
 				<ContentControl Theme="{DynamicResource FakeTitleBarContainer}">
-					<!--
-					<Grid ColumnDefinitions="Auto,*,Auto"
-						RowDefinitions="Auto,Auto">
-					-->
 					<DockPanel Height="{DynamicResource TitleBar.DefaultHeight}">
 						<ItemsControl x:Name="LeftCaptionButtons"
 									Theme="{DynamicResource CaptionButtonsSide}"
 									DataContext="{Binding LeftCaptionButtons, Mode=OneWay}"
 									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
 									DockPanel.Dock="Left" />
-						<!--
-									HorizontalAlignment="Left"
-									Grid.Column="0"
-									Grid.Row="0"
-									Grid.RowSpan="2"
-						-->
 						<ItemsControl x:Name="RightCaptionButtons"
 									Theme="{DynamicResource CaptionButtonsSide}"
 									DataContext="{Binding RightCaptionButtons, Mode=OneWay}"
 									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
 									DockPanel.Dock="Right" />
-						<!--
-									HorizontalAlignment="Right"
-									Grid.Column="2"
-									Grid.Row="0"
-									Grid.RowSpan="2"
-						-->
 						<ContentControl Theme="{DynamicResource FakeTitleBarMiddle}">
 							<TextBlock Text="Window title"
 									Theme="{DynamicResource FakeTitleBarText}"
 									HorizontalAlignment="Left" />
 						</ContentControl>
 					</DockPanel>
-					<!--
-					</Grid>
-					-->
 				</ContentControl>
 				<ItemsControl Theme="{DynamicResource CaptionButtonsPool}"
 							HorizontalAlignment="Center"
-							ItemsSource="{Binding AllCaptionButtons, Mode=OneWay}"
-							Grid.Column="1"
-							Grid.Row="1" />
+							ItemsSource="{Binding AllCaptionButtons, Mode=OneWay}" />
 				<TextBlock Text="Drag from here to the left or right groups to add."
-						Grid.Column="1"
-						Grid.Row="0" />
+						TextAlignment="Center" />
 			</StackPanel>
 		</HeaderedContentControl>
 		<HeaderedContentControl Header="Bridged caption buttons widths">
