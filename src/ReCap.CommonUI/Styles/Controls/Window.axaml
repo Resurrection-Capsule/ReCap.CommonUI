@@ -77,7 +77,7 @@
                             </Panel>
                         </VisualLayerManager>
                     </Panel>
-                    <rcui:WindowResizeEdge x:Name="ResizeEdge"
+                    <rcui:WindowResizer x:Name="Resizer"
                                         BorderThickness="8"
                                         IsEnabled="False" />
                 </Panel>
@@ -166,7 +166,7 @@
 
 
             <Style Selector="^[WindowState=Normal]">
-                <Style Selector="^ /template/ rcui|WindowResizeEdge#ResizeEdge">
+                <Style Selector="^ /template/ rcui|WindowResizer#Resizer">
                     <Setter Property="IsEnabled" Value="True" />
 		        </Style>
 		    </Style>

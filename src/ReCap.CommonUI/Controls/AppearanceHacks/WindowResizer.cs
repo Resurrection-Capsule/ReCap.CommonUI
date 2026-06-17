@@ -7,7 +7,7 @@ using Avalonia.Rendering;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
-    public sealed class WindowResizeEdge
+    public sealed class WindowResizer
         : Control
         , ICustomHitTest
     {
@@ -30,7 +30,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
         public static readonly StyledProperty<Thickness> BorderThicknessProperty =
-            Border.BorderThicknessProperty.AddOwner<WindowResizeEdge>();
+            Border.BorderThicknessProperty.AddOwner<WindowResizer>();
         public Thickness BorderThickness
         {
             get => GetValue(BorderThicknessProperty);
@@ -40,13 +40,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
 
-        static WindowResizeEdge()
+        static WindowResizer()
         {
-            IsEnabledProperty.Changed.AddClassHandler<WindowResizeEdge>(IsEnabledProperty_Changed);
+            IsEnabledProperty.Changed.AddClassHandler<WindowResizer>(IsEnabledProperty_Changed);
         }
 
 
-        static void IsEnabledProperty_Changed(WindowResizeEdge edge, AvaloniaPropertyChangedEventArgs args)
+        static void IsEnabledProperty_Changed(WindowResizer edge, AvaloniaPropertyChangedEventArgs args)
             => edge.OnIsEnabledChanged(args.GetNewValue<bool>());
 
 
@@ -55,7 +55,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         Window _window = null;
         bool _hasCustomCursor = false;
         bool _canResize = true;
-        public WindowResizeEdge()
+        public WindowResizer()
             : base()
         {
             _canResize = IsEnabled;
