@@ -38,45 +38,48 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        public static readonly StyledProperty<bool> CanResizeProperty =
-            AvaloniaProperty.Register<WindowResizeEdge, bool>(nameof(CanResize), true);
-        public bool CanResize
-        {
-            get => GetValue(CanResizeProperty);
-            set => SetValue(CanResizeProperty, value);
-        }
-
-
-        public static readonly DirectProperty<WindowResizeEdge, bool> IsPointerOverEdgeProperty =
-            AvaloniaProperty.RegisterDirect<WindowResizeEdge, bool>(nameof(IsPointerOverEdge)
-                , e => e.IsPointerOverEdge
-            );
-        bool _IsPointerOverEdge = false;
-        public bool IsPointerOverEdge
-        {
-            get => _IsPointerOverEdge;
-            private set => SetAndRaise(IsPointerOverEdgeProperty, ref _IsPointerOverEdge, value);
-        }
-
-
 
 
         static WindowResizeEdge()
         {
-            CanResizeProperty.Changed.AddClassHandler<WindowResizeEdge>(CanResizeProperty_Changed);
+            IsEnabledProperty.Changed.AddClassHandler<WindowResizeEdge>(IsEnabledProperty_Changed);
         }
 
 
-        static void CanResizeProperty_Changed(WindowResizeEdge edge, AvaloniaPropertyChangedEventArgs args)
-        {
-            if (!args.GetNewValue<bool>())
-                edge.Cursor = null;
-        }
+        static void IsEnabledProperty_Changed(WindowResizeEdge edge, AvaloniaPropertyChangedEventArgs args)
+            => edge.OnIsEnabledChanged(args.GetNewValue<bool>());
 
 
 
 
         Window _window = null;
+        bool _hasCustomCursor = false;
+        bool _canResize = true;
+        public WindowResizeEdge()
+            : base()
+        {
+            _canResize = IsEnabled;
+            Cursor = null;
+            _hasCustomCursor = false;
+        }
+
+
+
+
+        void OnIsEnabledChanged(bool canResize)
+        {
+            if (_canResize && (!canResize))
+            {
+                Cursor = null;
+                _hasCustomCursor = false;
+            }
+
+            _canResize = canResize;
+        }
+
+
+
+
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
@@ -92,37 +95,39 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-
-
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
-            if (CanResize && TryGetWindowEdgeUnderCursor(e, out WindowEdge edge))
+            if (!_canResize)
+                return;
+
+            if (TryGetWindowEdgeUnderCursor(e, out WindowEdge edge))
                 _window?.BeginResizeDrag(edge, e);
         }
 
 
-        bool _hasCustomCursor = false;
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
-            if (CanResize)
+            if (!_canResize)
+                return;
+
+            if (TryGetWindowEdgeUnderCursor(e, out WindowEdge edge))
             {
-                if (TryGetWindowEdgeUnderCursor(e, out WindowEdge edge))
-                {
-                    Cursor = _EDGE_TO_CURSOR.TryGetValue(edge, out Cursor cursor)
-                        ? cursor
-                        : _FALLBACK
-                    ;
-                    _hasCustomCursor = true;
-                }
-                else if (_hasCustomCursor)
-                {
-                    Cursor = null;
-                    _hasCustomCursor = false;
-                }
+                Cursor = _EDGE_TO_CURSOR.TryGetValue(edge, out Cursor cursor)
+                    ? cursor
+                    : _FALLBACK
+                ;
+                _hasCustomCursor = true;
+            }
+            else if (_hasCustomCursor)
+            {
+                Cursor = null;
+                _hasCustomCursor = false;
             }
         }
+
+
 
 
         bool TryGetWindowEdgeUnderCursor(PointerEventArgs e, out WindowEdge edge)

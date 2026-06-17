@@ -79,7 +79,7 @@
                     </Panel>
                     <rcui:WindowResizeEdge x:Name="ResizeEdge"
                                         BorderThickness="8"
-                                        CanResize="False" />
+                                        IsEnabled="False" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -167,7 +167,7 @@
 
             <Style Selector="^[WindowState=Normal]">
                 <Style Selector="^ /template/ rcui|WindowResizeEdge#ResizeEdge">
-                    <Setter Property="CanResize" Value="True" />
+                    <Setter Property="IsEnabled" Value="True" />
 		        </Style>
 		    </Style>
 
