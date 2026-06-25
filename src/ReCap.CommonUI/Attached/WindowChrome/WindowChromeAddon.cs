@@ -2,70 +2,44 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
     public partial class WindowChromeAddon
-        : AvaloniaObject
+        : Layoutable
     {
-        static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeAddonImpl>();
+        internal static readonly IWindowChromeAddonImpl _IMPL = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeAddonImpl>();
         static WindowChromeAddon()
         {
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
+            AffectsMeasure<WindowChromeAddon>(ManagedChromeHintProperty);
+            AffectsArrange<WindowChromeAddon>(ManagedChromeHintProperty);
+            AffectsRender<WindowChromeAddon>(ManagedChromeHintProperty);
+
+            AffectsMeasure<Window>(ManagedChromeHintProperty);
+            AffectsArrange<Window>(ManagedChromeHintProperty);
+            AffectsRender<Window>(ManagedChromeHintProperty);
+
+
+            UseAddonProperty.Changed.AddClassHandler<Window>(UseAddonProperty_Changed);
             ManagedChromeHintProperty.Changed.AddClassHandler<Window>(ManagedChromeHintProperty_Changed);
             _IMPL.Init();
 
-            Dbg.DoChangedDebugOutput<Window>(EnableHackHintProperty, ManagedChromeHintProperty, ManagedShowTitleProperty, Window.ExtendClientAreaTitleBarHeightHintProperty);
+            Dbg.DoChangedDebugOutput<Window>(UseAddonProperty, ManagedChromeHintProperty);
             CaptionButtonsInit();
         }
 
 
 
 
-#region Decorations Customization
-        public static readonly AttachedProperty<bool> ManagedShowTitleProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ManagedShowTitle", true);
-        public static bool GetManagedShowTitle(Window control)
-            => control.GetValue(ManagedShowTitleProperty);
-        public static void SetManagedShowTitle(Window control, bool value)
-            => control.SetValue(ManagedShowTitleProperty, value);
-
-
-        public static readonly AttachedProperty<bool> ManagedShowIconProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ManagedShowIcon", _IMPL.DefaultIconInTitleBar);
-        public static bool GetManagedShowIcon(Window control)
-            => control.GetValue(ManagedShowIconProperty);
-        public static void SetManagedShowIcon(Window control, bool value)
-            => control.SetValue(ManagedShowIconProperty, value);
-
-
-        public static readonly AttachedProperty<bool> ReserveCaptionAreaProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("ReserveCaptionArea", true);
-        public static bool GetReserveCaptionArea(Window control)
-            => control.GetValue(ReserveCaptionAreaProperty);
-        public static void SetReserveCaptionArea(Window control, bool value)
-            => control.SetValue(ReserveCaptionAreaProperty, value);
-
-
-        public static readonly AttachedProperty<double> DefaultTitleBarHeightProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, double>("DefaultTitleBarHeight", 1d);
-        public static double GetDefaultTitleBarHeight(Window control)
-            => control.GetValue(DefaultTitleBarHeightProperty);
-        public static void SetDefaultTitleBarHeight(Window control, double value)
-            => control.SetValue(DefaultTitleBarHeightProperty, value);
-#endregion
-
-
-
-
 #region Managed chrome hack
-        public static readonly AttachedProperty<bool> EnableHackHintProperty =
-            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("EnableHackHint", false);
-        internal static bool GetEnableHackHint(Window control)
-            => control.GetValue(EnableHackHintProperty);
-        internal static void SetEnableHackHint(Window control, bool value)
-            => control.SetValue(EnableHackHintProperty, value);
+        public static readonly AttachedProperty<bool> UseAddonProperty =
+            AvaloniaProperty.RegisterAttached<WindowChromeAddon, Window, bool>("UseAddon", false);
+        internal static bool GetUseAddon(Window control)
+            => control.GetValue(UseAddonProperty);
+        internal static void SetUseAddon(Window control, bool value)
+            => control.SetValue(UseAddonProperty, value);
 
 
         public static readonly AttachedProperty<ManagedChromeMode> ManagedChromeHintProperty =
@@ -112,7 +86,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        static void EnableHackHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
+        static void UseAddonProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
             => UpdateManagedChrome(window);
 
 
@@ -129,6 +103,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         {
             bool useManagedChrome = _IMPL.GetDesiredManagedChrome(window, chromeMode);
             SetDesiresManagedChrome(window, useManagedChrome);
+
+            WindowChromeOptions.RefreshManagedShowIcon(window, WindowChromeOptions.GetManagedShowIconHint(window));
+            WindowChromeOptions.RefreshManagedShowTitle(window, WindowChromeOptions.GetManagedShowTitleHint(window));
         }
 
 

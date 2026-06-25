@@ -18,7 +18,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             get;
         }
 
-        bool DefaultIconInTitleBar
+        bool DefaultShowCaptionIcon
+        {
+            get;
+        }
+
+        bool DefaultShowCaptionText
         {
             get;
         }

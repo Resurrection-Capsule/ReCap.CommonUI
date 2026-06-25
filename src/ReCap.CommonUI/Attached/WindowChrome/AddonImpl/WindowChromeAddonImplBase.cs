@@ -22,7 +22,13 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public virtual bool DefaultIconInTitleBar
+        public virtual bool DefaultShowCaptionIcon
+        {
+            get => true;
+        }
+
+
+        public virtual bool DefaultShowCaptionText
         {
             get => true;
         }

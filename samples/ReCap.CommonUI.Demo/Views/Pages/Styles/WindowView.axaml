@@ -69,9 +69,9 @@
 					<StackPanel Orientation="Vertical"
 								IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}">
 						<CheckBox Content="Display window title"
-								IsChecked="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowTitle), Mode=TwoWay}" />
+								IsChecked="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowTitle), Mode=TwoWay}" />
 						<CheckBox Content="Display window icon"
-								IsChecked="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=TwoWay}" />
+								IsChecked="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowIcon), Mode=TwoWay}" />
 						<!--
 						<CheckBox Content="Reserve titlebar caption area"
 								IsChecked="{Binding DataContext.UseReservedCaptionArea, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type v:UITestView}}, Mode=TwoWay}" />
@@ -85,7 +85,7 @@
 		<HeaderedContentControl Header="Caption Buttons order">
 			<StackPanel Orientation="Vertical">
 				<ContentControl Theme="{DynamicResource FakeTitleBarContainer}">
-					<DockPanel Height="{DynamicResource TitleBar.DefaultHeight}">
+					<DockPanel Height="{DynamicResource Window.TitleBar.ReservedHeight}">
 						<ItemsControl x:Name="LeftCaptionButtons"
 									Theme="{DynamicResource CaptionButtonsSide}"
 									DataContext="{Binding LeftCaptionButtons, Mode=OneWay}"

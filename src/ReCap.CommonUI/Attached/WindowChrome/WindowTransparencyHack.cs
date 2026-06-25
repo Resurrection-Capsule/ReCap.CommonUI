@@ -13,12 +13,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     public class WindowTransparencyHack
         : AvaloniaObject
     {
-        public static readonly AttachedProperty<bool> EnableHackHintProperty =
-            AvaloniaProperty.RegisterAttached<WindowTransparencyHack, Window, bool>("EnableHackHint", false);
-        internal static bool GetEnableHackHint(Window control)
-            => control.GetValue(EnableHackHintProperty);
-        internal static void SetEnableHackHint(Window control, bool value)
-            => control.SetValue(EnableHackHintProperty, value);
+        public static readonly AttachedProperty<bool> UseHackProperty =
+            AvaloniaProperty.RegisterAttached<WindowTransparencyHack, Window, bool>("UseHack", false);
+        internal static bool GetUseHack(Window control)
+            => control.GetValue(UseHackProperty);
+        internal static void SetUseHack(Window control, bool value)
+            => control.SetValue(UseHackProperty, value);
 
 
 
@@ -36,7 +36,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         static WindowTransparencyHack()
         {
 #if WINDOWS_USE_SETWINDOWCOMPOSITIONATTRIBUTE
-            EnableHackHintProperty.Changed.AddClassHandler<Window>(EnableHackHintProperty_Changed);
+            UseHackProperty.Changed.AddClassHandler<Window>(UseHackProperty_Changed);
             ActualIsTransparentProperty.Changed.AddClassHandler<Window>(ActualIsTransparentProperty_Changed);
 #endif
         }
@@ -68,7 +68,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             ;
             return osVersion >= win8xCompare;
         }
-        static void EnableHackHintProperty_Changed(Window sender, AvaloniaPropertyChangedEventArgs e)
+        static void UseHackProperty_Changed(Window sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (!_ACTUALLY_USE_WIN8_TRANSPARENCY_HACK)
                 return;

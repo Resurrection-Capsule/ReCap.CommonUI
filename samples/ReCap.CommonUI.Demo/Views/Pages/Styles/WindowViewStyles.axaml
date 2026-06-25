@@ -108,7 +108,7 @@
 													Foreground="{DynamicResource StrongForegroundBrush}"
 								- ->
 								<rcui:AngledBorder x:Name="HoloShadow"
-												Height="{DynamicResource TitleBar.DefaultHeight}"
+												Height="{DynamicResource Window.TitleBar.ReservedHeight}"
 												Background="{DynamicResource Window.HoloShadow.Background.Translucent}"
 												BorderBrush="{DynamicResource Window.HoloShadow.BorderBrush.Translucent}"
 												StrokeThickness="2"
@@ -128,7 +128,7 @@
 												Margin="0,0,0,-4" />
 							</Panel>
 							<ContentPresenter x:Name="PART_ContentPresenter"
-											Height="{DynamicResource TitleBar.DefaultHeight}"
+											Height="{DynamicResource Window.TitleBar.ReservedHeight}"
 											ClipToBounds="False" />
 						</Panel>
 						<!--

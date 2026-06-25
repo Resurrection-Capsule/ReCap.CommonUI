@@ -6,6 +6,6 @@
         Title="ReCap Common UI Tests"
         Width="1020" Height="572"
         Icon="avares://ReCap.CommonUI.Demo/Assets/icon.ico"
-        rcui:WindowChromeAddon.ReserveCaptionArea="{Binding UseReservedCaptionArea, Mode=OneWay}">
+        rcui:WindowChromeOptions.ReserveCaptionArea="{Binding UseReservedCaptionArea, Mode=OneWay}">
     <v:UITestView />
 </Window>

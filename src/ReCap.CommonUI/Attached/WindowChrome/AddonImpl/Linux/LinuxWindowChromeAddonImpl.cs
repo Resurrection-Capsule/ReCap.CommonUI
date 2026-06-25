@@ -55,8 +55,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         public bool PrefersManagedWindowChrome
             => CurrentSubImpl.PrefersManagedWindowChrome;
 
-        public bool DefaultIconInTitleBar
-            => CurrentSubImpl.DefaultIconInTitleBar;
+        public bool DefaultShowCaptionIcon
+            => CurrentSubImpl.DefaultShowCaptionIcon;
+
+        public bool DefaultShowCaptionText
+            => CurrentSubImpl.DefaultShowCaptionText;
 
 
         readonly CaptionButtonRolesPair _defaultCaptionButtons;

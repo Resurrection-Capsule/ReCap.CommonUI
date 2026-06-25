@@ -11,8 +11,8 @@
 		<Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
 		<Setter Property="FontSize" Value="12" />
         
-		<Setter Property="rcui:WindowChromeAddon.EnableHackHint" Value="True" />
-        <Setter Property="rcui:WindowChromeAddon.DefaultTitleBarHeight" Value="{DynamicResource TitleBar.DefaultHeight}" />
+		<Setter Property="rcui:WindowChromeAddon.UseAddon" Value="True" />
+        <Setter Property="rcui:WindowChromeOptions.ReservedCaptionHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
         <!--
 		<Setter Property="TransparencyBackgroundFallback" Value="#00FF00FF" />
 		-->
@@ -61,9 +61,9 @@
                                 <DockPanel>
                                     <Control x:Name="TitleBarHeightStandIn"
                                             Classes.fullScreen="{TemplateBinding WindowState, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static WindowState.FullScreen}}"
-                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChromeAddon.ReserveCaptionArea), Mode=OneWay}"
+                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChromeOptions.ReserveCaptionArea), Mode=OneWay}"
                                             IsVisible="False"
-                                            Height="{DynamicResource TitleBar.DefaultHeight}"
+                                            Height="{TemplateBinding (rcui:WindowChromeOptions.ReservedCaptionHeight)}"
                                             DockPanel.Dock="Top" />
                                     <Control DockPanel.Dock="Bottom"
                                             Classes="bottomEdge" />
@@ -151,7 +151,7 @@
         <Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=True]">
             <Setter Property="TransparencyLevelHint" Value="Transparent" />
             <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
-            <Setter Property="rcui:WindowTransparencyHack.EnableHackHint" Value="True" />
+            <Setter Property="rcui:WindowTransparencyHack.UseHack" Value="True" />
 
 
 			<Style Selector="^ /template/ :is(Panel)#Frame">
@@ -179,10 +179,13 @@
                     -->
 				</Style>
                 <Style Selector="^ /template/ :is(Panel)#TemplateRoot">
-                    <Setter Property="Margin" Value="-2,0,-2,-6" />
+                    <Setter Property="Margin" Value="{DynamicResource Window.SystemDecorations.RootMargin}" />
 				</Style>
 			</Style>
 
+            <Style Selector="^ /template/ Control#TitleBarHeightStandIn:not(.reserveCaptionArea)">
+                <Setter Property="Height" Value="0" />
+            </Style>
             <Style Selector="^:not(^[WindowState=FullScreen])">
                 <Style Selector="^ /template/ Control#TitleBarHeightStandIn.reserveCaptionArea">
                     <Setter Property="IsVisible" Value="True" />

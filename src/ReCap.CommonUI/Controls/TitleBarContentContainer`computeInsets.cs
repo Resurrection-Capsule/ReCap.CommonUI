@@ -46,13 +46,12 @@ namespace ReCap.CommonUI.Controls
                     ComputedRightInset = right;
 
                     IsContentInsideReservedArea = isContentInsideReservedArea;
-                    var padding = Padding;
-                    window.ExtendClientAreaTitleBarHeightHint = titleBarHeightHint + padding.Top + padding.Bottom;
+                    window.ExtendClientAreaTitleBarHeightHint = titleBarHeightHint;
                     return;
                 }
                 else
                 {
-                    window.ExtendClientAreaTitleBarHeightHint = WindowChromeAddon.GetDefaultTitleBarHeight(window);
+                    window.ExtendClientAreaTitleBarHeightHint = WindowChromeOptions.GetReservedCaptionHeight(window);
                 }
             }
 
@@ -64,37 +63,59 @@ namespace ReCap.CommonUI.Controls
         }
 
 
-        bool TryComputeInsets(Window window, out double left, out double top, out double right, out bool isContentInsideReservedArea, out double titleBarHeightHint)
+        bool TryComputeInsets(Window window
+            , out double left, out double top, out double right
+            , out bool isContentInsideReservedArea
+            , out double titleBarHeightHint
+        )
         {
+            var padding = Padding;
             var bounds = Bounds;
+            var topLevelRootMargin = TopLevelRootMargin;
 
 
             if (!this.TryTranslatePoint(_POINT_ZERO, window, out Point tl))
+            {
+                Console.WriteLine($"{nameof(TitleBarContentContainer)}.{nameof(TryComputeInsets)}: FAIL 1");
                 goto fail;
+            }
+            tl += new Point(topLevelRootMargin.Left, topLevelRootMargin.Top);
+
             if (!this.TryTranslatePoint(bounds.Size.ToPoint(), window, out Point br))
+            {
+                Console.WriteLine($"{nameof(TitleBarContentContainer)}.{nameof(TryComputeInsets)}: FAIL 2");
                 goto fail;
+            }
+            br -= new Point(topLevelRootMargin.Right, topLevelRootMargin.Bottom);
+
             if (!_insetReference.TryTranslatePoint(_POINT_ZERO, window, out Point tlContent))
+            {
+                Console.WriteLine($"{nameof(TitleBarContentContainer)}.{nameof(TryComputeInsets)}: FAIL 3");
                 goto fail;
+            }
 
 
             bool isUsingManagedChrome = WindowChromeAddon.GetIsUsingManagedChrome(window);
+            bool reserveCaptionArea = WindowChromeOptions.GetReserveCaptionArea(window);
             double reservedHeight = GetReservedHeight(window, isUsingManagedChrome);
             double upper = tl.Y;
-            top = reservedHeight - upper;
+            titleBarHeightHint = br.Y;
 
             if (isUsingManagedChrome)
             {
-                isContentInsideReservedArea = tlContent.Y < reservedHeight;
-                if (isContentInsideReservedArea)
+                if (reserveCaptionArea)
                 {
-                    left = WindowChromeAddon.GetLeftCaptionButtonsWidth(window) - tl.X;
-                    right = WindowChromeAddon.GetRightCaptionButtonsWidth(window) - (window.Bounds.Width - br.X);
+                    isContentInsideReservedArea = tlContent.Y < reservedHeight;
 
-                    left = Math.Max(0d, left);
-                    right = Math.Max(0d, right);
+                    top = reservedHeight - upper;
+                    left = Math.Max(0d, WindowChromeAddon.GetLeftCaptionButtonsWidth(window) - tl.X);
+                    right = Math.Max(0d, WindowChromeAddon.GetRightCaptionButtonsWidth(window) - (window.Bounds.Width - br.X));
                 }
                 else
                 {
+                    isContentInsideReservedArea = false;
+
+                    top = 0d;
                     left = 0d;
                     right = 0d;
                 }
@@ -102,12 +123,14 @@ namespace ReCap.CommonUI.Controls
             else
             {
                 isContentInsideReservedArea = false;
+                //titleBarHeightHint += reservedHeight;
+                top = reservedHeight;
                 left = 0d;
                 right = 0d;
             }
 
 
-            titleBarHeightHint = br.Y;
+            //titleBarHeightHint += padding.Top + padding.Bottom;
             return true;
 
 
@@ -126,8 +149,8 @@ namespace ReCap.CommonUI.Controls
         {
             if (!isUsingManagedChrome)
                 return 0d;
-            else if (WindowChromeAddon.GetReserveCaptionArea(window))
-                return WindowChromeAddon.GetDefaultTitleBarHeight(window);
+            else if (WindowChromeOptions.GetReserveCaptionArea(window))
+                return WindowChromeOptions.GetReservedCaptionHeight(window);
             else
                 return 0d;
         }

@@ -23,7 +23,7 @@
                     ColumnDefinitions="Auto,*,Auto"
                     RowDefinitions="Auto,Auto"
                     Classes.isUsingManagedChrome="{Binding $parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}"
-                    Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChromeAddon.ReserveCaptionArea), Mode=OneWay}">
+                    Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChromeOptions.ReserveCaptionArea), Mode=OneWay}">
 
                     <Control x:Name="Left"
                             Classes="spacing"
@@ -59,20 +59,28 @@
                                     Background="Transparent"
                                     BorderBrush="Transparent"
                                     BorderThickness="0"
-                                    Padding="{TemplateBinding Padding}"
+                                    Margin="{TemplateBinding Padding}"
                                     Content="{TemplateBinding Content}"
                                     ContentTemplate="{TemplateBinding ContentTemplate}"
+
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="3"
+
+                                    Grid.Column="1"
                                     Grid.Row="0"
                                     Grid.RowSpan="2" />
+                    <!--
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                    -->
                 </Grid>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^:not(:managed_decorations)">
+            <Setter Property="TopLevelRootMargin" Value="{DynamicResource Window.SystemDecorations.RootMargin}" />
+        </Style>
         <Style Selector="^ /template/ Control.spacing">
             <Setter Property="Focusable" Value="False" />
             <Setter Property="IsHitTestVisible" Value="False" />
@@ -94,9 +102,15 @@
             <Setter Property="Grid.RowSpan" Value="2" />
         </Style>
         -->
-        <Style Selector="^[IsContentInsideReservedArea=True] /template/ Grid.isUsingManagedChrome.reserveCaptionArea > ContentPresenter#PART_ContentPresenter">
+        <Style Selector="^[IsContentInsideReservedArea=True] /template/ Grid > ContentPresenter#PART_ContentPresenter">
+            <!--
             <Setter Property="Grid.Row" Value="1" />
             <Setter Property="Grid.RowSpan" Value="1" />
+            -->
+            <!--
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            -->
         </Style>
 
 

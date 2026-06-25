@@ -11,11 +11,13 @@ namespace ReCap.CommonUI.Controls
 {
     [TemplatePart(_PART_ContentPresenter, typeof(ContentPresenter), IsRequired = true)]
     [TemplatePart(_PART_InsetReference, typeof(Control), IsRequired = true)]
+    [PseudoClasses(_PSEUD_MANAGED_DECO)]
     public sealed partial class TitleBarContentContainer
         : ContentControl
     {
         const string _PART_ContentPresenter = "PART_ContentPresenter";
         const string _PART_InsetReference = "PART_InsetReference";
+        const string _PSEUD_MANAGED_DECO = ":managed_decorations";
         static readonly Thickness _THICKNESS_ZERO = new(0d);
         static readonly Point _POINT_ZERO = new(0d, 0d);
 
@@ -23,6 +25,15 @@ namespace ReCap.CommonUI.Controls
 
 
 #region Properties
+        public static readonly StyledProperty<Thickness> TopLevelRootMarginProperty =
+            AvaloniaProperty.Register<TitleBarContentContainer, Thickness>(nameof(TopLevelRootMargin), new(0d));
+        public Thickness TopLevelRootMargin
+        {
+            get => GetValue(TopLevelRootMarginProperty);
+            set => SetValue(TopLevelRootMarginProperty, value);
+        }
+
+
         public static readonly DirectProperty<TitleBarContentContainer, double> ComputedLeftInsetProperty
             = AvaloniaProperty.RegisterDirect<TitleBarContentContainer, double>(nameof(ComputedLeftInset)
                 , getter: x => x.ComputedLeftInset
@@ -105,8 +116,25 @@ namespace ReCap.CommonUI.Controls
             {
                 IsContentInsideReservedAreaProperty,
                 ComputedInsetsProperty,
+                TopLevelRootMarginProperty,
             };
             AffectsStuff(props);
+            TopLevelRootMarginProperty.Changed.AddClassHandler<TitleBarContentContainer>(TopLevelRootMarginProperty_Changed);
+        }
+
+
+        static void TopLevelRootMarginProperty_Changed(TitleBarContentContainer container, AvaloniaPropertyChangedEventArgs args)
+        {
+            (Thickness oldValue, Thickness newValue) = args.GetOldAndNewValue<Thickness>();
+            bool[] changes =
+            {
+                oldValue.Left != newValue.Left,
+                oldValue.Top != newValue.Top,
+                oldValue.Right != newValue.Right,
+                oldValue.Bottom != newValue.Bottom,
+            };
+            Console.WriteLine($"{nameof(TopLevelRootMargin)}: '{oldValue}' => '{newValue}' ({string.Join(",", changes)})");
+            container.UpdateLayout();
         }
 
 
@@ -218,7 +246,11 @@ namespace ReCap.CommonUI.Controls
             {
                 _window
                     .GetObservable(WindowChromeAddon.IsUsingManagedChromeProperty)
-                    .Subscribe(PropertyObservablesHandler)
+                    .Subscribe(t =>
+                    {
+                        PseudoClasses.Set(_PSEUD_MANAGED_DECO, (_window != null) && WindowChromeAddon.GetIsUsingManagedChrome(_window));
+                        PropertyObservablesHandler(t);
+                    })
                 ,
                 _window
                     .GetObservable(WindowChromeAddon.LeftCaptionButtonsWidthProperty)
@@ -229,11 +261,11 @@ namespace ReCap.CommonUI.Controls
                     .Subscribe(PropertyObservablesHandler)
                 ,
                 _window
-                    .GetObservable(WindowChromeAddon.ReserveCaptionAreaProperty)
+                    .GetObservable(WindowChromeOptions.ReserveCaptionAreaProperty)
                     .Subscribe(PropertyObservablesHandler)
                 ,
                 _window
-                    .GetObservable(WindowChromeAddon.DefaultTitleBarHeightProperty)
+                    .GetObservable(WindowChromeOptions.ReservedCaptionHeightProperty)
                     .Subscribe(PropertyObservablesHandler)
                 ,
             };
@@ -247,6 +279,7 @@ namespace ReCap.CommonUI.Controls
             _windowDisposable?.Dispose();
             _windowDisposable = null;
             _window = null;
+            PseudoClasses.Set(_PSEUD_MANAGED_DECO, false);
         }
     }
 }

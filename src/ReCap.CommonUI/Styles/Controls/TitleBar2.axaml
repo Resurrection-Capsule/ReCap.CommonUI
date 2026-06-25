@@ -54,26 +54,26 @@
 							<Panel x:Name="TitleContainer">
 								<StackPanel Orientation="Horizontal"
 											IsHitTestVisible="False"
-											IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.ReserveCaptionArea), Mode=OneWay}">
+											IsVisible="{Binding $parent[Window].(rcui:WindowChromeOptions.ReserveCaptionArea), Mode=OneWay}">
 									<Control x:Name="IconSpaceFake"
 											Width="{Binding Bounds.Width, ElementName=PART_WindowIconContainer, Mode=OneWay}"
 											MaxWidth="5"
 											Classes.hasMenu="{Binding HasMenuAsLastOnLeft, ElementName=PART_CaptionButtons, Mode=OneWay}"
-											Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
+											Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowIcon), Mode=OneWay}"
 											Focusable="False"
 											IsTabStop="False" />
 									<TextBlock x:Name="TitleDisplay"
 											Margin="5,0"
 											VerticalAlignment="Center"
 											Text="{Binding $parent[Window].Title, Mode=OneWay}"
-											IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowTitle), Mode=OneWay}">
+											IsVisible="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowTitle), Mode=OneWay}">
 									<!--
 										<TextBlock.IsVisible>
 											<MultiBinding>
-												<Binding Path="(rcui:WindowChromeAddon.ManagedShowTitle)"
+												<Binding Path="(rcui:WindowChromeOptions.ManagedShowTitle)"
 														RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
 														Mode="OneWay" />
-												<Binding Path="(rcui:WindowChromeAddon.ReserveCaptionArea)"
+												<Binding Path="(rcui:WindowChromeOptions.ReserveCaptionArea)"
 														RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
 														Mode="OneWay" />
 											</MultiBinding>
@@ -83,7 +83,7 @@
 								</StackPanel>
 								<rcui:CaptionButton x:Name="PART_WindowIconContainer"
 													Theme="{DynamicResource WindowIconButton}"
-													Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedShowIcon), Mode=OneWay}"
+													Classes.showIcon="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowIcon), Mode=OneWay}"
 													HorizontalAlignment="Left"
 													IsVisible="{Binding HasMenuAsLastOnLeft, ElementName=PART_CaptionButtons, Mode=OneWay}"
 													Padding="10,0,5,0"

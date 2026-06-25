@@ -173,10 +173,21 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             // [TODO: account for negative margins on TitleBarUnderlay?]
             double height = _window.ExtendClientAreaTitleBarHeightHint;
 
+            /*
             if (!WindowChromeAddon.GetIsUsingManagedChrome(_window))
-                height -= WindowChromeAddon.GetDefaultTitleBarHeight(_window);
+                height -= WindowChromeAddon.GetReservedCaptionHeight(_window);
             else if (height < 0d)
                 height = _titleBar.Bounds.Height;
+            */
+            if (WindowChromeAddon.GetIsUsingManagedChrome(_window))
+            {
+                if (height < 0d)
+                    height = _titleBar.Bounds.Height;
+            }
+            else
+            {
+                //height -= WindowChromeAddon.GetReservedCaptionHeight(_window);
+            }
 
 
             height = Math.Max(0d, height);

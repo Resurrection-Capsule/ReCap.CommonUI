@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<Thickness x:Key="Window.SystemDecorations.RootMargin">-2,0,-2,-6</Thickness>
 	<SolidColorBrush x:Key="WindowBodyBorderBrush">#FFC0C0C0</SolidColorBrush>
 
 	<Color x:Key="WindowBodyBackgroundColor">#F7111213</Color>
@@ -18,6 +19,7 @@
 	-->
 
 
+	<x:Double x:Key="Window.TitleBar.ReservedHeight">32</x:Double>
 
 	<Color x:Key="Window.TitleBar.BackgroundBrush.Active.Color0">#BBB7CFDA</Color>
 	<Color x:Key="Window.TitleBar.BackgroundBrush.Active.Color1">#7C93A5AD</Color>

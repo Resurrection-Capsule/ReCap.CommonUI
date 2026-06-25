@@ -17,11 +17,11 @@
 												Classes="activateColoration"
 												Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}"
 
-												TopLeftMajorCut="{DynamicResource TitleBar.DefaultHeight}"
+												TopLeftMajorCut="{DynamicResource Window.TitleBar.ReservedHeight}"
 												TopLeftMinorCut="6"
 												TopLeftInset="{Binding $parent[Window].(rcui:WindowChromeAddon.LeftCaptionButtonsWidth), Mode=OneWay}"
 
-												TopRightMajorCut="{DynamicResource TitleBar.DefaultHeight}"
+												TopRightMajorCut="{DynamicResource Window.TitleBar.ReservedHeight}"
 												TopRightMinorCut="6"
 												TopRightInset="{Binding $parent[Window].(rcui:WindowChromeAddon.RightCaptionButtonsWidth), Mode=OneWay}"
 
@@ -48,17 +48,19 @@
 				</Panel>
 			</ControlTemplate>
 		</Setter>
+		<!--
 		<Style Selector="^[IsTitleBarVisible=False] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain">
 			<Setter Property="Margin">
 				<MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
 							ConverterParameter="0,_,0,0">
-					<Binding Path="(rcui:WindowChromeAddon.DefaultTitleBarHeight)"
+					<Binding Path="(rcui:WindowChromeAddon.ReservedCaptionHeight)"
 							RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
 							Converter="{x:Static rcui:ArithmeticConverters.Invert}"
 							Mode="OneWay" />
 				</MultiBinding>
 			</Setter>
 		</Style>
+		-->
 
 		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopLeftInset=0]">
 			<Setter Property="TopLeftMajorCut" Value="0" />

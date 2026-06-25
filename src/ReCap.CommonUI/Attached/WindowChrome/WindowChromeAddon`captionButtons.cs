@@ -8,8 +8,7 @@ using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    public partial class WindowChromeAddon
-        : AvaloniaObject
+    partial class WindowChromeAddon
     {
 #region Caption buttons ordering
         public static readonly AttachedProperty<CaptionButtonRoles> LeftCaptionButtonsProperty =
