@@ -1,8 +1,38 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="{x:Type rcui:TitleBarAngledBorder}"
+				TargetType="{x:Type rcui:TitleBarAngledBorder}">
+		<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource Window.TitleBar.BorderBrush}" />
+		<Setter Property="StrokeThickness" Value="1" />
+		<Setter Property="IsHitTestVisible" Value="False" />
+
+
+		<Setter Property="TopLeftMajorCut" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
+		<Setter Property="TopLeftMinorCut" Value="6" />
+
+		<Setter Property="TopRightMajorCut" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
+		<Setter Property="TopRightMinorCut" Value="6" />
+
+		<Setter Property="BottomLeftInset" Value="16" />
+		<Setter Property="BottomLeftCut" Value="6" />
+		<Setter Property="BottomRightInset" Value="16" />
+		<Setter Property="BottomRightCut" Value="6" />
+
+		<Style Selector="^[TopLeftInset=0]">
+			<Setter Property="TopLeftMajorCut" Value="0" />
+		</Style>
+		<Style Selector="^[TopRightInset=0]">
+			<Setter Property="TopRightMajorCut" Value="0" />
+		</Style>
+	</ControlTheme>
+
+
+
+
 	<ControlTheme x:Key="{x:Type rcui:TitleBarUnderlay}"
-				  TargetType="{x:Type rcui:TitleBarUnderlay}">
+				TargetType="{x:Type rcui:TitleBarUnderlay}">
 		<Setter Property="VerticalAlignment" Value="Top" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="Background" Value="Transparent" />
@@ -13,25 +43,10 @@
 				<Panel x:Name="TemplateRoot"
 					Background="#01000000"
 					Margin="0,0,0,-5">
-						<rcui:TitleBarAngledBorder x:Name="TitleBarBackgroundMain"
-												Classes="activateColoration"
+						<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
 												Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}"
-
-												TopLeftMajorCut="{DynamicResource Window.TitleBar.ReservedHeight}"
-												TopLeftMinorCut="6"
 												TopLeftInset="{Binding $parent[Window].(rcui:WindowChromeAddon.LeftCaptionButtonsWidth), Mode=OneWay}"
-
-												TopRightMajorCut="{DynamicResource Window.TitleBar.ReservedHeight}"
-												TopRightMinorCut="6"
-												TopRightInset="{Binding $parent[Window].(rcui:WindowChromeAddon.RightCaptionButtonsWidth), Mode=OneWay}"
-
-												BottomLeftInset="16"
-												BottomLeftCut="6"
-												BottomRightInset="16"
-												BottomRightCut="6"
-												BorderBrush="{DynamicResource Window.TitleBar.BorderBrush}"
-												StrokeThickness="1"
-												IsHitTestVisible="False" />
+												TopRightInset="{Binding $parent[Window].(rcui:WindowChromeAddon.RightCaptionButtonsWidth), Mode=OneWay}" />
 
 						<!--
 						<rcui:AngledBorderEx x:Name="LeftCaptionButtonsFrame"
@@ -49,7 +64,7 @@
 			</ControlTemplate>
 		</Setter>
 		<!--
-		<Style Selector="^[IsTitleBarVisible=False] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain">
+		<Style Selector="^[IsTitleBarVisible=False] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
 			<Setter Property="Margin">
 				<MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
 							ConverterParameter="0,_,0,0">
@@ -62,56 +77,44 @@
 		</Style>
 		-->
 
-		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopLeftInset=0]">
-			<Setter Property="TopLeftMajorCut" Value="0" />
-		</Style>
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopLeftInset=0]">
+		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopLeftInset=0]">
 			<Setter Property="TopLeftMinorCut" Value="0" />
 		</Style>
 
-		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopRightInset=0]">
-			<Setter Property="TopRightMajorCut" Value="0" />
-		</Style>
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopRightInset=0]">
+		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopRightInset=0]">
 			<Setter Property="TopRightMinorCut" Value="0" />
 		</Style>
 
 		
-		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain.isWindowUsingSystemChrome">
+		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackground.isWindowUsingSystemChrome">
 			<Setter Property="TopLeftMajorCut" Value="0" />
 			<Setter Property="TopLeftMinorCut" Value="0" />
 			<Setter Property="TopRightMajorCut" Value="0" />
 			<Setter Property="TopRightMinorCut" Value="0" />
 		</Style>
 		<!--
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain">
+		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
 			<Setter Property="TopLeftMinorCut" Value="0" />
 			<Setter Property="TopRightMinorCut" Value="0" />
 		</Style>
 
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopRightInset=0]">
+		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopRightInset=0]">
 			<Setter Property="TopRightMinorCut" Value="0" />
 		</Style>
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackgroundMain[TopLeftInset=0]">
+		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopLeftInset=0]">
 			<Setter Property="TopLeftMinorCut" Value="0" />
 		</Style>
 		-->
 
 
-		<Style Selector="^ /template/ :is(rcui|AngledBorderBase).activateColoration">
-			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
-		</Style>
-
-		<Style Selector="^[IsWindowActive=False]">
-			<Style Selector="^ /template/ :is(rcui|AngledBorderBase).activateColoration">
-				<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
-			</Style>
+		<Style Selector="^[IsWindowActive=False] /template/ :is(rcui|AngledBorderBase)#TitleBarBackground">
+			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
 		</Style>
 
 
 		<Style Selector=":is(Window)[(rcui|WindowTransparencyHack.ActualIsTransparent)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
 			<Style Selector="^:not(:fills_screen)">
-				<Style Selector="^ /template/ rcui|AngledBorderEx#TitleBarBackgroundMain">
+				<Style Selector="^ /template/ rcui|AngledBorderEx#TitleBarBackground">
 					<Setter Property="TopLeftCut" Value="6" />
 				</Style>
 			</Style>

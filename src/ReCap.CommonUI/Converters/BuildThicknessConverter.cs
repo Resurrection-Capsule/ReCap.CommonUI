@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Converters
 {
@@ -32,8 +33,9 @@ namespace ReCap.CommonUI.Converters
 
         public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (parameter != null)
+            if (parameter == null)
                 goto fail;
+
             if (!TryParseParameter(parameter
                 , out double? left, out double? top, out double? right, out double? bottom
                 , out bool axisSidesShared
@@ -67,7 +69,7 @@ namespace ReCap.CommonUI.Converters
                 return value.Value;
             else
             {
-                double result = NumberConvUtils.ObjectToDouble(values[idx]);
+                double result = ConverterHelper.ObjectToDouble(values[idx]);
                 idx++;
                 return result;
             }
@@ -79,9 +81,9 @@ namespace ReCap.CommonUI.Converters
             , out bool axisSidesShared
         )
         {
-            string data = parameter.ToString();
-
-            if (string.IsNullOrWhiteSpace(data))
+            if (!ConverterHelper.TryGetString(parameter, out string data))
+                goto fail;
+            else if (string.IsNullOrWhiteSpace(data))
                 goto fail;
             else if (!_SEPARATORS.Any(data.Contains))
                 goto fail;

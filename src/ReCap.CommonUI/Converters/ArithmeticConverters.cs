@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Converters
 {
@@ -11,7 +12,7 @@ namespace ReCap.CommonUI.Converters
             : IValueConverter
         {
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-                => -NumberConvUtils.ObjectToDouble(value, 0d);
+                => -ConverterHelper.ObjectToDouble(value, 0d);
             public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
                 => throw new NotSupportedException();
         }
@@ -27,8 +28,8 @@ namespace ReCap.CommonUI.Converters
 
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                double val = NumberConvUtils.ObjectToDouble(value);
-                double param = NumberConvUtils.ObjectToDouble(parameter);
+                double val = ConverterHelper.ObjectToDouble(value);
+                double param = ConverterHelper.ObjectToDouble(parameter);
                 return Compare(val, param);
             }
 

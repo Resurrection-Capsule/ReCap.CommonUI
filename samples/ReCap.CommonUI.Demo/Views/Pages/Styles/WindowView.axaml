@@ -85,23 +85,34 @@
 		<HeaderedContentControl Header="Caption Buttons order">
 			<StackPanel Orientation="Vertical">
 				<ContentControl Theme="{DynamicResource FakeTitleBarContainer}">
-					<DockPanel Height="{DynamicResource Window.TitleBar.ReservedHeight}">
-						<ItemsControl x:Name="LeftCaptionButtons"
-									Theme="{DynamicResource CaptionButtonsSide}"
-									DataContext="{Binding LeftCaptionButtons, Mode=OneWay}"
-									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
-									DockPanel.Dock="Left" />
-						<ItemsControl x:Name="RightCaptionButtons"
-									Theme="{DynamicResource CaptionButtonsSide}"
-									DataContext="{Binding RightCaptionButtons, Mode=OneWay}"
-									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
-									DockPanel.Dock="Right" />
+					<Panel Height="{DynamicResource Window.TitleBar.ReservedHeight}">
 						<ContentControl Theme="{DynamicResource FakeTitleBarMiddle}">
+							<ContentControl.Tag>
+								<MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
+											ConverterParameter="_,0,_,0">
+									<Binding Path="Bounds.Width"
+											ElementName="LeftCaptionButtons"
+											Mode="OneWay" />
+									<Binding Path="Bounds.Width"
+											ElementName="RightCaptionButtons"
+											Mode="OneWay" />
+								</MultiBinding>
+							</ContentControl.Tag>
 							<TextBlock Text="Window title"
 									Theme="{DynamicResource FakeTitleBarText}"
 									HorizontalAlignment="Left" />
 						</ContentControl>
-					</DockPanel>
+						<ItemsControl x:Name="LeftCaptionButtons"
+									Theme="{DynamicResource CaptionButtonsSide}"
+									DataContext="{Binding LeftCaptionButtons, Mode=OneWay}"
+									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
+									HorizontalAlignment="Left" />
+						<ItemsControl x:Name="RightCaptionButtons"
+									Theme="{DynamicResource CaptionButtonsSide}"
+									DataContext="{Binding RightCaptionButtons, Mode=OneWay}"
+									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
+									HorizontalAlignment="Right" />
+					</Panel>
 				</ContentControl>
 				<ItemsControl Theme="{DynamicResource CaptionButtonsPool}"
 							HorizontalAlignment="Center"

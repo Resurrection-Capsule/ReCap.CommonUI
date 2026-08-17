@@ -3,6 +3,7 @@ using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Converters
 {
@@ -19,7 +20,7 @@ namespace ReCap.CommonUI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             ItemsControl itemsCtl = (ItemsControl)value;
-            int index = NumberConvUtils.ObjectToInt(parameter);
+            int index = ConverterHelper.ObjectToInt(parameter);
             Control container = itemsCtl.ContainerFromIndex(index);
             if (container != null)
                 return container.Bounds.Height;

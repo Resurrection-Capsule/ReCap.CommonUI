@@ -6,7 +6,7 @@ using ReCap.CommonUI.Attached.WindowChrome;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
-    public sealed class CaptionButtonCluster
+    public sealed partial class CaptionButtonCluster
         : ItemsControl
     {
         static CaptionButtonCluster()

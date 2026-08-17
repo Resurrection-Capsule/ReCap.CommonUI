@@ -1,6 +1,55 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="CaptionButtonCluster.GlyphPresenter"
+				TargetType="{x:Type TemplatedControl}">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Path x:Name="Glyph"
+					Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
+			</ControlTemplate>
+		</Setter>
+
+
+		<Style Selector="^[DataContext=Minimize]">
+			<Style Selector="^ /template/ Path#Glyph">
+				<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Minimize}" />
+			</Style>
+
+			<!-- Windows actually does this. Unsure about other platforms, so following the known precedent for now. -->
+			<Style Selector="^[Tag=Minimized]">
+				<Style Selector="^ /template/ Path#Glyph">
+					<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
+				</Style>
+			</Style>
+		</Style>
+
+
+		<Style Selector="^[DataContext=Maximize]">
+			<Style Selector="^ /template/ Path#Glyph">
+				<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Maximize}" />
+			</Style>
+			<Style Selector="^[Tag=Maximized], ^[Tag=FullScreen]">
+				<Style Selector="^ /template/ Path#Glyph">
+					<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
+				</Style>
+			</Style>
+		</Style>
+
+
+		<Style Selector="^[DataContext=FullScreen] /template/ Path#Glyph">
+			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.FullScreen}" />
+		</Style>
+
+
+		<Style Selector="^[DataContext=Close] /template/ Path#Glyph">
+			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Close}" />
+		</Style>
+	</ControlTheme>
+
+
+
+
 	<ControlTheme x:Key="{x:Type rcui:CaptionButtonCluster}"
 				TargetType="{x:Type rcui:CaptionButtonCluster}">
 		<!--
@@ -29,7 +78,7 @@
 									Classes.minimize="{Binding Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonRole.Minimize}, Mode=OneWay}"
 									Classes.maximize="{Binding Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonRole.Maximize}, Mode=OneWay}"
 				-->
-					<TemplatedControl Theme="{DynamicResource CaptionButtons2.GlyphPresenter}"
+					<TemplatedControl Theme="{DynamicResource CaptionButtonCluster.GlyphPresenter}"
 									DataContext="{Binding $parent[rcui:CaptionButton].Role, Mode=OneWay}"
 									Tag="{Binding $parent[rcui:CaptionButton].HostWindowState, Mode=OneWay}" />
 				</rcui:CaptionButton>

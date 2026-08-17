@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data.Converters;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Converters
 {
@@ -17,7 +18,7 @@ namespace ReCap.CommonUI.Converters
             double ret = 0;
             foreach (var value in values)
             {
-                ret += NumberConvUtils.ObjectToDouble(value);
+                ret += ConverterHelper.ObjectToDouble(value);
             }
             return ret;
         }

@@ -72,7 +72,7 @@ namespace ReCap.CommonUI.Converters
             : CompareConverter
         {
             protected override bool Convert(int count, object parameter)
-                => Convert(count, (int)Math.Round(NumberConvUtils.ObjectToDouble(parameter)));
+                => Convert(count, (int)Math.Round(ConverterHelper.ObjectToDouble(parameter)));
             protected abstract bool Convert(int count, int parameter);
         }
 
