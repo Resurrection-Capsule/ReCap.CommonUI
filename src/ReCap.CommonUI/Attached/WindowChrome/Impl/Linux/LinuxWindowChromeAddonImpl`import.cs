@@ -6,7 +6,7 @@ using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    partial class LinuxWindowChromeAddonImpl
+    partial class LinuxWindowChromeImpl
     {
         static bool TryParseRoleGTK3(string gtkCaptionButton, out CaptionButtonRole role)
         {
@@ -106,7 +106,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             ['A'] = CaptionButtonRole.Maximize,
             ['X'] = CaptionButtonRole.Close,
             ['F'] = CaptionButtonRole.KeepAbove,
-            ['M'] = CaptionButtonRole.Menu,
+            ['M'] = CaptionButtonRole.WindowMenu,
         };
         static CaptionButtonRoles ParseCaptionButtonsKWin(string kwinButtons)
         {
@@ -165,10 +165,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         public static bool TryImportCaptionButtons(out CaptionButtonRolesPair imported)
         {
-#if NO //DEBUG
-            imported = DefaultWindowChromeAddonImpl.DefaultCaptionButtons_Default(this);
-            return true;
-#else
             if (TryGetCaptionButtonsKWin(out imported))
                 return true;
             else if (TryGetCaptionButtonsGTK3(out imported))
@@ -177,7 +173,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
             imported = default;
             return false;
-#endif
         }
     }
 }

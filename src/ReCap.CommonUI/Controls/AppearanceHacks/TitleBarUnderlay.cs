@@ -3,8 +3,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Chrome;
-using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using ReCap.CommonUI.Attached.WindowChrome;
@@ -12,14 +10,9 @@ using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
-    [PseudoClasses(_PSEUD_FILLS_SCREEN)]
     public sealed class TitleBarUnderlay
         : TemplatedControl
     {
-        const string _PSEUD_FILLS_SCREEN = ":fills_screen";
-
-
-
 #region Properties
         public static readonly DirectProperty<TitleBarUnderlay, bool> IsTitleBarVisibleProperty =
             AvaloniaProperty.RegisterDirect<TitleBarUnderlay, bool>(
@@ -34,79 +27,104 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        public static readonly DirectProperty<TitleBarUnderlay, bool> IsWindowActiveProperty =
+        public static readonly DirectProperty<TitleBarUnderlay, bool> IsHostWindowActiveProperty =
             AvaloniaProperty.RegisterDirect<TitleBarUnderlay, bool>(
-                nameof(IsWindowActive)
-                , s => s.IsWindowActive
+                nameof(IsHostWindowActive)
+                , s => s.IsHostWindowActive
             );
-        bool _isWindowActive = false;
-        public bool IsWindowActive
+        bool _isHostWindowActive = false;
+        public bool IsHostWindowActive
         {
-            get => _isWindowActive;
-            internal set => SetAndRaise(IsWindowActiveProperty, ref _isWindowActive, value);
+            get => _isHostWindowActive;
+            internal set => SetAndRaise(IsHostWindowActiveProperty, ref _isHostWindowActive, value);
         }
 
 
-        public static readonly DirectProperty<TitleBarUnderlay, bool> IsWindowMaximizedOrFullScreenProperty =
-            AvaloniaProperty.RegisterDirect<TitleBarUnderlay, bool>(
-                nameof(IsWindowMaximizedOrFullScreen)
-                , s => s.IsWindowMaximizedOrFullScreen
+        public static readonly DirectProperty<TitleBarUnderlay, WindowState> HostWindowStateProperty =
+            AvaloniaProperty.RegisterDirect<TitleBarUnderlay, WindowState>(
+                nameof(HostWindowState)
+                , s => s.HostWindowState
             );
-        bool _isWindowMaximizedOrFullScreen = false;
-        public bool IsWindowMaximizedOrFullScreen
+        WindowState _hostWindowState = WindowState.Normal;
+        public WindowState HostWindowState
         {
-            get => _isWindowMaximizedOrFullScreen;
-            internal set => SetAndRaise(IsWindowMaximizedOrFullScreenProperty, ref _isWindowMaximizedOrFullScreen, value);
+            get => _hostWindowState;
+            internal set => SetAndRaise(HostWindowStateProperty, ref _hostWindowState, value);
+        }
+
+
+        public static readonly DirectProperty<TitleBarUnderlay, WindowMenuPresence> LeftWindowMenuPresenceProperty
+            = TitleBar2.LeftWindowMenuPresenceProperty.AddOwner<TitleBarUnderlay>(
+                getter: o => o.LeftWindowMenuPresence
+                , unsetValue: TitleBar2.DEFAULT_LeftWindowMenuPresence
+            );
+        WindowMenuPresence _leftWindowMenuPresence = TitleBar2.DEFAULT_LeftWindowMenuPresence;
+        public WindowMenuPresence LeftWindowMenuPresence
+        {
+            get => _leftWindowMenuPresence;
+            private set => SetAndRaise(LeftWindowMenuPresenceProperty, ref _leftWindowMenuPresence, value);
+        }
+
+
+        public static readonly DirectProperty<TitleBarUnderlay, WindowMenuPresence> RightWindowMenuPresenceProperty
+            = TitleBar2.RightWindowMenuPresenceProperty.AddOwner<TitleBarUnderlay>(
+                o => o.RightWindowMenuPresence
+                , unsetValue: TitleBar2.DEFAULT_RightWindowMenuPresence
+            );
+        WindowMenuPresence _rightWindowMenuPresence = TitleBar2.DEFAULT_RightWindowMenuPresence;
+        public WindowMenuPresence RightWindowMenuPresence
+        {
+            get => _rightWindowMenuPresence;
+            private set => SetAndRaise(RightWindowMenuPresenceProperty, ref _rightWindowMenuPresence, value);
         }
 #endregion
 
 
 
 
-        Window _window = null;
-        TitleBar _titleBar = null;
+        Window _hostWindow = null;
+        TitleBar2 _hostTitleBar = null;
         IDisposable _windowDisposable = null;
-        IDisposable _titleBarDisposable = null;
+        IDisposable _hostTitleBarDisposable = null;
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
             if (e.Root is not Window window)
                 return;
             
-            _window = window;
+            _hostWindow = window;
             _windowDisposable = new CompositeDisposable()
             {
-                _window
+                _hostWindow
                     .GetObservable(Window.WindowStateProperty)
-                    .Subscribe(RefreshIsWindowMaximizedOrFullScreen)
+                    .Subscribe(windowState => HostWindowState = windowState)
                 ,
-                _window
+                _hostWindow
                     .GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
                     .Subscribe(_ => RefreshHeight())
                 ,
-                _window
+                _hostWindow
                     .GetObservable(WindowBase.IsActiveProperty)
-                    .Subscribe(isActive => IsWindowActive = isActive)
+                    .Subscribe(isActive => IsHostWindowActive = isActive)
                 ,
             };
-            RefreshIsWindowMaximizedOrFullScreen(_window.WindowState);
             RefreshHeight();
-            IsWindowActive = _window.IsActive;
+            IsHostWindowActive = _hostWindow.IsActive;
 
-            var chromeOverlay = ChromeOverlayLayer.GetOverlayLayer(_window.Presenter);
+            var chromeOverlay = ChromeOverlayLayer.GetOverlayLayer(_hostWindow.Presenter);
             if (chromeOverlay == null)
                 return;
             
             var chromeChildren = chromeOverlay.Children;
             foreach (var chromeChild in chromeChildren)
             {
-                if (chromeChild is not TitleBar titleBar)
+                if (chromeChild is not TitleBar2 hostTitleBar)
                     continue;
 
-                _titleBar = titleBar;
-                _titleBarDisposable = new CompositeDisposable()
+                _hostTitleBar = hostTitleBar;
+                _hostTitleBarDisposable = new CompositeDisposable()
                 {
-                    _titleBar
+                    _hostTitleBar
                         .GetObservable(IsVisibleProperty)
                         .Subscribe(isVisible =>
                         {
@@ -114,16 +132,27 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                             RefreshHeight();
                         })
                     ,
-                    _titleBar
+                    _hostTitleBar
                         .GetObservable(BoundsProperty)
                         .Subscribe(_ => RefreshHeight())
                     ,
+                    _hostTitleBar
+                        .GetObservable(TitleBar2.LeftWindowMenuPresenceProperty)
+                        .Subscribe(presence => LeftWindowMenuPresence = presence)
+                    ,
+                    _hostTitleBar
+                        .GetObservable(TitleBar2.RightWindowMenuPresenceProperty)
+                        .Subscribe(presence => RightWindowMenuPresence = presence)
+                    ,
                 };
                 RefreshHeight();
-                IsTitleBarVisible = _titleBar.IsVisible;
+                IsTitleBarVisible = _hostTitleBar.IsVisible;
                 break;
             }
         }
+
+
+
 
         protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
         {
@@ -132,17 +161,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             _windowDisposable?.Dispose();
             _windowDisposable = null;
 
-            if (_window != null)
-            {
-                IsWindowMaximizedOrFullScreen = false;
-                _window = null;
-            }
+            _hostWindow = null;
 
 
-            _titleBarDisposable?.Dispose();
-            _titleBarDisposable = null;
+            _hostTitleBarDisposable?.Dispose();
+            _hostTitleBarDisposable = null;
 
-            _titleBar = null;
+            _hostTitleBar = null;
         }
 
 
@@ -156,37 +181,31 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        void RefreshIsWindowMaximizedOrFullScreen(WindowState winState)
-            => IsWindowMaximizedOrFullScreen =
-                (winState == WindowState.Maximized)
-                ||
-                (winState == WindowState.FullScreen)
-            ;
         void RefreshHeight()
         {
-            if (_window == null)
+            if (_hostWindow == null)
                 return;
             
-            if (_titleBar == null)
+            if (_hostTitleBar == null)
                 return;
 
             // [TODO: account for negative margins on TitleBarUnderlay?]
-            double height = _window.ExtendClientAreaTitleBarHeightHint;
+            double height = _hostWindow.ExtendClientAreaTitleBarHeightHint;
 
             /*
-            if (!WindowChromeAddon.GetIsUsingManagedChrome(_window))
-                height -= WindowChromeAddon.GetReservedCaptionHeight(_window);
+            if (!ManagedWindowChrome.GetIsChromeManaged(_window))
+                height -= ManagedWindowChrome.GetReservedCaptionHeight(_window);
             else if (height < 0d)
-                height = _titleBar.Bounds.Height;
+                height = _hostTitleBar.Bounds.Height;
             */
-            if (WindowChromeAddon.GetIsUsingManagedChrome(_window))
+            if (ManagedWindowChrome.GetIsChromeManaged(_hostWindow))
             {
                 if (height < 0d)
-                    height = _titleBar.Bounds.Height;
+                    height = _hostTitleBar.Bounds.Height;
             }
             else
             {
-                //height -= WindowChromeAddon.GetReservedCaptionHeight(_window);
+                //height -= ManagedWindowChrome.GetReservedCaptionHeight(_window);
             }
 
 
@@ -203,12 +222,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         static TitleBarUnderlay()
         {
             Extensions.MakeControlTypeNonInteractive<TitleBarUnderlay>();
-            IsWindowMaximizedOrFullScreenProperty.Changed.AddClassHandler<TitleBarUnderlay>(IsWindowMaximizedOrFullScreenProperty_Changed);
-        }
-
-        static void IsWindowMaximizedOrFullScreenProperty_Changed(TitleBarUnderlay underlay, AvaloniaPropertyChangedEventArgs args)
-        {
-            underlay.PseudoClasses.Set(_PSEUD_FILLS_SCREEN, args.GetNewValue<bool>());
         }
 
         protected override Type StyleKeyOverride

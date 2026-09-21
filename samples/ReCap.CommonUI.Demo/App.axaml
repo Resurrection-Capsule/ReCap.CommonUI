@@ -13,9 +13,9 @@
         <rcui:ReCapTheme />
 
         <Style Selector="Window">
-            <Setter Property="rcui:WindowChromeAddon.ManagedChromeHint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:WindowChromeAddon.LeftCaptionButtons" Value="{Binding LeftCaptionButtons, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:WindowChromeAddon.RightCaptionButtons" Value="{Binding RightCaptionButtons, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:ManagedWindowChrome.Hint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:ManagedWindowChrome.LeftCaptionButtonRoles" Value="{Binding LeftCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:ManagedWindowChrome.RightCaptionButtonRoles" Value="{Binding RightCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
         </Style>
 
         <Style Selector="HeaderedContentControl">
@@ -47,7 +47,7 @@
         </ControlTheme>
 
 
-        <ControlTheme x:Key="HeaderedContentControl.WindowCustomization.ManagedChromeHint"
+        <ControlTheme x:Key="HeaderedContentControl.WindowCustomization.Hint"
 					TargetType="{x:Type HeaderedContentControl}"
                     BasedOn="{StaticResource HeaderedContentControl.WindowCustomization.Base}">
             <Setter Property="Header" Value="Window chrome preference" />
@@ -125,8 +125,8 @@
                                             IsChecked="{Binding CanMaximize, Mode=TwoWay}" />
                             </StackPanel>
                             - ->
-                            <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ManagedChromeHint}"
-                                                    DataContext="{Binding $parent[Window].(rcui:WindowChromeAddon.ManagedChromeHint), Mode=TwoWay}" />
+                            <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.Hint}"
+                                                    DataContext="{Binding $parent[Window].(rcui:ManagedWindowChrome.Hint), Mode=TwoWay}" />
                             <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ExtendClientAreaTitleBarHeightHint}"
                                                     DataContext="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}" />
                         </StackPanel>

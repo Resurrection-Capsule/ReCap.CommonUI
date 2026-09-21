@@ -1,15 +1,124 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<x:Double x:Key="CaptionButton.MinWidth">43</x:Double>
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<x:Double x:Key="CaptionButton.Width">43</x:Double>
+	<x:Double x:Key="CaptionButton.Height">23</x:Double>
 
 
+	<CornerRadius x:Key="CaptionButton.CornerRadius.Left">5,0,5,0</CornerRadius>
+	<CornerRadius x:Key="CaptionButton.CornerRadius.Right">0,5,0,5</CornerRadius>
+
+
+
+
+	<!--[TODO: move to somewhere localizable]-->
+	<x:String x:Key="CaptionButton.RoleTitle.Minimize">Minimize</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnMinimize">Restore Up</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.Maximize">Maximize</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnMaximize">Restore Down</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.FullScreen">Full-screen</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnFullScreen">Exit full-screen</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.Close">Close</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.WindowMenu">Window Icon/Menu</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.ApplicationMenu">Application Menu</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.ShowOnAllDesktops">Show on All Desktops</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnShowOnAllDesktops">Don't Show on All Desktops</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.ContextHelp">Help</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.Shade">Shade</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnShade">Un-shade</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.KeepBelow">Keep Below</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnKeepBelow">Un-Keep Below</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.KeepAbove">Keep Above</x:String>
+	<x:String x:Key="CaptionButton.RoleTitle.UnKeepAbove">Un-Keep Above</x:String>
+
+
+
+
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.Minimize">
+		M 0 0 L 13 0 L 13 4 L 0 4 Z
+	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.UnMinimize" ResourceKey="CaptionButton.RoleGlyph.UnMaximize" />
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.Maximize">
+		M 0 0 V 9 H 11 V 0 Z
+		M 2 2 H 9 V 7 H 2 Z
+	</PathGeometry>
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.UnMaximize">
+		M 0 3 V 9 H 8 V 3 Z
+		M 2 5 H 6 V 7 H 2 Z
+		M 3 0 H 11 V 6 H 9 V 2 H 3 Z
+	</PathGeometry>
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.FullScreen">
+		M 4 2 L 6 0 H 10 V 4 L 8 6 V 2 H 4 Z
+		M 1 5 L 3 3 V 7 H 7 L 5 9 H 1 Z
+	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.UnFullScreen" ResourceKey="CaptionButton.RoleGlyph.FullScreen" />
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.Close">
+		M 0 0 H 3 L 5.5 2.5 L 8 0 H 11
+		V 1 L 7.5 4.5 L 11 8 V 9
+		H 8 L 5.5 6.5 L 3 9 H 0
+		V 8 L 3.5 4.5 L 0 1 Z
+	</PathGeometry>
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.WindowMenu">
+		M 4.5 -2 L 7.5 1 L 4.5 4 L 1.5 1 Z
+		M 8 1.5 L 11 4.5 L 8 7.5 L 5 4.5 Z
+		M 4.5 5 L 7.5 8 L 4.5 11 L 1.5 8 Z
+		M 1 1.5 L 4 4.5 L 1 7.5 L -2 4.5 Z
+	</PathGeometry>
+	<!--
+#if CAPTIONBUTTONROLES_NYI
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.ApplicationMenu">
+	</PathGeometry>
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.ShowOnAllDesktops">
+	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.UnShowOnAllDesktops" ResourceKey="CaptionButton.RoleGlyph.ShowOnAllDesktops" />
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.ContextHelp">
+	</PathGeometry>
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.Shade">
+	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.UnShade" ResourceKey="CaptionButton.RoleGlyph.KeepAbove" />
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.KeepBelow">
+	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.UnKeepBelow" ResourceKey="CaptionButton.RoleGlyph.KeepAbove" />
+#endif
+	-->
+	<PathGeometry x:Key="CaptionButton.RoleGlyph.KeepAbove">
+		M 4.5 0 L 7.5 3 V 5 L 4.5 2 L 1.5 5 V 3 Z
+		M 4.5 5 L 7.5 7 V 9 L 4.5 6 L 1.5 9 V 7 Z
+	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.UnKeepAbove" ResourceKey="CaptionButton.RoleGlyph.KeepAbove" />
+
+
+
+	<rcui:CaptionButtonGlyphs x:Key="CaptionButton.Glyphs"
+							MinimizeGlyph="{DynamicResource CaptionButton.RoleGlyph.Minimize}"
+							UnMinimizeGlyph="{DynamicResource CaptionButton.RoleGlyph.UnMinimize}"
+							MaximizeGlyph="{DynamicResource CaptionButton.RoleGlyph.Maximize}"
+							UnMaximizeGlyph="{DynamicResource CaptionButton.RoleGlyph.UnMaximize}"
+							FullScreenGlyph="{DynamicResource CaptionButton.RoleGlyph.FullScreen}"
+							UnFullScreenGlyph="{DynamicResource CaptionButton.RoleGlyph.UnFullScreen}"
+							CloseGlyph="{DynamicResource CaptionButton.RoleGlyph.Close}"
+							WindowMenuGlyph="{DynamicResource CaptionButton.RoleGlyph.WindowMenu}"
+							KeepAboveGlyph="{DynamicResource CaptionButton.RoleGlyph.KeepAbove}"
+							UnKeepAboveGlyph="{DynamicResource CaptionButton.RoleGlyph.UnKeepAbove}" />
+		<!--
+#if CAPTIONBUTTONROLES_NYI
+							ApplicationMenuGlyph="{DynamicResource CaptionButton.RoleGlyph.ApplicationMenu}"
+							ShowOnAllDesktopsGlyph="{DynamicResource CaptionButton.RoleGlyph.ShowOnAllDesktops}"
+							UnShowOnAllDesktopsGlyph="{DynamicResource CaptionButton.RoleGlyph.UnShowOnAllDesktops}"
+							ContextHelpGlyph="{DynamicResource CaptionButton.RoleGlyph.ContextHelp}"
+							ShadeGlyph="{DynamicResource CaptionButton.RoleGlyph.Shade}"
+							UnShadeGlyph="{DynamicResource CaptionButton.RoleGlyph.UnShade}"
+							KeepBelowGlyph="{DynamicResource CaptionButton.RoleGlyph.KeepBelow}"
+							UnKeepBelowGlyph="{DynamicResource CaptionButton.RoleGlyph.UnKeepBelow}"
+#endif
+		-->
 
 
 	<RadialGradientBrush x:Key="CaptionButton.Background.Idle"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						RadiusX="0.625"
-						RadiusY="0.625">
+						RadiusX="8"
+						RadiusY="8">
 		<GradientStop Offset="0.125" Color="#FF970000" />
 		<GradientStop Offset="1" Color="#FF590000" />
 	</RadialGradientBrush>
@@ -20,34 +129,20 @@
 	<RadialGradientBrush x:Key="CaptionButton.Background.Idle.Inactive"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						RadiusX="0.625"
-						RadiusY="0.625">
+						RadiusX="8"
+						RadiusY="8">
 		<GradientStop Offset="0.125" Color="#FF6C4D4D" />
 		<GradientStop Offset="1" Color="#FF554343" />
 	</RadialGradientBrush>
 	<Color x:Key="CaptionButton.BorderBrush.Idle.Inactive">#FFDDD9D9</Color>
 	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FFDD6E6E</Color>
-	<!--
-	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FF875A5A</Color>
-	-->
-	<!--
-	<RadialGradientBrush x:Key="CaptionButton.Background.Idle.Inactive"
-						Center="50%,50%"
-						GradientOrigin="50%,50%"
-						 Radius="0.625">
-		<GradientStop Offset="0.125" Color="#FF964B4B" />
-		<GradientStop Offset="1" Color="#FF562B2B" />
-	</RadialGradientBrush>
-	<Color x:Key="CaptionButton.BorderBrush.Idle.Inactive">#FFDDD4D4</Color>
-	<Color x:Key="CaptionButton.Foreground.Idle.Inactive">#FFDD6E6E</Color>
-	-->
 
 
 	<RadialGradientBrush x:Key="CaptionButton.Background.Hover"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						RadiusX="0.625"
-						RadiusY="0.625">
+						RadiusX="8"
+						RadiusY="8">
 		<GradientStop Offset="0.125" Color="#FFFF0000" />
 		<GradientStop Offset="1" Color="#FFFD0E0E" />
 	</RadialGradientBrush>
@@ -58,8 +153,8 @@
 	<RadialGradientBrush x:Key="CaptionButton.Background.Pressed"
 						Center="50%,50%"
 						GradientOrigin="50%,50%"
-						RadiusX="0.625"
-						RadiusY="0.625">
+						RadiusX="8"
+						RadiusY="8">
 		<GradientStop Offset="0.125" Color="#FF940000" />
 		<GradientStop Offset="1" Color="#FF560000" />
 	</RadialGradientBrush>
@@ -70,16 +165,4 @@
 	<Color x:Key="CaptionButton.Background.Disabled">#FF2D2D2D</Color>
 	<Color x:Key="CaptionButton.BorderBrush.Disabled">#FFD1D1D1</Color>
 	<Color x:Key="CaptionButton.Foreground.Disabled">#FF898989</Color>
-	<!--
-	<RadialGradientBrush x:Key="CaptionButton.Background.Disabled"
-						Center="50%,50%"
-						GradientOrigin="50%,50%"
-						RadiusX="0.625"
-						RadiusY="0.625">
-		<GradientStop Offset="0.125" Color="#FF970000" />
-		<GradientStop Offset="1" Color="#FF590000" />
-	</RadialGradientBrush>
-	<Color x:Key="CaptionButton.BorderBrush.Disabled">#FFDECCCC</Color>
-	<Color x:Key="CaptionButton.Foreground.Disabled">#FFDE0000</Color>
-	-->
 </ResourceDictionary>

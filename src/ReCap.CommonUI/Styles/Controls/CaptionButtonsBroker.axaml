@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<ControlTheme x:Key="{x:Type rcui:CaptionButtonsBroker}"
+				TargetType="{x:Type rcui:CaptionButtonsBroker}">
+    	<Setter Property="Template">
+      		<ControlTemplate />
+		</Setter>
+	</ControlTheme>
+</ResourceDictionary>

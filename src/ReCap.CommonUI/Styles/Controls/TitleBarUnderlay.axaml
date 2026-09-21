@@ -37,83 +37,75 @@
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="ClipToBounds" Value="False" />
+		<!--
 		<Setter Property="Win32Properties.NonClientHitTestResult" Value="Caption" />
+		-->
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Panel x:Name="TemplateRoot"
+				<DockPanel x:Name="TemplateRoot"
 					Background="#01000000"
 					Margin="0,0,0,-5">
-						<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
-												Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}"
-												TopLeftInset="{Binding $parent[Window].(rcui:WindowChromeAddon.LeftCaptionButtonsWidth), Mode=OneWay}"
-												TopRightInset="{Binding $parent[Window].(rcui:WindowChromeAddon.RightCaptionButtonsWidth), Mode=OneWay}" />
-
-						<!--
-						<rcui:AngledBorderEx x:Name="LeftCaptionButtonsFrame"
-										Classes="caption-buttons-frame"
-										HorizontalAlignment="Left"
-										VerticalAlignment="Stretch"
-										IsVisible="False" />
-						<rcui:AngledBorderEx x:Name="RightCaptionButtonsFrame"
-										Classes="caption-buttons-frame"
-										HorizontalAlignment="Right"
-										VerticalAlignment="Stretch"
-										IsVisible="False" />
-						-->
-				</Panel>
+						<Panel Classes="outward">
+							<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
+													Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:ManagedWindowChrome.IsChromeManaged), Mode=OneWay}" />
+							<!--
+							<rcui:AngledBorderEx x:Name="LeftCaptionButtonsFrame"
+											Classes="caption-buttons-frame"
+											HorizontalAlignment="Left"
+											VerticalAlignment="Stretch"
+											IsVisible="False" />
+							<rcui:AngledBorderEx x:Name="RightCaptionButtonsFrame"
+											Classes="caption-buttons-frame"
+											HorizontalAlignment="Right"
+											VerticalAlignment="Stretch"
+											IsVisible="False" />
+							-->
+						</Panel>
+				</DockPanel>
 			</ControlTemplate>
 		</Setter>
-		<!--
-		<Style Selector="^[IsTitleBarVisible=False] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
-			<Setter Property="Margin">
-				<MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
-							ConverterParameter="0,_,0,0">
-					<Binding Path="(rcui:WindowChromeAddon.ReservedCaptionHeight)"
-							RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
-							Converter="{x:Static rcui:ArithmeticConverters.Invert}"
-							Mode="OneWay" />
-				</MultiBinding>
-			</Setter>
-		</Style>
-		-->
 
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopLeftInset=0]">
-			<Setter Property="TopLeftMinorCut" Value="0" />
+
+		<Style Selector="^[LeftWindowMenuPresence=Lone] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+			<Setter Property="TopLeftInset" Value="0" />
+		</Style>
+		<Style Selector="^:not(^[LeftWindowMenuPresence=Lone]) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+			<Setter Property="TopLeftInset" Value="{Binding $parent[Window].(rcui:ManagedWindowChrome.LeftCaptionButtonsWidth), Mode=OneWay}" />
 		</Style>
 
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopRightInset=0]">
-			<Setter Property="TopRightMinorCut" Value="0" />
+		<Style Selector="^[RightWindowMenuPresence=Lone] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+			<Setter Property="TopRightInset" Value="0" />
+		</Style>
+		<Style Selector="^:not(^[RightWindowMenuPresence=Lone]) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+			<Setter Property="TopRightInset" Value="{Binding $parent[Window].(rcui:ManagedWindowChrome.RightCaptionButtonsWidth), Mode=OneWay}" />
 		</Style>
 
-		
+		<Style Selector="^[HostWindowState=Maximized], ^[HostWindowState=FullScreen]">
+			<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopLeftInset=0]">
+				<Setter Property="TopLeftMinorCut" Value="0" />
+			</Style>
+
+			<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopRightInset=0]">
+				<Setter Property="TopRightMinorCut" Value="0" />
+			</Style>
+		</Style>
+
+
 		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackground.isWindowUsingSystemChrome">
 			<Setter Property="TopLeftMajorCut" Value="0" />
 			<Setter Property="TopLeftMinorCut" Value="0" />
 			<Setter Property="TopRightMajorCut" Value="0" />
 			<Setter Property="TopRightMinorCut" Value="0" />
 		</Style>
-		<!--
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
-			<Setter Property="TopLeftMinorCut" Value="0" />
-			<Setter Property="TopRightMinorCut" Value="0" />
-		</Style>
-
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopRightInset=0]">
-			<Setter Property="TopRightMinorCut" Value="0" />
-		</Style>
-		<Style Selector="^[IsWindowMaximizedOrFullScreen=True] /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopLeftInset=0]">
-			<Setter Property="TopLeftMinorCut" Value="0" />
-		</Style>
-		-->
 
 
-		<Style Selector="^[IsWindowActive=False] /template/ :is(rcui|AngledBorderBase)#TitleBarBackground">
+		<Style Selector="^[IsHostWindowActive=False] /template/ :is(rcui|AngledBorderBase)#TitleBarBackground">
 			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
 		</Style>
 
 
 		<Style Selector=":is(Window)[(rcui|WindowTransparencyHack.ActualIsTransparent)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
-			<Style Selector="^:not(:fills_screen)">
+			<Style Selector="^:not(^[HostWindowState=Maximized]):not(^[HostWindowState=FullScreen])">
 				<Style Selector="^ /template/ rcui|AngledBorderEx#TitleBarBackground">
 					<Setter Property="TopLeftCut" Value="6" />
 				</Style>

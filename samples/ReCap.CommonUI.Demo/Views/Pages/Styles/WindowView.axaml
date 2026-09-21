@@ -4,7 +4,7 @@
 			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
 			xmlns:demo="using:ReCap.CommonUI.Demo"
 			xmlns:v="using:ReCap.CommonUI.Demo.Views"
-			Classes.IsWindowUsingManagedChrome="{Binding Path=(rcui:WindowChromeAddon.IsUsingManagedChrome), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=False}">
+			Classes.IsWindowUsingManagedChrome="{Binding Path=(rcui:ManagedWindowChrome.IsChromeManaged), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=False}">
 	<UserControl.Styles>
 		<StyleInclude Source="avares://ReCap.CommonUI.Demo/Views/Pages/Styles/WindowViewStyles.axaml" />
 	</UserControl.Styles>
@@ -13,29 +13,32 @@
 		<UniformGrid Rows="1"
 					ColumnSpacing="8"
 					RowSpacing="8">
-			<StackPanel Orientation="Vertical"
-						Spacing="8">
-				<HeaderedContentControl Header="Windowing properties"
-										Grid.Column="0"
-										Grid.Row="0">
-					<UniformGrid Columns="2"
-								DataContext="{Binding $parent[Window], Mode=OneWay}">
-						<CheckBox Content="Resizable"
-								IsChecked="{Binding CanResize, Mode=TwoWay}" />
-						<CheckBox Content="Allow minimize"
-								IsChecked="{Binding CanMinimize, Mode=TwoWay}" />
-						<CheckBox Content="Show in taskbar"
-								IsChecked="{Binding ShowInTaskbar, Mode=TwoWay}" />
-						<CheckBox Content="Allow maximize"
-								IsChecked="{Binding CanMaximize, Mode=TwoWay}" />
+			<HeaderedContentControl Header="Properties"
+									DataContext="{Binding $parent[Window], Mode=OneWay}">
+				<StackPanel Orientation="Vertical"
+							Spacing="12">
+					<UniformGrid Columns="2">
+						<StackPanel Orientation="Vertical">
+							<CheckBox Content="CanResize"
+									IsChecked="{Binding CanResize, Mode=TwoWay}" />
+							<CheckBox Content="CanMinimize"
+									IsChecked="{Binding CanMinimize, Mode=TwoWay}" />
+							<CheckBox Content="CanMaximize"
+									IsChecked="{Binding CanMaximize, Mode=TwoWay}"
+									IsEnabled="{Binding CanResize, Mode=OneWay}" />
+						</StackPanel>
+						<StackPanel Orientation="Vertical">
+							<CheckBox Content="ShowInTaskbar"
+									IsChecked="{Binding ShowInTaskbar, Mode=TwoWay}" />
+							<CheckBox Content="ShowActivated"
+									IsChecked="{Binding ShowActivated, Mode=TwoWay}" />
+						</StackPanel>
 					</UniformGrid>
-				</HeaderedContentControl>
-				<HeaderedContentControl Header="TitleBar Height Hint"
-										VerticalAlignment="Top"
-										Grid.Column="0"
-										Grid.Row="2">
-					<StackPanel Orientation="Vertical">
-						<Slider Value="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
+					<StackPanel Orientation="Vertical"
+								Spacing="-10">
+						<TextBlock Text="ExtendClientAreaTitleBarHeightHint"
+								Classes="sh3" />
+						<Slider Value="{Binding ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}"
 								TickFrequency="1"
 								IsSnapToTickEnabled="True"
 								Minimum="-1"
@@ -43,15 +46,15 @@
 						<Panel>
 							<TextBlock x:Name="AutoLabel"
 									Text="Height:     Auto"
-									IsVisible="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Converter={x:Static rcui:ArithmeticConverters.LessThan}, ConverterParameter=0, Mode=OneWay}" />
+									IsVisible="{Binding ExtendClientAreaTitleBarHeightHint, Converter={x:Static rcui:ArithmeticConverters.LessThan}, ConverterParameter=0, Mode=OneWay}" />
 							<TextBlock x:Name="TextLabel"
-									Text="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, StringFormat='Height:     {0:#######0}', Mode=OneWay}"
+									Text="{Binding ExtendClientAreaTitleBarHeightHint, StringFormat='Height:     {0:#######0}', Mode=OneWay}"
 									IsVisible="{Binding !#AutoLabel.IsVisible, Mode=OneWay}" />
 						</Panel>
 					</StackPanel>
-				</HeaderedContentControl>
-			</StackPanel>
-			<HeaderedContentControl Header="Window chrome options"
+				</StackPanel>
+			</HeaderedContentControl>
+			<HeaderedContentControl Header="WindowChromeOptions"
 									VerticalAlignment="Top"
 									Grid.Column="2"
 									Grid.Row="0"
@@ -60,18 +63,18 @@
 							Spacing="20">
 					<StackPanel Classes="leftButtons">
 						<ToggleButton Content="Auto"
-									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Auto}, Mode=TwoWay}" />
+									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Auto}, Mode=TwoWay}" />
 						<ToggleButton Content="System"
-									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.Never}, Mode=TwoWay}" />
+									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Never}, Mode=TwoWay}" />
 						<ToggleButton Content="Managed"
-									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeMode.WheneverPossible}, Mode=TwoWay}" />
+									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.WheneverPossible}, Mode=TwoWay}" />
 					</StackPanel>
 					<StackPanel Orientation="Vertical"
-								IsVisible="{Binding $parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}">
+								IsVisible="{Binding $parent[Window].(rcui:ManagedWindowChrome.IsChromeManaged), Mode=OneWay}">
 						<CheckBox Content="Display window title"
-								IsChecked="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowTitle), Mode=TwoWay}" />
+								IsChecked="{Binding $parent[Window].(rcui:ManagedWindowChrome.ShowTitle), Mode=TwoWay}" />
 						<CheckBox Content="Display window icon"
-								IsChecked="{Binding $parent[Window].(rcui:WindowChromeOptions.ManagedShowIcon), Mode=TwoWay}" />
+								IsChecked="{Binding $parent[Window].(rcui:ManagedWindowChrome.ShowIcon), Mode=TwoWay}" />
 						<!--
 						<CheckBox Content="Reserve titlebar caption area"
 								IsChecked="{Binding DataContext.UseReservedCaptionArea, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type v:UITestView}}, Mode=TwoWay}" />
@@ -82,52 +85,57 @@
 		</UniformGrid>
 
 
-		<HeaderedContentControl Header="Caption Buttons order">
-			<StackPanel Orientation="Vertical">
-				<ContentControl Theme="{DynamicResource FakeTitleBarContainer}">
-					<Panel Height="{DynamicResource Window.TitleBar.ReservedHeight}">
-						<ContentControl Theme="{DynamicResource FakeTitleBarMiddle}">
-							<ContentControl.Tag>
-								<MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
-											ConverterParameter="_,0,_,0">
-									<Binding Path="Bounds.Width"
-											ElementName="LeftCaptionButtons"
-											Mode="OneWay" />
-									<Binding Path="Bounds.Width"
-											ElementName="RightCaptionButtons"
-											Mode="OneWay" />
-								</MultiBinding>
-							</ContentControl.Tag>
-							<TextBlock Text="Window title"
-									Theme="{DynamicResource FakeTitleBarText}"
-									HorizontalAlignment="Left" />
-						</ContentControl>
-						<ItemsControl x:Name="LeftCaptionButtons"
-									Theme="{DynamicResource CaptionButtonsSide}"
-									DataContext="{Binding LeftCaptionButtons, Mode=OneWay}"
-									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
-									HorizontalAlignment="Left" />
-						<ItemsControl x:Name="RightCaptionButtons"
-									Theme="{DynamicResource CaptionButtonsSide}"
-									DataContext="{Binding RightCaptionButtons, Mode=OneWay}"
-									ItemsSource="{Binding CaptionButtons, Mode=TwoWay}"
-									HorizontalAlignment="Right" />
-					</Panel>
-				</ContentControl>
-				<ItemsControl Theme="{DynamicResource CaptionButtonsPool}"
-							HorizontalAlignment="Center"
-							ItemsSource="{Binding AllCaptionButtons, Mode=OneWay}" />
-				<TextBlock Text="Drag from here to the left or right groups to add."
-						TextAlignment="Center" />
-			</StackPanel>
+		<HeaderedContentControl Theme="{DynamicResource WindowView.TitleBar.Container}">
+			<HeaderedContentControl.Header>
+				<Panel Height="{DynamicResource Window.TitleBar.ReservedHeight}">
+					<ContentControl Theme="{DynamicResource WindowView.TitleBar.Middle}">
+						<ContentControl.Padding>
+							<MultiBinding Converter="{x:Static rcui:BuildThicknessConverter.Instance}"
+										ConverterParameter="_,0,_,0">
+								<Binding Path="Bounds.Width"
+										ElementName="LeftCaptionButtonRoles"
+										Mode="OneWay" />
+								<Binding Path="Bounds.Width"
+										ElementName="RightCaptionButtonRoles"
+										Mode="OneWay" />
+							</MultiBinding>
+						</ContentControl.Padding>
+						<TextBlock Text="Caption Buttons order"
+								Theme="{DynamicResource WindowView.TitleBar.Text}"
+								HorizontalAlignment="Left" />
+					</ContentControl>
+					<ItemsControl x:Name="LeftCaptionButtonRoles"
+								Theme="{DynamicResource WindowView.CaptionButtons.Cluster.Left}"
+								DataContext="{Binding LeftCaptionButtonRoles, Mode=OneWay}"
+								HorizontalAlignment="Left" />
+					<ItemsControl x:Name="RightCaptionButtonRoles"
+								Theme="{DynamicResource WindowView.CaptionButtons.Cluster.Right}"
+								DataContext="{Binding RightCaptionButtonRoles, Mode=OneWay}"
+								HorizontalAlignment="Right" />
+				</Panel>
+			</HeaderedContentControl.Header>
+			<DockPanel>
+				<TemplatedControl Theme="{DynamicResource WindowView.CaptionButtons.HintArrow.Left}"
+								DockPanel.Dock="Left" />
+				<TemplatedControl Theme="{DynamicResource WindowView.CaptionButtons.HintArrow.Right}"
+								DockPanel.Dock="Right" />
+				<StackPanel Orientation="Vertical">
+					<TextBlock Text="Drag from below to the left or right groups above to add."
+							TextAlignment="Center"
+							Classes="sh3" />
+					<ItemsControl Theme="{DynamicResource WindowView.CaptionButtons.RolesPool}"
+								HorizontalAlignment="Center"
+								ItemsSource="{Binding AllCaptionButtonRoles, Mode=OneWay}" />
+				</StackPanel>
+			</DockPanel>
 		</HeaderedContentControl>
 		<HeaderedContentControl Header="Bridged caption buttons widths">
 			<DockPanel LastChildFill="False">
-				<ContentControl Theme="{DynamicResource CaptionButtonsBridgedWidth}"
-								DataContext="{Binding Path=(rcui:WindowChromeAddon.LeftCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+				<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
+								DataContext="{Binding Path=(rcui:ManagedWindowChrome.LeftCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 								DockPanel.Dock="Left" />
-				<ContentControl Theme="{DynamicResource CaptionButtonsBridgedWidth}"
-								DataContext="{Binding Path=(rcui:WindowChromeAddon.RightCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+				<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
+								DataContext="{Binding Path=(rcui:ManagedWindowChrome.RightCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 								DockPanel.Dock="Right" />
 			</DockPanel>
 		</HeaderedContentControl>
@@ -137,14 +145,14 @@
 									DockPanel.Dock="Left">
 				<StackPanel Orientation="Vertical"
 							Spacing="8">
-					<ContentControl DataContext="{Binding Path=(rcui:WindowChromeAddon.LeftCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+					<ContentControl DataContext="{Binding Path=(rcui:ManagedWindowChrome.LeftCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 									Classes="CaptionButtonsBridgedWidth"
 									HorizontalAlignment="Left"
 									HorizontalContentAlignment="Left" />
-					<ItemsControl x:Name="LeftCaptionButtons"
+					<ItemsControl x:Name="LeftCaptionButtonRoles"
 							Classes="CaptionButtonRoles"
 							HorizontalAlignment="Left"
-							DataContext="{Binding LeftCaptionButtons, Mode=OneWay}"
+							DataContext="{Binding LeftCaptionButtonRoles, Mode=OneWay}"
 							ItemsSource="{Binding CaptionButtons, Mode=TwoWay}" />
 				</StackPanel>
 			</HeaderedContentControl>
@@ -152,14 +160,14 @@
 									DockPanel.Dock="Right">
 				<StackPanel Orientation="Vertical"
 							Spacing="8">
-					<ContentControl DataContext="{Binding Path=(rcui:WindowChromeAddon.RightCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+					<ContentControl DataContext="{Binding Path=(rcui:ManagedWindowChrome.RightCaptionButtonsWidth), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 									Classes="CaptionButtonsBridgedWidth"
 									HorizontalAlignment="Right"
 									HorizontalContentAlignment="Right" />
-					<ItemsControl x:Name="RightCaptionButtons"
+					<ItemsControl x:Name="RightCaptionButtonRoles"
 							Classes="CaptionButtonRoles"
 							HorizontalAlignment="Right"
-							DataContext="{Binding RightCaptionButtons, Mode=OneWay}"
+							DataContext="{Binding RightCaptionButtonRoles, Mode=OneWay}"
 							ItemsSource="{Binding CaptionButtons, Mode=TwoWay}" />
 				</StackPanel>
 			</HeaderedContentControl>
@@ -169,7 +177,7 @@
 							Spacing="8">
 					<ItemsControl Classes="CaptionButtonRoles ReadOnly"
 								HorizontalAlignment="Center"
-								ItemsSource="{Binding AllCaptionButtons, Mode=OneWay}" />
+								ItemsSource="{Binding AllCaptionButtonRoles, Mode=OneWay}" />
 					<TextBlock Text="Drag from here to the left or right groups to add." />
 				</StackPanel>
 			</HeaderedContentControl>

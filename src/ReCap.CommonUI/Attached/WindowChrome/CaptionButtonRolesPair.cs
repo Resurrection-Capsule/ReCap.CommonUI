@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -15,10 +16,18 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             init;
         }
 
-        public CaptionButtonRolesPair(CaptionButtonRoles left, CaptionButtonRoles right)
+
+
+
+        public CaptionButtonRolesPair(IEnumerable<CaptionButtonRole> left, IEnumerable<CaptionButtonRole> right)
         {
-            Left = left;
-            Right = right;
+            Left = AsObservableCollection(left);
+            Right = AsObservableCollection(right);
         }
+        static CaptionButtonRoles AsObservableCollection(IEnumerable<CaptionButtonRole> enumerable)
+            => enumerable is CaptionButtonRoles roles
+                ? roles
+                : new(enumerable)
+            ;
     }
 }

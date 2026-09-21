@@ -10,14 +10,14 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
     public partial class WindowViewModel
         : PageViewModelBase
     {
-        ManagedChromeMode _managedChromeHint = App.Current.ManagedChromeHint;
-        public ManagedChromeMode ManagedChromeHint
+        ManagedChromeHint _managedChromeHint = App.Current.ManagedChromeHint;
+        public ManagedChromeHint ManagedChromeHint
         {
             get => _managedChromeHint;
             set
             {
                 RASIC(ref _managedChromeHint, value);
-                App.Current.ManagedChromeHint = value;
+                App.Current.ManagedChromeHint = _managedChromeHint;
             }
         }
 
@@ -29,36 +29,36 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
             set
             {
                 RASIC(ref _useReserveCaptionArea, value);
-                App.Current.MainVM.UseReservedCaptionArea = value;
+                App.Current.MainVM.UseReservedCaptionArea = _useReserveCaptionArea;
             }
         }
 
 
-        readonly WindowCaptionButtonsSideViewModel _leftCaptionButtons = new(
-            () => App.Current.LeftCaptionButtons,
-            v => App.Current.LeftCaptionButtons = v
+        readonly WindowCaptionButtonsSideViewModel _leftCaptionButtonRoles = new(
+            () => App.Current.LeftCaptionButtonRoles,
+            v => App.Current.LeftCaptionButtonRoles = v
         );
-        public WindowCaptionButtonsSideViewModel LeftCaptionButtons
+        public WindowCaptionButtonsSideViewModel LeftCaptionButtonRoles
         {
-            get => _leftCaptionButtons;
+            get => _leftCaptionButtonRoles;
         }
 
 
-        readonly WindowCaptionButtonsSideViewModel _rightCaptionButtons = new(
-            () => App.Current.RightCaptionButtons,
-            v => App.Current.RightCaptionButtons = v
+        readonly WindowCaptionButtonsSideViewModel _rightCaptionButtonRoles = new(
+            () => App.Current.RightCaptionButtonRoles,
+            v => App.Current.RightCaptionButtonRoles = v
         );
-        public WindowCaptionButtonsSideViewModel RightCaptionButtons
+        public WindowCaptionButtonsSideViewModel RightCaptionButtonRoles
         {
-            get => _rightCaptionButtons;
+            get => _rightCaptionButtonRoles;
         }
 
 
-        readonly IReadOnlyCollection<CaptionButtonRole> _allCaptionButtons;
-        public IReadOnlyCollection<CaptionButtonRole> AllCaptionButtons
+        readonly IReadOnlyCollection<CaptionButtonRole> _allCaptionButtonRoles;
+        public IReadOnlyCollection<CaptionButtonRole> AllCaptionButtonRoles
         {
-            get => _allCaptionButtons;
-            private init => RASIC(ref _allCaptionButtons, value);
+            get => _allCaptionButtonRoles;
+            private init => RASIC(ref _allCaptionButtonRoles, value);
         }
 
 
@@ -67,8 +67,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         public WindowViewModel()
             : base()
         {
-            //AllCaptionButtons = Enum.GetValues<CaptionButtonRole>()
-            AllCaptionButtons = WindowChromeAddon.ValidCaptionButtonRoles
+            AllCaptionButtonRoles = ManagedWindowChrome.ValidCaptionButtonRoles
                 .ToList()
                 .AsReadOnly()
             ;
@@ -77,21 +76,20 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 
 
 
-            ///*
 #region Sortable.Avalonia
             public void CBPoolUpdateCommand(object parameter)
                 => CBPoolUpdate((SortableUpdateEventArgs)parameter);
-            public void CBPoolDropCommand(object parameter)
-                => CBPoolDrop((SortableDropEventArgs)parameter);
-
-
             public void CBPoolUpdate(SortableUpdateEventArgs e)
             {
                 bool mutationResult = e.ApplyUpdateMutation();
-                Debug.WriteLine($"{nameof(CBPoolUpdate)}({Fmt(e)})\n    => {mutationResult};");
+                Debug.WriteLine($"{nameof(CBPoolUpdate)}({nameof(e)})\n    => {mutationResult};");
                 if (mutationResult)
                     return;
             }
+
+
+            public void CBPoolDropCommand(object parameter)
+                => CBPoolDrop((SortableDropEventArgs)parameter);
             public void CBPoolDrop(SortableDropEventArgs e)
             {
                 if (e.SourceCollection.IsReadOnly)
@@ -108,13 +106,8 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
                     mutationResult = e.ApplyDropMutation();
                 }
 
-                Debug.WriteLine($"{nameof(CBPoolDrop)}({Fmt(e)})\n    => {mutationResult};");
+                Debug.WriteLine($"{nameof(CBPoolDrop)}({nameof(e)})\n    => {mutationResult};");
             }
-            static string Fmt(SortableUpdateEventArgs e)
-                => nameof(e);
-            static string Fmt(SortableDropEventArgs e)
-                => nameof(e);
 #endregion
-            //*/
     }
 }

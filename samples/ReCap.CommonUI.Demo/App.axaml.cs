@@ -25,30 +25,30 @@ namespace ReCap.CommonUI.Demo
 
 
 
-        public static readonly StyledProperty<ManagedChromeMode> ManagedChromeHintProperty =
-            AvaloniaProperty.Register<App, ManagedChromeMode>(nameof(ManagedChromeHint));
-        public ManagedChromeMode ManagedChromeHint
+        public static readonly StyledProperty<ManagedChromeHint> ManagedChromeHintProperty =
+            AvaloniaProperty.Register<App, ManagedChromeHint>(nameof(ManagedChromeHint));
+        public ManagedChromeHint ManagedChromeHint
         {
             get => GetValue(ManagedChromeHintProperty);
             set => SetValue(ManagedChromeHintProperty, value);
         }
 
 
-        public static readonly StyledProperty<CaptionButtonRoles> LeftCaptionButtonsProperty =
-            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(LeftCaptionButtons));
-        public CaptionButtonRoles LeftCaptionButtons
+        public static readonly StyledProperty<CaptionButtonRoles> LeftCaptionButtonRolesProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(LeftCaptionButtonRoles));
+        public CaptionButtonRoles LeftCaptionButtonRoles
         {
-            get => GetValue(LeftCaptionButtonsProperty);
-            set => SetValue(LeftCaptionButtonsProperty, value);
+            get => GetValue(LeftCaptionButtonRolesProperty);
+            set => SetValue(LeftCaptionButtonRolesProperty, value);
         }
 
 
-        public static readonly StyledProperty<CaptionButtonRoles> RightCaptionButtonsProperty =
-            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(RightCaptionButtons));
-        public CaptionButtonRoles RightCaptionButtons
+        public static readonly StyledProperty<CaptionButtonRoles> RightCaptionButtonRolesProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(RightCaptionButtonRoles));
+        public CaptionButtonRoles RightCaptionButtonRoles
         {
-            get => GetValue(RightCaptionButtonsProperty);
-            set => SetValue(RightCaptionButtonsProperty, value);
+            get => GetValue(RightCaptionButtonRolesProperty);
+            set => SetValue(RightCaptionButtonRolesProperty, value);
         }
 
 
@@ -74,10 +74,10 @@ namespace ReCap.CommonUI.Demo
 
         public override void OnFrameworkInitializationCompleted()
         {
-            ManagedChromeHint = ManagedChromeMode.Auto;
-            var captionButtons = WindowChromeAddon.PlatformDefaultCaptionButtons;
-            LeftCaptionButtons = captionButtons.Left;
-            RightCaptionButtons = captionButtons.Right;
+            ManagedChromeHint = ManagedChromeHint.Auto;
+            var roles = ManagedWindowChrome.PlatformDefaultCaptionButtonRoles;
+            LeftCaptionButtonRoles = roles.Left;
+            RightCaptionButtonRoles = roles.Right;
             MainVM = new UITestViewModel();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

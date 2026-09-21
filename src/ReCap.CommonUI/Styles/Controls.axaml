@@ -7,7 +7,7 @@
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButton.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButtonCluster.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButtons.axaml" />
-				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButtons2.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CaptionButtonsBroker.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/CheckBox.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/Closeable.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Controls/ComboBox.axaml" />

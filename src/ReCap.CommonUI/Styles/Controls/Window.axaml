@@ -1,6 +1,24 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+    <ControlTheme x:Key="Window.BottomEdgeTrim"
+                TargetType="{x:Type rcui:AngledBorderEx}">
+        <Setter Property="Height" Value="14" />
+        <Setter Property="Margin" Value="0,-5,0,0" />
+
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.BottomEdgeTrim.BorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="InvertSide" Value="Top" />
+
+        <Setter Property="TopLeftCut" Value="6" />
+        <Setter Property="TopRightCut" Value="6" />
+        <Setter Property="TopLeftInset" Value="18" />
+        <Setter Property="TopRightInset" Value="18" />
+    </ControlTheme>
+
+
+
+
     <ControlTheme x:Key="{x:Type Window}"
                 TargetType="{x:Type Window}">
         <Setter Property="TopLevel.SystemBarColor" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
@@ -11,8 +29,8 @@
 		<Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
 		<Setter Property="FontSize" Value="12" />
         
-		<Setter Property="rcui:WindowChromeAddon.UseAddon" Value="True" />
-        <Setter Property="rcui:WindowChromeOptions.ReservedCaptionHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
+		<Setter Property="rcui:ManagedWindowChrome.MakeAvailable" Value="True" />
+        <Setter Property="rcui:ManagedWindowChrome.ReservedCaptionHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
         <!--
 		<Setter Property="TransparencyBackgroundFallback" Value="#00FF00FF" />
 		-->
@@ -26,7 +44,7 @@
                     <Panel x:Name="MainContent">
                         <Panel Background="Transparent"
                             Margin="{TemplateBinding WindowDecorationMargin}" />
-                        <VisualLayerManager>
+                        <VisualLayerManager Margin="{TemplateBinding OffScreenMargin}">
                             <VisualLayerManager.ChromeOverlayLayer>
                                 <rcui:TitleBar2 />
                             </VisualLayerManager.ChromeOverlayLayer>
@@ -35,24 +53,9 @@
                                     <rcui:TitleBarUnderlay x:Name="TitleBarUnderlay"
                                                         DockPanel.Dock="Top" />
                                     <rcui:AngledBorderEx x:Name="BottomEdgeTrim"
-                                                        Classes="bottomEdge activateColoration"
-                                                        BorderBrush="{DynamicResource Window.BottomEdgeTrim.BorderBrush}"
-                                                        InvertSide="Top"
-                                                
-                                                        TopLeftCut="6"
-                                                        TopRightCut="6"
-                                                
-                                                        TopLeftInset="18"
-                                                        TopRightInset="18" />
+                                                        Theme="{DynamicResource Window.BottomEdgeTrim}"
+                                                        Classes="bottom-edge activate-coloration" />
                                     <rcui:AngledBorderEx x:Name="BgElement"
-                                                        TopLeftCut="6"
-                                                        TopRightCut="6"
-                                                        BottomRightCut="6"
-                                                        BottomLeftCut="6"
-                                                        TopLeftInset="18"
-                                                        TopRightInset="18"
-                                                        BottomRightInset="18"
-                                                        BottomLeftInset="18"
                                                         Background="{TemplateBinding Background}"
                                                         BorderBrush="{TemplateBinding BorderBrush}"
                                                         StrokeThickness="1"
@@ -61,12 +64,12 @@
                                 <DockPanel>
                                     <Control x:Name="TitleBarHeightStandIn"
                                             Classes.fullScreen="{TemplateBinding WindowState, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static WindowState.FullScreen}}"
-                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChromeOptions.ReserveCaptionArea), Mode=OneWay}"
+                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:ManagedWindowChrome.ReserveCaptionArea), Mode=OneWay}"
                                             IsVisible="False"
-                                            Height="{TemplateBinding (rcui:WindowChromeOptions.ReservedCaptionHeight)}"
+                                            Height="{TemplateBinding (rcui:ManagedWindowChrome.ReservedCaptionHeight)}"
                                             DockPanel.Dock="Top" />
                                     <Control DockPanel.Dock="Bottom"
-                                            Classes="bottomEdge" />
+                                            Classes="bottom-edge" />
                                     <ContentPresenter x:Name="PART_ContentPresenter"
                                                     ContentTemplate="{TemplateBinding ContentTemplate}"
                                                     Content="{TemplateBinding Content}"
@@ -85,26 +88,19 @@
         </Setter>
 
 
-        <Style Selector="^ /template/ :is(Control).bottomEdge">
+        <Style Selector="^ /template/ :is(Control).bottom-edge">
             <Setter Property="Height" Value="14" />
             <Setter Property="Margin" Value="0,-5,0,0" />
             <Setter Property="DockPanel.Dock" Value="Bottom" />
         </Style>
 
-        <Style Selector="^ /template/ rcui|AngledBorderEx.activateColoration">
-			<Setter Property="StrokeThickness" Value="1" />
-		</Style>
-
-		<Style Selector="^ /template/ rcui|AngledBorderEx.activateColoration">
+		<Style Selector="^ /template/ rcui|AngledBorderEx.activate-coloration">
 			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
 		</Style>
 
 		<Style Selector="^[IsActive=True]">
-			<Style Selector="^ /template/ rcui|AngledBorderEx.activateColoration">
+			<Style Selector="^ /template/ rcui|AngledBorderEx.activate-coloration">
 			    <Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
-		    </Style>
-		    <Style Selector="^ /template/ rcui|AngledBorder#HoloShadow">
-			    <Setter Property="Background" Value="{DynamicResource Window.HoloShadow.Background.Opaque.Active}" />
 		    </Style>
 		</Style>
 
@@ -112,7 +108,7 @@
 
 
         <!-- System decorations -->
-		<Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=False]">
+		<Style Selector="^[(rcui|ManagedWindowChrome.IsChromeManaged)=False]">
             <Style Selector="^ /template/ :is(Panel)#TemplateRoot">
                 <Setter Property="Margin" Value="-2,-4,-2,-10" />
             </Style>
@@ -131,7 +127,7 @@
                 -->
 		    </Style>
             <!--
-            <Style Selector="^ /template/ :is(Control).bottomEdge">
+            <Style Selector="^ /template/ :is(Control).bottom-edge">
                 <Setter Property="Margin" Value="0,-5,0,-2" />
             </Style>
             -->
@@ -148,7 +144,7 @@
 
 
         <!-- Managed decorations -->
-        <Style Selector="^[(rcui|WindowChromeAddon.IsUsingManagedChrome)=True]">
+        <Style Selector="^[(rcui|ManagedWindowChrome.IsChromeManaged)=True]">
             <Setter Property="TransparencyLevelHint" Value="Transparent" />
             <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
             <Setter Property="rcui:WindowTransparencyHack.UseHack" Value="True" />

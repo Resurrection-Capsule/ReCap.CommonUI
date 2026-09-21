@@ -9,7 +9,7 @@ using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    partial class Win32WindowChromeAddonImpl
+    partial class Win32WindowChromeImpl
     {
         sealed class WindowData
         {
@@ -84,11 +84,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             }
 
 
-            public bool TryGetVisualFor(NCHitTestResult hitResult, out Visual visual)
+            public bool TryGetVisualFor(Win32Properties.Win32HitTestValue hitResult, out Visual visual)
             {
                 foreach (var ncHitTestVisual in _ncHitTestVisuals)
                 {
-                    if (hitResult != WindowChromeAddon.GetNonClienHitTestResult(ncHitTestVisual))
+                    if (hitResult != Win32Properties.GetNonClientHitTestResult(ncHitTestVisual))
                         continue;
 
                     visual = ncHitTestVisual;
@@ -100,7 +100,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             }
 
 
-            public bool NonClientHitTest(PixelPoint pxPoint, out NCHitTestResult hitResult)
+            public bool NonClientHitTest(PixelPoint pxPoint, out Win32Properties.Win32HitTestValue hitResult)
             {
                 foreach (var ncHitTestVisual in _ncHitTestVisuals)
                 {
@@ -111,7 +111,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     if (!ncHitTestRect.Contains(pxPoint))
                         continue;
 
-                    NCHitTestResult result = WindowChromeAddon.GetNonClienHitTestResult(ncHitTestVisual); //(NCHitTestResult)Win32Properties.GetNonClientHitTestResult(ncHitTestVisual);
+                    Win32Properties.Win32HitTestValue result = Win32Properties.GetNonClientHitTestResult(ncHitTestVisual);
                     if (result == NCHitTestResult.CLIENT)
                         continue;
 
@@ -193,7 +193,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        const NCHitTestResult _INVALID_HITTEST_VALUE = (NCHitTestResult)(-1337);
         static IntPtr NonClientWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             //Console.WriteLine($"{nameof(NonClientWndProc)}({hWnd}, {msg}, {wParam}, {lParam}, {handled})");
@@ -224,8 +223,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 */
                 case WindowMessage.NCCALCSIZE:
                     return NCCALCSIZE(hWnd, data, wParam, lParam, ref handled);
+                /*
                 case WindowMessage.NCHITTEST:
                     return NCHITTEST(hWnd, data, wParam, lParam, ref handled);
+                */
                 case WindowMessage.NCLBUTTONDOWN:
                     return NCLBUTTONDOWN(hWnd, data, wParam, lParam, ref handled);
                 case WindowMessage.NCLBUTTONDBLCLK:
@@ -279,54 +280,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         {
             //Console.WriteLine($"{nameof(NCHITTEST)}({wParam}, {lParam})");
             PixelPoint pxPoint = MakePoint(lParam);
-#if NO
-            Point pt = window.PointToClient(pxPoint); //.ToPointWithDpi(window.RenderScaling);
-            //Console.WriteLine($"    {pt}");
-            if (window.InputHitTest(pt) is not Visual visual)
+            if (!data.NonClientHitTest(pxPoint, out Win32Properties.Win32HitTestValue hitResult))
                 return IntPtr.Zero;
 
-            NCHitTestResult hitResult = _INVALID_HITTEST_VALUE;
-            while ((visual != null) && (hitResult != NCHitTestResult.Client))
-            {
-                hitResult = Win32Properties.GetNonClientHitTestResult(visual);
-                if (visual.Parent is Visual parent)
-                    visual = parent;
-                else
-                    break;
-            }
-
-            //Console.WriteLine($"    => {hitResult};");
-            if (hitResult == _INVALID_HITTEST_VALUE)
-                hitResult = NCHitTestResult.Client;
-#elif NO
-            NCHitTestResult hitResult = NCHitTestResult.Client;
-
-            var ncHitTestVisuals = data.NCHitTestVisuals;
-            foreach (var ncHitTestVisual in ncHitTestVisuals)
-            {
-                PixelPoint tl = ncHitTestVisual.PointToScreen(_POINT_ZERO);
-                var size = ncHitTestVisual.Bounds.Size;
-                PixelPoint br = ncHitTestVisual.PointToScreen(new(size.Width, size.Height));
-                PixelRect ncHitTestRect = new(tl, br);
-                if (ncHitTestRect.Contains(pxPoint))
-                {
-                    hitResult = Win32Properties.GetNonClientHitTestResult(ncHitTestVisual);
-                    break;
-                }
-                //hitResult
-                //Win32Properties.GetNonClientHitTestResult(ncHitTestVisual) == NCHitTestResult.Client
-            }
-
-            if (hitResult != NCHitTestResult.Client)
-            {
-                //Console.WriteLine($"    => {hitResult};");
-            }
-#else
-            if (!data.NonClientHitTest(pxPoint, out NCHitTestResult hitResult))
-                return IntPtr.Zero;
-
-            //Console.WriteLine($"    => {hitResult};");
-#endif
             handled = true;
             return new IntPtr((int)hitResult);
         }
@@ -334,7 +290,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static IntPtr NCLBUTTONDOWN(IntPtr hWnd, WindowData data, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            NCHitTestResult hitResult = (NCHitTestResult)wParam.ToInt32();
+            Win32Properties.Win32HitTestValue hitResult = (Win32Properties.Win32HitTestValue)wParam.ToInt32();
             Console.WriteLine($"{nameof(NCLBUTTONDOWN)}({hitResult}, {lParam})");
             switch (hitResult)
             {
@@ -357,7 +313,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static IntPtr NCLBUTTONDBLCLK(IntPtr hWnd, WindowData data, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            NCHitTestResult hitResult = (NCHitTestResult)wParam.ToInt32();
+            Win32Properties.Win32HitTestValue hitResult = (Win32Properties.Win32HitTestValue)wParam.ToInt32();
             Console.WriteLine($"{nameof(NCLBUTTONDBLCLK)}({hitResult}, {lParam})");
             switch (hitResult)
             {

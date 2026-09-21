@@ -1,3 +1,4 @@
+#define MANUAL_DROP
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -122,49 +123,9 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
 #region Sortable.Avalonia
         public void CBSideUpdateCommand(object parameter)
             => CBSideUpdate((SortableUpdateEventArgs)parameter);
-        public void CBSideDropCommand(object parameter)
-            => CBSideDrop((SortableDropEventArgs)parameter);
-        public void CBSideReleaseCommand(object parameter)
-            => CBSideRelease((SortableReleaseEventArgs)parameter);
-
-
         public void CBSideUpdate(SortableUpdateEventArgs e)
-            {
-                bool mutationResult = e.ApplyUpdateMutation();
-                Debug.WriteLine($"{nameof(CBSideUpdate)}({nameof(e)})\n    => {mutationResult};");
-            }
-
-
-        public void CBSideDrop(SortableDropEventArgs e)
         {
-            object mutationResult;
-
-            if (e.SourceCollection.IsReadOnly)
-            {
-                CaptionButtons.Insert(e.NewIndex, (CaptionButtonRole)e.Item);
-                mutationResult = 2;
-            }
-            else
-            {
-                mutationResult = e.ApplyDropMutation();
-            }
-
-            Debug.WriteLine($"{nameof(CBSideDrop)}({nameof(e)})\n    => {mutationResult};");
-        }
-
-
-        public void CBSideRelease(SortableReleaseEventArgs e)
-        {
-            int oldIdx = e.OldIndex;
-            if (oldIdx >= 0)
-                CaptionButtons.RemoveAt(oldIdx);
-        }
-
-
-
-
-        void CBSideUpdate_Manual(SortableUpdateEventArgs e)
-        {
+#if MANUAL_UPDATE
             var captionButtons = CaptionButtons;
             int oldIdx = e.OldIndex;
             int newIdx = e.OldIndex;
@@ -204,9 +165,19 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
                 default:
                     break;
             }
+#else
+            var mutationResult = e.ApplyUpdateMutation();
+            Debug.WriteLine($"{nameof(CBSideUpdate)}({nameof(e)})\n    => {mutationResult};");
+#endif
         }
-        void CBSideDrop_Manual(SortableDropEventArgs e)
+
+
+        public void CBSideDropCommand(object parameter)
+            => CBSideDrop((SortableDropEventArgs)parameter);
+        public void CBSideDrop(SortableDropEventArgs e)
         {
+#if MANUAL_DROP
+#if NO
             var captionButtons = CaptionButtons;
             int oldIdx = e.OldIndex;
             int newIdx = e.OldIndex;
@@ -245,6 +216,38 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
                 default:
                     break;
             }
+#else
+            object mutationResult;
+
+            if (e.SourceCollection == e.TargetCollection)
+            {
+                mutationResult = "skipped";
+            }
+            else if (e.SourceCollection.IsReadOnly)
+            {
+                CaptionButtons.Insert(e.NewIndex, (CaptionButtonRole)e.Item);
+                mutationResult = 2;
+            }
+            else
+            {
+                mutationResult = e.ApplyDropMutation();
+            }
+
+            Debug.WriteLine($"{nameof(CBSideDrop)}({nameof(e)})\n    => {mutationResult};");
+#endif
+#else
+            e.ApplyDropMutation();
+#endif
+        }
+
+
+        public void CBSideReleaseCommand(object parameter)
+            => CBSideRelease((SortableReleaseEventArgs)parameter);
+        public void CBSideRelease(SortableReleaseEventArgs e)
+        {
+            int oldIdx = e.OldIndex;
+            if (oldIdx >= 0)
+                CaptionButtons.RemoveAt(oldIdx);
         }
 #endregion
     }

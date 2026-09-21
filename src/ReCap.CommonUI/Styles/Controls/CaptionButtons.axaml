@@ -22,7 +22,7 @@
 				<Panel Background="#01000000">
 					<rcui:AngledBorder x:Name="BgElement"
 									StrokeThickness="2"
-									CornerRadius="0,5,0,5"
+									CornerRadius="{DynamicResource CaptionButton.CornerRadius.Right}"
 									Background="{TemplateBinding Background}"
 									BorderBrush="{TemplateBinding BorderBrush}">
 						<ContentPresenter x:Name="PART_ContentPresenter"
@@ -110,7 +110,7 @@
 			<Setter Property="Padding" Value="0" />
 		</Style>
 
-		<Style Selector="^:windowactive:not(:pointerover):not(:pressed):not(:disabled)">
+		<Style Selector="^[IsHostWindowActive=True]:not(:pointerover):not(:pressed):not(:disabled)">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
@@ -176,7 +176,7 @@
 						Orientation="Horizontal"
 						ZIndex="99999999"
 						Height="{Binding ExtendClientAreaTitleBarHeightHint, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
-						Classes.left-side-buttons="{Binding Path=(rcui:WindowChromeAddon.LeftSideButtons), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}">
+						Classes.left-side-buttons="{Binding Path=(rcui:ManagedWindowChrome.LeftSideButtons), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}">
 					<rcui:CaptionButton x:Name="PART_FullScreenButton"
 							IsVisible="False">
 					</rcui:CaptionButton>
@@ -186,22 +186,22 @@
 								VerticalAlignment="Stretch"
 								>
 					<!--
-								Classes.max-before-min="{Binding Path=(rcui:WindowChromeAddon.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}"
+								Classes.max-before-min="{Binding Path=(rcui:ManagedWindowChrome.ButtonsOrder), RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonsOrder.MaxMinClose}, Mode=OneWay}"
 					-->
 						<rcui:CaptionButton x:Name="PART_MinimizeButton"
 											Win32Properties.NonClientHitTestResult="MinButton">
-							<Path Data="{DynamicResource CaptionButtons.GlyphGeometry.Minimize}" />
+							<Path Data="{DynamicResource CaptionButton.RoleGlyph.Minimize}" />
 						</rcui:CaptionButton>
 						<rcui:CaptionButton x:Name="PART_RestoreButton"
 											Win32Properties.NonClientHitTestResult="MaxButton">
 							<Path Classes="maxRestoreIcon"
 								Classes.maximized="{Binding WindowState, Converter={StaticResource IsMaxStateConverter}}"
-								Data="CaptionButtons.GlyphGeometry.Maximize" />
+								Data="CaptionButton.RoleGlyph.Maximize" />
 						</rcui:CaptionButton>
 					</StackPanel>
 					<rcui:CaptionButton x:Name="PART_CloseButton"
 										Win32Properties.NonClientHitTestResult="Close">
-						<Path Data="{DynamicResource CaptionButtons.GlyphGeometry.Close}" />
+						<Path Data="{DynamicResource CaptionButton.RoleGlyph.Close}" />
 								<!--M 0 0 L 4 0 L 5.5 2 L 7 0 L 11 0
 											L 9 4.5 L 11 9
 											L 7 9 L 5.5 7 L 4 9 L 0 9
@@ -251,7 +251,7 @@
 			<!--
 			<Setter Property="Data" Value="m 3 0 v 2 h 6 v 4 h 2 V 0 Z M 0 3 V 9 H 8 V 3 Z M 2 5 H 6 V 7 H 2 Z" />
 			-->
-			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
+			<Setter Property="Data" Value="{DynamicResource CaptionButton.RoleGlyph.Restore}" />
 		</Style>
 
 		<Style Selector="^ /template/ Path.maxRestoreIcon:not(.maximized)">

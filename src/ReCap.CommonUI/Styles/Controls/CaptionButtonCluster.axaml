@@ -1,62 +1,109 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
-	<ControlTheme x:Key="CaptionButtonCluster.GlyphPresenter"
-				TargetType="{x:Type TemplatedControl}">
-		<Setter Property="Template">
-			<ControlTemplate>
-				<Path x:Name="Glyph"
-					Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
-			</ControlTemplate>
-		</Setter>
-
-
-		<Style Selector="^[DataContext=Minimize]">
-			<Style Selector="^ /template/ Path#Glyph">
-				<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Minimize}" />
-			</Style>
-
-			<!-- Windows actually does this. Unsure about other platforms, so following the known precedent for now. -->
-			<Style Selector="^[Tag=Minimized]">
-				<Style Selector="^ /template/ Path#Glyph">
-					<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
-				</Style>
-			</Style>
+	<ControlTheme x:Key="CaptionButtonCluster.Button.Base"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
+		<Setter Property="Content" Value="{Binding $self.Role, Mode=OneWay}" />
+		<Style Selector="^ /template/ Panel#LayoutRoot">
+			<Setter Property="Background" Value="#01000000" />
 		</Style>
 
 
-		<Style Selector="^[DataContext=Maximize]">
-			<Style Selector="^ /template/ Path#Glyph">
-				<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Maximize}" />
-			</Style>
-			<Style Selector="^[Tag=Maximized], ^[Tag=FullScreen]">
-				<Style Selector="^ /template/ Path#Glyph">
-					<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Restore}" />
-				</Style>
-			</Style>
-		</Style>
-
-
-		<Style Selector="^[DataContext=FullScreen] /template/ Path#Glyph">
-			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.FullScreen}" />
-		</Style>
-
-
-		<Style Selector="^[DataContext=Close] /template/ Path#Glyph">
-			<Setter Property="Data" Value="{DynamicResource CaptionButtons.GlyphGeometry.Close}" />
+		<Style Selector="^ /template/ :is(Control).inset">
+			<Setter Property="Width" Value="{DynamicResource CaptionButton.Width}" />
+			<Setter Property="Height" Value="{Binding Bounds.Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+			<Setter Property="MaxHeight" Value="{DynamicResource CaptionButton.Height}" />
+			<Setter Property="VerticalAlignment" Value="Top" />
 		</Style>
 	</ControlTheme>
+	<ControlTheme x:Key="CaptionButtonCluster.Button.Left"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButtonCluster.Button.Base}">
+		<Setter Property="CornerRadius" Value="{DynamicResource CaptionButton.CornerRadius.Left}" />
+		<Style Selector="^ /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="0,8,0,0" />
+		</Style>
+		<Style Selector="^:nth-child(1) /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="5,8,0,0" />
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButtonCluster.Button.Right"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButtonCluster.Button.Base}">
+		<Style Selector="^ /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="0,8,0,0" />
+		</Style>
+		<Style Selector="^:nth-last-child(1) /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="0,8,13,0" />
+		</Style>
+	</ControlTheme>
+	<DataTemplate x:Key="CaptionButtonCluster.ItemTemplate">
+		<Path Data="{Binding CurrentGlyph, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type rcui:CaptionButton}}, Mode=OneWay}"
+			Stretch="None"
+			Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
+	</DataTemplate>
+
+
+
+
+	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Base"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
+		<Setter Property="Height" Value="{DynamicResource CaptionButton.Height}" />
+		<Setter Property="Padding" Value="10,3" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Bottom" />
+		<Setter Property="ClipToBounds" Value="False" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Panel x:Name="LayoutRoot"
+					Background="#40FF00FF">
+					<ContentPresenter x:Name="PART_ContentPresenter"
+									Classes="inset"
+									Content="{TemplateBinding Content}"
+									ContentTemplate="{TemplateBinding ContentTemplate}"
+									Padding="{TemplateBinding Padding}"
+									HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+				</Panel>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^[IsRoleChecked=True] /template/ Panel#LayoutRoot">
+			<Setter Property="Opacity" Value="0.01" />
+			<Setter Property="Background" Value="#FF000000" />
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Left"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButtonCluster.Button.WindowMenu.Base}">
+		<Style Selector="^:nth-last-child(1):not(:nth-child(1)) /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="20,0,-58,0" />
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Right"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButtonCluster.Button.WindowMenu.Base}">
+		<Style Selector="^:nth-child(1):not(:nth-last-child(1)) /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="-58,0,20,0" />
+		</Style>
+	</ControlTheme>
+	<DataTemplate x:Key="CaptionButtonCluster.ItemTemplate.WindowMenu">
+		<rcui:ImagePresenter IsHitTestVisible="False"
+							Width="16"
+							Height="16"
+							Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Converter={x:Static rcui:WindowIconToMultipleSizesWrapperImageConverter.Instance}, Mode=OneWay, FallbackValue={x:Null}}" />
+	</DataTemplate>
 
 
 
 
 	<ControlTheme x:Key="{x:Type rcui:CaptionButtonCluster}"
 				TargetType="{x:Type rcui:CaptionButtonCluster}">
-		<!--
-		<Setter Property="IsVisible" Value="{Binding $parent[rcui:CaptionButtons2].IsVisible, Mode=OneWay}" />
-		-->
-		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:WindowChromeAddon.IsUsingManagedChrome), Mode=OneWay}" />
-		<Setter Property="ZIndex" Value="99999999" />
+		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:ManagedWindowChrome.IsChromeManaged), Mode=OneWay}" />
+		<Setter Property="ItemTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate}" />
+		<Setter Property="WindowMenuItemTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate.WindowMenu}" />
+		<Setter Property="ClipToBounds" Value="False" />
 		<Setter Property="Template">
 			<ControlTemplate>
 				<ItemsPresenter x:Name="PART_ItemsPresenter"
@@ -67,29 +114,18 @@
 			<ItemsPanelTemplate>
 				<StackPanel x:Name="PART_ItemsPanel"
 							Orientation="Horizontal"
-							Spacing="-11" />
+							Spacing="2" />
 			</ItemsPanelTemplate>
 		</Setter>
-		<Setter Property="ItemTemplate">
-			<DataTemplate DataType="{x:Type rcui:CaptionButtonRole}">
-				<rcui:CaptionButton Role="{Binding Mode=OneWay}"
-									Theme="{Binding $parent[ItemsControl].ItemContainerTheme, Mode=OneWay}">
-				<!--
-									Classes.minimize="{Binding Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonRole.Minimize}, Mode=OneWay}"
-									Classes.maximize="{Binding Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:CaptionButtonRole.Maximize}, Mode=OneWay}"
-				-->
-					<TemplatedControl Theme="{DynamicResource CaptionButtonCluster.GlyphPresenter}"
-									DataContext="{Binding $parent[rcui:CaptionButton].Role, Mode=OneWay}"
-									Tag="{Binding $parent[rcui:CaptionButton].HostWindowState, Mode=OneWay}" />
-				</rcui:CaptionButton>
-			</DataTemplate>
-		</Setter>
-		<!--
-		<Style Selector="^[IsVisible=False]">
-			<Setter Property="MinWidth" Value="0" />
-			<Setter Property="MaxWidth" Value="0" />
-			<Setter Property="Width" Value="0" />
+
+
+		<Style Selector="^[Position=Left]">
+			<Setter Property="ItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.Left}" />
+			<Setter Property="WindowMenuItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.WindowMenu.Left}" />
 		</Style>
-		-->
+		<Style Selector="^[Position=Right]">
+			<Setter Property="ItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.Right}" />
+			<Setter Property="WindowMenuItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.WindowMenu.Right}" />
+		</Style>
 	</ControlTheme>
 </ResourceDictionary>

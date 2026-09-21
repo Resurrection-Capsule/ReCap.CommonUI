@@ -5,13 +5,17 @@
 		xmlns:vps="using:ReCap.CommonUI.Demo.Views.Pages.Styles"
 		xmlns:st="using:Sortable.Avalonia">
 	<Styles.Resources>
-		<GradientStops x:Key="FakeTitleBarFadeStops">
+		<GradientStops x:Key="WindowView.FakeWindow.Fade.Stops">
 			<GradientStop Offset="0" Color="#FFFFFFFF" />
 			<GradientStop Offset="1" Color="#00FFFFFF" />
 		</GradientStops>
+		<LinearGradientBrush x:Key="WindowView.FakeWindow.Fade.Brush"
+							StartPoint="0%,6.25%"
+							EndPoint="0%,87.5%"
+							GradientStops="{StaticResource WindowView.FakeWindow.Fade.Stops}" />
 
 
-		<ControlTheme x:Key="FakeTitleBarPartBase"
+		<ControlTheme x:Key="WindowView.TitleBar.Base"
 				  	TargetType="{x:Type ContentControl}">
 			<Setter Property="HorizontalAlignment" Value="Stretch" />
 
@@ -28,95 +32,70 @@
 		</ControlTheme>
 
 
-		<ControlTheme x:Key="FakeTitleBarContainer"
-				  	TargetType="{x:Type ContentControl}"
-					BasedOn="{StaticResource FakeTitleBarPartBase}">
+		<ControlTheme x:Key="WindowView.TitleBar.Container"
+				  	TargetType="{x:Type HeaderedContentControl}"
+					BasedOn="{StaticResource WindowView.TitleBar.Base}">
+			<Setter Property="Background" Value="{DynamicResource Window.Body.Background}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource Window.Body.BorderBrush}" />
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="ClipToBounds" Value="False" />
+			<Setter Property="Padding" Value="8" />
 			<Setter Property="Template">
 				<ControlTemplate>
-					<DockPanel x:Name="FakeBgContainer">
-					<!--
-							Classes.IsWindowActive="{Binding Path=IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=True}"
-					-->
-							<Panel ClipToBounds="True"
-								DockPanel.Dock="Bottom">
-								<Panel.OpacityMask>
-									<LinearGradientBrush StartPoint="0%,6.25%"
-														EndPoint="0%,87.5%"
-														GradientStops="{DynamicResource FakeTitleBarFadeStops}" />
-								</Panel.OpacityMask>
-								<Panel Margin="0,0,4,0">
-									<rcui:AngledBorder Classes="holo-shadow"
-													CornerRadius="0,0,9,9"
-													Margin="0,-4,0,0">
-										<!--
-										<rcui:AngledBorder.OpacityMask>
-											<LinearGradientBrush StartPoint="0%,56.25%"
-																EndPoint="0%,100%"
-																GradientStops="{DynamicResource FakeTitleBarFadeStops}" />
-										</rcui:AngledBorder.OpacityMask>
-										-->
-									</rcui:AngledBorder>
-								</Panel>
-								<rcui:AngledBorderEx x:Name="BgElement"
-													TopLeftCut="6"
-													TopRightCut="6"
-													TopLeftInset="18"
-													TopRightInset="18"
-													Background="{DynamicResource Window.Body.Background}"
-													BorderBrush="{DynamicResource Window.Body.BorderBrush}"
-													StrokeThickness="1"
-													InnerGlowColor="{DynamicResource Window.Body.InnerGlowColor}"
-													Margin="0,2,4,0"
-													MinHeight="32">
-								<!--
-													BottomRightCut="6"
-													BottomLeftCut="6"
-
-													BottomRightInset="18"
-													BottomLeftInset="18"
-								-->
-								</rcui:AngledBorderEx>
-							</Panel>
-						<Panel>
-							<Panel ClipToBounds="True"
-								Margin="0,2,4,0">
-								<rcui:AngledBorder Classes="holo-shadow"
-												CornerRadius="9,9,0,0"
-												Margin="0,0,0,-4" />
-							</Panel>
-							<ContentPresenter x:Name="PART_ContentPresenter"
+					<Panel>
+						<rcui:AngledBorder Classes="holo-shadow"
+                        				Background="{DynamicResource Window.HoloShadow.Background.Translucent}"
+                        				BorderBrush="{DynamicResource Window.HoloShadow.BorderBrush.Translucent}"
+                        				StrokeThickness="2"
+                        				CornerRadius="9"
+                        				Margin="0,2,4,0" />
+						<StackPanel Orientation="Vertical"
+									Margin="4,0,0,6">
+							<ContentPresenter x:Name="PART_HeaderPresenter"
 											Height="{DynamicResource Window.TitleBar.ReservedHeight}"
+											Content="{TemplateBinding Header}"
+											ContentTemplate="{TemplateBinding HeaderTemplate}"
 											ClipToBounds="False" />
-						</Panel>
-					</DockPanel>
+							<rcui:AngledBorderEx MinHeight="32"
+												Background="{TemplateBinding Background}"
+												BorderBrush="{TemplateBinding BorderBrush}"
+												StrokeThickness="1"
+												InnerGlowColor="{DynamicResource Window.Body.InnerGlowColor}"
+												Padding="{TemplateBinding Padding}"
+												TopLeftCut="6"
+												TopRightCut="6"
+												TopLeftInset="18"
+												TopRightInset="18"
+												BottomRightCut="6"
+												BottomLeftCut="6"
+												BottomRightInset="18"
+												BottomLeftInset="18">
+								<ContentPresenter x:Name="PART_ContentPresenter"
+												Content="{TemplateBinding Content}"
+												ContentTemplate="{TemplateBinding ContentTemplate}"
+												ClipToBounds="False" />
+							</rcui:AngledBorderEx>
+							<rcui:AngledBorderEx Theme="{DynamicResource Window.BottomEdgeTrim}"
+												Background="{DynamicResource Window.TitleBar.BackgroundBrush.Active}"
+												BottomLeftCut="6"
+												BottomRightCut="6" />
+						</StackPanel>
+					</Panel>
 				</ControlTemplate>
 			</Setter>
+
 			<Style Selector="^ /template/ rcui|AngledBorder.holo-shadow">
 				<Setter Property="Background" Value="{DynamicResource Window.HoloShadow.Background.Translucent}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource Window.HoloShadow.BorderBrush.Translucent}" />
 				<Setter Property="StrokeThickness" Value="2" />
 			</Style>
-
-		    <!--
-			<Style Selector="^ /template/ DockPanel#FakeBgContainer:not(.IsWindowActive)">
-			-->
-			<Style Selector="Window[IsActive=False] ^">
-				<Style Selector="^ /template/ rcui|AngledBorder.holo-shadow">
-					<Setter Property="Opacity" Value="0.5" />
-				</Style>
-		    </Style>
 		</ControlTheme>
 
 
-		<ControlTheme x:Key="FakeTitleBarMiddle"
+		<ControlTheme x:Key="WindowView.TitleBar.Middle"
 				  	TargetType="{x:Type ContentControl}"
-					BasedOn="{StaticResource FakeTitleBarPartBase}">
+					BasedOn="{StaticResource WindowView.TitleBar.Base}">
 			<Setter Property="VerticalAlignment" Value="Stretch" />
-			<Setter Property="Padding" Value="9,0" />
-			<!--
-			-->
 			<Setter Property="ClipToBounds" Value="False" />
 			<Setter Property="Template">
 				<ControlTemplate>
@@ -135,45 +114,32 @@
 											Margin="0,0,0,-5" />
 						-->
 						<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
-												TopLeftInset="{TemplateBinding Tag, Converter={x:Static rcui:ThicknessToDoubleConverters.Left}, Mode=OneWay}"
-												TopRightInset="{TemplateBinding Tag, Converter={x:Static rcui:ThicknessToDoubleConverters.Right}, Mode=OneWay}"
-												Margin="0,0,0,-5" />
+												TopLeftInset="{TemplateBinding Padding, Converter={x:Static rcui:ThicknessToDoubleConverters.Left}, Mode=OneWay}"
+												TopRightInset="{TemplateBinding Padding, Converter={x:Static rcui:ThicknessToDoubleConverters.Right}, Mode=OneWay}"
+												Margin="10,0,10,-5" />
 
 						<ContentPresenter x:Name="PART_ContentPresenter"
-										Margin="{TemplateBinding Tag}"
-										Padding="{TemplateBinding Padding}" />
-						<!--
+										Margin="{TemplateBinding Padding}"
 										Padding="9,0" />
-						-->
 					</Panel>
 				</ControlTemplate>
 			</Setter>
-
-
-			<!--
-			<Style Selector="^ /template/ :is(rcui|AngledBorderBase)#TitleBarBackground:not(.IsWindowActive)">
-				<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
-			</Style>
-
-			<Style Selector="^ /template/ :is(rcui|AngledBorderBase)#TitleBarBackground.IsWindowActive">
-				<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Active}" />
-			</Style>
-			-->
 		</ControlTheme>
 
 
-		<ControlTheme x:Key="FakeTitleBarText"
+		<ControlTheme x:Key="WindowView.TitleBar.Text"
 				  	TargetType="{x:Type TextBlock}">
 			<Setter Property="FontFamily" Value="{DynamicResource HeaderFont}" />
 			<Setter Property="FontSize" Value="15" />
 			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Margin" Value="28,0" />
 		</ControlTheme>
 
 
-		<ControlTheme x:Key="CaptionButtonRolesBase"
+		<ControlTheme x:Key="WindowView.CaptionButtons.Roles.Base"
 				  	TargetType="{x:Type ItemsControl}"
 					BasedOn="{StaticResource {x:Type ItemsControl}}">
-			<Setter Property="MinWidth" Value="60" />
+			<Setter Property="MinWidth" Value="{DynamicResource CaptionButton.MinWidth}" />
 			<Setter Property="Padding" Value="0,8,0,0" />
 
 			<Setter Property="st:Sortable.Group" Value="CaptionButtonsRoles" />
@@ -184,100 +150,214 @@
 								Spacing="2" />
 				</ItemsPanelTemplate>
 			</Setter>
-
-			<Style Selector="^[(DockPanel.Dock)=Left]">
-				<Setter Property="HorizontalAlignment" Value="Left" />
-				<Setter Property="Margin" Value="9,0,0,0" />
-
-				<Style Selector="^[(DockPanel.Dock)=Left] > :is(TemplatedControl) /template/ rcui|CaptionButton#CaptionButton">
-					<Setter Property="CornerRadius" Value="5,0,5,0" />
-				</Style>
-			</Style>
 		</ControlTheme>
 
-		<ControlTheme x:Key="CaptionButtonsSide"
+		<ControlTheme x:Key="WindowView.CaptionButtons.Cluster.Base"
 				  	TargetType="{x:Type ItemsControl}"
-					BasedOn="{StaticResource CaptionButtonRolesBase}">
-			<Setter Property="st:Sortable.Droppable" Value="True" />
+					BasedOn="{StaticResource WindowView.CaptionButtons.Roles.Base}">
+			<Setter Property="Background" Value="#01000000" />
+			<Setter Property="ItemsSource" Value="{Binding CaptionButtons, Mode=TwoWay}" />
 			<Setter Property="st:Sortable.Sortable" Value="True" />
 
-			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBSideDropCommand, Mode=OneWay}" />
 			<Setter Property="st:Sortable.UpdateCommand" Value="{Binding CBSideUpdateCommand, Mode=OneWay}" />
 			<Setter Property="st:Sortable.ReleaseCommand" Value="{Binding CBSideReleaseCommand, Mode=OneWay}" />
 
+			<Setter Property="st:Sortable.Droppable" Value="True" />
+			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBSideDropCommand, Mode=OneWay}" />
+
 			<Setter Property="ItemTemplate">
-				<DataTemplate>
+				<DataTemplate DataType="{x:Type rcui:CaptionButtonRole}">
 					<Panel x:Name="ItemLayoutRoot"
 						Background="#01000000"
 						st:Sortable.IsSortable="True"
-						st:Sortable.IsDroppable="True">
+						st:Sortable.IsDroppable="True"
+						HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Mode=OneWay}"
+						ToolTip.Tip="{Binding CurrentRoleTitle, ElementName=CaptionButton, Mode=OneWay}">
 						<rcui:CaptionButton x:Name="CaptionButton"
-											Classes="FakeCaptionButton"
-											ToolTip.Tip="{Binding Mode=OneWay}">
-							<TemplatedControl Theme="{DynamicResource CaptionButtonCluster.GlyphPresenter}"
-											DataContext="{Binding Mode=OneWay}" />
-						</rcui:CaptionButton>
+											Classes="fake"
+											Role="{Binding Mode=OneWay}" />
 					</Panel>
 				</DataTemplate>
 			</Setter>
-
-			<Style Selector="^[(DockPanel.Dock)=Right]">
-				<Setter Property="HorizontalAlignment" Value="Right" />
-				<Setter Property="Margin" Value="0,0,9,0" />
-			</Style>
-
 			<Style Selector="^:empty">
-				<Setter Property="MaxWidth" Value="0" />
-				<Setter Property="MinWidth" Value="0" />
-				<Setter Property="Width" Value="0" />
-				<Setter Property="Margin" Value="0" />
+				<Setter Property="Template">
+					<ControlTemplate>
+						<TextBlock Text="+ Drag here to add"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center" />
+					</ControlTemplate>
+				</Setter>
+			</Style>
+		</ControlTheme>
+		<ControlTheme x:Key="WindowView.CaptionButtons.Cluster.Left"
+				  	TargetType="{x:Type ItemsControl}"
+					BasedOn="{StaticResource WindowView.CaptionButtons.Cluster.Base}">
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="Margin" Value="5,0,0,0" />
+
+			<Style Selector="^:empty /template/ ItemsPresenter">
+				<Setter Property="Margin" Value="0,0,-43,0" />
+			</Style>
+		</ControlTheme>
+		<ControlTheme x:Key="WindowView.CaptionButtons.Cluster.Right"
+				  	TargetType="{x:Type ItemsControl}"
+					BasedOn="{StaticResource WindowView.CaptionButtons.Cluster.Base}">
+			<Setter Property="HorizontalAlignment" Value="Right" />
+			<Setter Property="Margin" Value="0,0,13,0" />
+
+			<Style Selector="^:empty /template/ ItemsPresenter">
+				<Setter Property="Margin" Value="-43,0,0,0" />
 			</Style>
 		</ControlTheme>
 
-		<ControlTheme x:Key="CaptionButtonsPool"
+		<ControlTheme x:Key="WindowView.CaptionButtons.RolesPool"
 				  	TargetType="{x:Type ItemsControl}"
-					BasedOn="{StaticResource CaptionButtonRolesBase}">
-			<Setter Property="st:Sortable.Droppable" Value="True" />
+					BasedOn="{StaticResource WindowView.CaptionButtons.Roles.Base}">
 			<Setter Property="st:Sortable.Sortable" Value="True" />
-
-			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBPoolDropCommand, Mode=OneWay}" />
 			<Setter Property="st:Sortable.UpdateCommand" Value="{Binding CBPoolUpdateCommand, Mode=OneWay}" />
+			<!--
+			-->
+
+			<!--
+			<Setter Property="st:Sortable.Droppable" Value="True" />
+			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBPoolDropCommand, Mode=OneWay}" />
+			-->
 
 			<Setter Property="st:Sortable.CrossCollectionTransferMode" Value="Copy" />
+			<!--
+			-->
 			<Setter Property="ItemTemplate">
-				<DataTemplate>
+				<DataTemplate DataType="{x:Type rcui:CaptionButtonRole}">
 					<StackPanel x:Name="ItemLayoutRoot"
 								Background="#01000000"
 								Orientation="Vertical"
 								Spacing="12"
-								st:Sortable.IsSortable="True"
 								st:Sortable.IsDroppable="True"
 								Margin="0,5">
 						<rcui:CaptionButton x:Name="CaptionButton"
-											Classes="FakeCaptionButton"
-											Margin="8,0,9,0">
-							<TemplatedControl Theme="{DynamicResource CaptionButtonCluster.GlyphPresenter}"
-											DataContext="{Binding Mode=OneWay}" />
-						</rcui:CaptionButton>
-						<TextBlock Text="{Binding Mode=OneWay}"
+											Classes="fake"
+											Role="{Binding Mode=OneWay}"
+											Margin="8,0,9,0"
+											Content="{Binding Mode=OneWay}"
+											ContentTemplate="{DynamicResource CaptionButtonCluster.ItemTemplate}" />
+						<TextBlock Text="{Binding #CaptionButton.CurrentRoleTitle, Mode=OneWay}"
 								HorizontalAlignment="Stretch"
 								TextAlignment="Center" />
 					</StackPanel>
 				</DataTemplate>
 			</Setter>
+			<Setter Property="ItemsPanel">
+				<ItemsPanelTemplate>
+					<WrapPanel x:Name="PART_ItemsPanel"
+								Orientation="Horizontal"
+								ItemSpacing="2"
+								LineSpacing="2" />
+				</ItemsPanelTemplate>
+			</Setter>
 		</ControlTheme>
 
 
 
 
-		<ControlTheme x:Key="CaptionButtonsBridgedWidth"
+        <x:TimeSpan x:Key="FlashEmphasisDuration">0:0:1.8</x:TimeSpan>
+        <x:TimeSpan x:Key="FlashEmphasisDelay1">0:0:0</x:TimeSpan>
+        <x:TimeSpan x:Key="FlashEmphasisDelay2">0:0:0.24</x:TimeSpan>
+        <QuarticEaseOut x:Key="FlashEmphasisEasing" />
+		<StreamGeometry x:Key="WindowView.CaptionButtons.HintArrow.Geometry">
+			M 0 0 M 32 32
+			M 16 1 L 32 17 V 31 L 16 15 L 0 31 V 17 Z
+		</StreamGeometry>
+		<ControlTheme x:Key="WindowView.CaptionButtons.HintArrow"
+				  	TargetType="{x:Type TemplatedControl}">
+			<Setter Property="Width" Value="32" />
+			<Setter Property="Height" Value="32" />
+			<Setter Property="HorizontalAlignment" Value="Center" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="ClipToBounds" Value="False" />
+			<Setter Property="IsHitTestVisible" Value="False" />
+			<Setter Property="Focusable" Value="False" />
+			<Setter Property="IsTabStop" Value="False" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Panel x:Name="Fade">
+						<Path Classes="arrow" />
+						<Path Classes="arrow pulse first" />
+						<Path Classes="arrow pulse second" />
+					</Panel>
+				</ControlTemplate>
+			</Setter>
+
+
+			<Style Selector="^ /template/ Path.arrow">
+				<Setter Property="Fill" Value="{Binding $parent[ContentControl].Foreground, Mode=OneWay}" />
+				<Setter Property="Data" Value="{DynamicResource WindowView.CaptionButtons.HintArrow.Geometry}" />
+				<Setter Property="Stretch" Value="Uniform" />
+			</Style>
+
+
+			<Style Selector="^ /template/ :is(Control).pulse">
+				<Setter Property="RenderTransform" Value="translate(0,0)" />
+			</Style>
+			<Style Selector="^ /template/ :is(Control).pulse.first">
+				<Style.Animations>
+					<Animation Duration="{DynamicResource FlashEmphasisDuration}"
+							Delay="{DynamicResource FlashEmphasisDelay1}"
+							Easing="{DynamicResource FlashEmphasisEasing}"
+							IterationCount="INFINITE"
+							FillMode="Both">
+						<KeyFrame Cue="0%">
+							<Setter Property="Opacity" Value="1" />
+							<Setter Property="TranslateTransform.Y" Value="0" />
+						</KeyFrame>
+						<KeyFrame Cue="100%">
+							<Setter Property="Opacity" Value="0" />
+							<Setter Property="TranslateTransform.Y" Value="-64" />
+						</KeyFrame>
+					</Animation>
+				</Style.Animations>
+			</Style>
+			<Style Selector="^ /template/ :is(Control).pulse.second">
+				<Style.Animations>
+					<Animation Duration="{DynamicResource FlashEmphasisDuration}"
+							Delay="{DynamicResource FlashEmphasisDelay2}"
+							IterationCount="INFINITE"
+							FillMode="Forward">
+						<KeyFrame Cue="0%">
+							<Setter Property="Opacity" Value="1" />
+							<Setter Property="TranslateTransform.Y" Value="0" />
+						</KeyFrame>
+						<KeyFrame Cue="40%">
+							<Setter Property="Opacity" Value="0" />
+							<Setter Property="TranslateTransform.Y" Value="-24" />
+						</KeyFrame>
+					</Animation>
+				</Style.Animations>
+			</Style>
+		</ControlTheme>
+		<ControlTheme x:Key="WindowView.CaptionButtons.HintArrow.Left"
+				  	TargetType="{x:Type TemplatedControl}"
+					BasedOn="{StaticResource WindowView.CaptionButtons.HintArrow}">
+			<Setter Property="Margin" Value="32,8,-4,8" />
+			<Setter Property="RenderTransform" Value="rotate(-30deg)" />
+		</ControlTheme>
+		<ControlTheme x:Key="WindowView.CaptionButtons.HintArrow.Right"
+				  	TargetType="{x:Type TemplatedControl}"
+					BasedOn="{StaticResource WindowView.CaptionButtons.HintArrow}">
+			<Setter Property="Margin" Value="-4,8,32,8" />
+			<Setter Property="RenderTransform" Value="rotate(30deg)" />
+		</ControlTheme>
+
+
+
+
+		<ControlTheme x:Key="WindowView.CaptionButtons.BridgedWidth"
 					TargetType="{x:Type TemplatedControl}">
 			<Setter Property="Focusable" Value="False" />
 			<Setter Property="IsTabStop" Value="False" />
 			<Setter Property="Template">
 				<ControlTemplate>
 					<StackPanel Orientation="Vertical">
-						<TextBlock HorizontalAlignment="{Binding $parent[TemplatedControl].HorizontalContentAlignment, Mode=OneWay}">
+						<TextBlock Classes="align">
 							<TextBlock.Text>
 								<MultiBinding StringFormat="{}{0} bridged width: {1}">
 									<TemplateBinding Property="(DockPanel.Dock)" />
@@ -291,10 +371,28 @@
 								BorderThickness="1"
 								Width="{Binding Mode=OneWay}"
 								Height="4"
-								HorizontalAlignment="{Binding $parent[TemplatedControl].HorizontalContentAlignment, Mode=OneWay}" />
+								Classes="align" />
 					</StackPanel>
 				</ControlTemplate>
 			</Setter>
+
+
+			<Style Selector="^[(DockPanel.Dock)=Left]">
+				<Style Selector="^ /template/ :is(Layoutable).align">
+					<Setter Property="HorizontalAlignment" Value="Left" />
+				</Style>
+				<Style Selector="^ /template/ TextBlock.align">
+					<Setter Property="TextAlignment" Value="Left" />
+				</Style>
+			</Style>
+			<Style Selector="^[(DockPanel.Dock)=Right]">
+				<Style Selector="^ /template/ :is(Layoutable).align">
+					<Setter Property="HorizontalAlignment" Value="Right" />
+				</Style>
+				<Style Selector="^ /template/ TextBlock.align">
+					<Setter Property="TextAlignment" Value="Right" />
+				</Style>
+			</Style>
 		</ControlTheme>
 	</Styles.Resources>
 
@@ -308,13 +406,17 @@
 
 
 
-	<Style Selector="rcui|CaptionButton.FakeCaptionButton">
-		<Setter Property="Width" Value="{DynamicResource CaptionButton.MinWidth}" />
-		<Setter Property="Height" Value="23" />
+	<Style Selector="rcui|CaptionButton.fake">
+		<Setter Property="Width" Value="{DynamicResource CaptionButton.Width}" />
+		<Setter Property="Height" Value="{DynamicResource CaptionButton.Height}" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="Focusable" Value="False" />
 		<Setter Property="IsHitTestVisible" Value="False" />
-		<Setter Property="Padding" Value="15,2" />
+		<Setter Property="Content" Value="{Binding $self.Role, Mode=OneWay}" />
+		<Setter Property="ContentTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate}" />
+	</Style>
+	<Style Selector="Panel#ItemLayoutRoot[HorizontalAlignment=Left] > rcui|CaptionButton.fake">
+		<Setter Property="CornerRadius" Value="{DynamicResource CaptionButton.CornerRadius.Left}" />
 	</Style>
 </Styles>

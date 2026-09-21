@@ -6,8 +6,8 @@ using ReCap.CommonUI.Util.OperatingSystem.Linux;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    internal sealed partial class LinuxWindowChromeAddonImpl
-        : IWindowChromeAddonImpl
+    internal sealed partial class LinuxWindowChromeImpl
+        : WindowChromeImplBaseBase
     {
         static readonly LinuxDetails _DETAILS = OSInfo.GetOSDetails<LinuxDetails>();
 
@@ -16,8 +16,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 #region Properties
         bool _x11NeedsInit = false;
-        X11WindowChromeAddonSubImpl _x11 = null;
-        X11WindowChromeAddonSubImpl X11Impl
+        X11WindowChromeSubImpl _x11 = null;
+        X11WindowChromeSubImpl X11Impl
         {
             get => EnsureSubImpl(ref _x11, ref _x11NeedsInit, () => new(_DETAILS));
         }
@@ -25,15 +25,15 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 #if WAYLAND
         bool _waylandNeedsInit = false;
-        WaylandWindowChromeAddonSubImpl _wayland = null;
-        WaylandWindowChromeAddonSubImpl WaylandImpl
+        WaylandWindowChromeSubImpl _wayland = null;
+        WaylandWindowChromeSubImpl WaylandImpl
         {
             get => EnsureSubImpl(ref _wayland, ref _waylandNeedsInit, () => new(_DETAILS));
         }
 #endif
 
 
-        IWindowChromeAddonImpl CurrentSubImpl
+        IWindowChromeImpl CurrentSubImpl
         {
             get
             {
@@ -49,62 +49,62 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public bool CanUseManagedWindowChrome
+        public override bool CanUseManagedWindowChrome
             => CurrentSubImpl.CanUseManagedWindowChrome;
 
-        public bool PrefersManagedWindowChrome
+        public override bool PrefersManagedWindowChrome
             => CurrentSubImpl.PrefersManagedWindowChrome;
 
-        public bool DefaultShowCaptionIcon
+        public override bool DefaultShowCaptionIcon
             => CurrentSubImpl.DefaultShowCaptionIcon;
 
-        public bool DefaultShowCaptionText
+        public override bool DefaultShowCaptionText
             => CurrentSubImpl.DefaultShowCaptionText;
 
 
-        readonly CaptionButtonRolesPair _defaultCaptionButtons;
-        public CaptionButtonRolesPair DefaultCaptionButtons
+        readonly CaptionButtonRolesPair _defaultCaptionButtonRoles;
+        public override CaptionButtonRolesPair DefaultCaptionButtonRoles
         {
-            get => _defaultCaptionButtons;
-            private init => _defaultCaptionButtons = value;
+            get => _defaultCaptionButtonRoles;
         }
 
 
-        public IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
-            => CurrentSubImpl.ValidCaptionButtonRoles;
+        public override IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
+        {
+            get => CurrentSubImpl.ValidCaptionButtonRoles;
+        }
 #endregion
 
 
 
 
-        public void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
+        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
             => CurrentSubImpl.ApplyDesiredManagedChrome(window, desiredManagedChrome, applyUseManagedChrome);
 
-        public void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e)
-            => CurrentSubImpl.ExecuteExtendedCaptionButton(window, e);
+        public override bool ExecuteButton(Window window, CaptionButtonClickEventArgs e, Action roleAction)
+            => CurrentSubImpl.ExecuteButton(window, e, roleAction);
 
-        public bool GetDesiredManagedChrome(Window window, ManagedChromeMode chromeMode)
+        public override bool GetDesiredManagedChrome(Window window, ManagedChromeHint chromeMode)
             => CurrentSubImpl.GetDesiredManagedChrome(window, chromeMode);
 
 
 
-
-        public LinuxWindowChromeAddonImpl()
+        public LinuxWindowChromeImpl()
             : base()
         {
             if (TryImportCaptionButtons(out CaptionButtonRolesPair imported))
             {
-                DefaultCaptionButtons = imported;
+                _defaultCaptionButtonRoles = imported;
             }
             else
             {
-                DefaultCaptionButtons = new()
+                _defaultCaptionButtonRoles = new()
                 {
                     //[TODO: Detect e.g. Unity DE?]
                     //[TODO: platform-level user settings?]
                     Left = new()
                     {
-                        CaptionButtonRole.Menu,
+                        CaptionButtonRole.WindowMenu,
                     },
                     Right = new()
                     {
@@ -120,8 +120,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         bool _isInitialized = false;
-        public void Init()
+        public override void Init()
         {
+            base.Init();
+
+
             _x11NeedsInit = true;
 #if WAYLAND
             _waylandNeedsInit = true;
@@ -134,7 +137,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         T EnsureSubImpl<T>(ref T impl, ref bool needsInit, Func<T> create)
             where T
-                : IWindowChromeAddonImpl
+                : IWindowChromeImpl
         {
             impl ??= create();
 

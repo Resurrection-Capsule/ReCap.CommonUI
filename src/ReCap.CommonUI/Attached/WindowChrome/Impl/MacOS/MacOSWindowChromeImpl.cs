@@ -5,8 +5,8 @@ using Avalonia.Platform;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    internal sealed class MacOSWindowChromeAddonImpl
-        : WindowChromeAddonImplBase
+    internal sealed class MacOSWindowChromeImpl
+        : WindowChromeImplBase
     {
         public override bool CanUseManagedWindowChrome
         {
@@ -20,18 +20,18 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        protected override IEnumerable<CaptionButtonRole> GetValidCaptionButtonRoles()
+        protected override IEnumerable<CaptionButtonRole> InitValidButtonRoles()
             => new List<CaptionButtonRole>()
             {
                 CaptionButtonRole.Minimize,
                 CaptionButtonRole.Maximize,
                 CaptionButtonRole.FullScreen,
                 CaptionButtonRole.Close,
-                CaptionButtonRole.Menu,
+                CaptionButtonRole.WindowMenu,
             };
 
 
-        protected override CaptionButtonRolesPair CreateDefaultCaptionButtons()
+        protected override CaptionButtonRolesPair InitDefaultButtonRoles()
             => new()
             {
                 Left = new()
@@ -39,7 +39,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     CaptionButtonRole.Close,
                     CaptionButtonRole.Minimize,
                     CaptionButtonRole.Maximize,
-                    CaptionButtonRole.Menu,
+                    CaptionButtonRole.WindowMenu,
                 },
                 Right = new()
                 {
@@ -51,7 +51,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         {
             window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
             bool useManagedChrome = default;
-            DefaultWindowChromeAddonImpl.ApplyDesiredManagedChrome_Default(
+            DEFAULT_IWindowChromeImpl.ApplyDesiredManagedChrome_IMPL(
                 this, window, desiredManagedChrome
                 , fallbackToSystemDecorationsProperty: true
                 , value =>
