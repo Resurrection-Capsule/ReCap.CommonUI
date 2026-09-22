@@ -113,28 +113,29 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        const bool _DEFAULT_IsRoleCheckable = false;
-        public static readonly DirectProperty<CaptionButton, bool> IsRoleCheckableProperty
-            = AvaloniaProperty.RegisterDirect<CaptionButton, bool>(nameof(IsRoleCheckable)
-                , getter: o => o.IsRoleCheckable
-                , unsetValue: _DEFAULT_IsRoleCheckable
+        const bool _DEFAULT_IsRoleActivatable = false;
+        internal static readonly DirectProperty<CaptionButton, bool> IsRoleActivatableProperty
+            = AvaloniaProperty.RegisterDirect<CaptionButton, bool>(nameof(IsRoleActivatable)
+                , getter: o => o.IsRoleActivatable
+                , setter: (o, v) => o.IsRoleActivatable = v
+                , unsetValue: _DEFAULT_IsRoleActivatable
             );
-        bool _isRoleCheckable = _DEFAULT_IsRoleCheckable;
-        public bool IsRoleCheckable
+        bool _isRoleActivatable = _DEFAULT_IsRoleActivatable;
+        internal bool IsRoleActivatable
         {
-            get => _isRoleCheckable;
-            internal set => SetAndRaise(IsRoleCheckableProperty, ref _isRoleCheckable, value);
+            get => _isRoleActivatable;
+            set => SetAndRaise(IsRoleActivatableProperty, ref _isRoleActivatable, value);
         }
 
 
-        internal static readonly StyledProperty<bool> IsRoleCheckedProperty
-            = AvaloniaProperty.Register<CaptionButton, bool>(nameof(IsRoleChecked), false, coerce: IsRoleCheckedProperty_Coerce);
-        static bool IsRoleCheckedProperty_Coerce(AvaloniaObject o, bool value)
-            => value && ((CaptionButton)o).IsRoleCheckable;
-        public bool IsRoleChecked
+        internal static readonly StyledProperty<bool> IsRoleActiveProperty
+            = AvaloniaProperty.Register<CaptionButton, bool>(nameof(IsRoleActive), false, coerce: IsRoleActiveProperty_Coerce);
+        static bool IsRoleActiveProperty_Coerce(AvaloniaObject o, bool value)
+            => value && ((CaptionButton)o).IsRoleActivatable;
+        internal bool IsRoleActive
         {
-            get => GetValue(IsRoleCheckedProperty);
-            internal set => SetValue(IsRoleCheckedProperty, value);
+            get => GetValue(IsRoleActiveProperty);
+            set => SetValue(IsRoleActiveProperty, value);
         }
 
 
@@ -169,8 +170,8 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 HostWindowStateProperty,
             });
 
-            IsRoleCheckableProperty.Changed.AddClassHandler<CaptionButton>(IsRoleCheckableProperty_Changed);
-            IsRoleCheckedProperty.Changed.AddClassHandler<CaptionButton>(IsRoleCheckedProperty_Changed);
+            IsRoleActivatableProperty.Changed.AddClassHandler<CaptionButton>(IsRoleActivatableProperty_Changed);
+            IsRoleActiveProperty.Changed.AddClassHandler<CaptionButton>(IsRoleActiveProperty_Changed);
             RoleProperty.Changed.AddClassHandler<CaptionButton>(RoleProperty_Changed);
             GlyphsProperty.Changed.AddClassHandler<CaptionButton>(GlyphsProperty_Changed);
             UseManagedToolTipProperty.Changed.AddClassHandler<CaptionButton>(UseManagedToolTipProperty_Changed);
@@ -187,25 +188,25 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        static void IsRoleCheckableProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs e)
+        static void IsRoleActivatableProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs e)
         {
             if (e.GetNewValue<bool>())
                 return;
             else
-                button.IsRoleChecked = false;
+                button.IsRoleActive = false;
         }
 
 
-        static void IsRoleCheckedProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs e)
+        static void IsRoleActiveProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs e)
         {
             bool value = e.GetNewValue<bool>();
 
-            if (button.IsRoleCheckable)
+            if (button.IsRoleActivatable)
                 button.RefreshGlyph(button.Role, value);
             else if (value)
-                button.IsRoleChecked = false;
+                button.IsRoleActive = false;
 
-            button.PseudoClasses.Set(_PSEUD_ROLE_ACTIVE, button.IsRoleChecked);
+            button.PseudoClasses.Set(_PSEUD_ROLE_ACTIVE, button.IsRoleActive);
         }
 
 
@@ -246,18 +247,18 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
         CompositeDisposable _contentBindingDisposable = null;
         void Refresh()
-            => Refresh(Role, IsRoleChecked);
+            => Refresh(Role, IsRoleActive);
         void Refresh(CaptionButtonRole role)
-            => Refresh(role, IsRoleChecked);
-        void Refresh(CaptionButtonRole role, bool roleChecked)
+            => Refresh(role, IsRoleActive);
+        void Refresh(CaptionButtonRole role, bool roleActive)
         {
             _contentBindingDisposable?.Dispose();
             _contentBindingDisposable = null;
 
-            RefreshGlyph(role, roleChecked);
-            IsRoleCheckable = ManagedWindowChromeEnumsHelper.ACTIVATABLE_ROLES.Contains(role);
+            RefreshGlyph(role, roleActive);
+            IsRoleActivatable = ManagedWindowChromeEnumsHelper.ACTIVATABLE_ROLES.Contains(role);
 
-            if (!role.TryGetCaptionButtonRoleTitleDynamicResource(roleChecked, out DynamicResourceExtension roleTitleDynamicResource))
+            if (!role.TryGetCaptionButtonRoleTitleDynamicResource(roleActive, out DynamicResourceExtension roleTitleDynamicResource))
                 return;
 
             _contentBindingDisposable = new()
@@ -271,8 +272,8 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        void RefreshGlyph(CaptionButtonRole role, bool roleChecked)
-            => CurrentGlyph = Glyphs?.GetGlyph(role, roleChecked);
+        void RefreshGlyph(CaptionButtonRole role, bool roleActive)
+            => CurrentGlyph = Glyphs?.GetGlyph(role, roleActive);
 
 
 

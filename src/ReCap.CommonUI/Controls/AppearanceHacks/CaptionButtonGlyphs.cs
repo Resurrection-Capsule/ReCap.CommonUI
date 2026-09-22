@@ -257,18 +257,18 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        internal Geometry GetGlyph(CaptionButtonRole role, bool roleChecked)
+        internal Geometry GetGlyph(CaptionButtonRole role, bool roleActive)
             => role switch
             {
-                CaptionButtonRole.Minimize => roleChecked
+                CaptionButtonRole.Minimize => roleActive
                     ? UnMinimizeGlyph
                     : MinimizeGlyph
                 ,
-                CaptionButtonRole.Maximize => roleChecked
+                CaptionButtonRole.Maximize => roleActive
                     ? UnMaximizeGlyph
                     : MaximizeGlyph
                 ,
-                CaptionButtonRole.FullScreen => roleChecked
+                CaptionButtonRole.FullScreen => roleActive
                     ? UnFullScreenGlyph
                     : FullScreenGlyph
                 ,
@@ -276,21 +276,21 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 CaptionButtonRole.WindowMenu => WindowMenuGlyph,
 #if CAPTIONBUTTONROLES_NYI
                 CaptionButtonRole.ApplicationMenu => ApplicationMenuGlyph,
-                CaptionButtonRole.ShowOnAllDesktops => roleChecked
+                CaptionButtonRole.ShowOnAllDesktops => roleActive
                     ? UnShowOnAllDesktopsGlyph
                     : ShowOnAllDesktopsGlyph
                 ,
                 CaptionButtonRole.ContextHelp => ContextHelpGlyph,
-                CaptionButtonRole.Shade => roleChecked
+                CaptionButtonRole.Shade => roleActive
                     ? UnShadeGlyph
                     : ShadeGlyph
                 ,
-                CaptionButtonRole.KeepBelow => roleChecked
+                CaptionButtonRole.KeepBelow => roleActive
                     ? UnKeepBelowGlyph
                     : KeepBelowGlyph
                 ,
 #endif
-                CaptionButtonRole.KeepAbove => roleChecked
+                CaptionButtonRole.KeepAbove => roleActive
                     ? UnKeepAboveGlyph
                     : KeepAboveGlyph
                 ,

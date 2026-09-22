@@ -64,8 +64,8 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             {
                 button.DisposeBindingDisposables();
 
-                button.ClearValue(CaptionButton.IsRoleCheckableProperty);
-                button.ClearValue(CaptionButton.IsRoleCheckedProperty);
+                button.ClearValue(CaptionButton.IsRoleActivatableProperty);
+                button.ClearValue(CaptionButton.IsRoleActiveProperty);
                 button.ClearValue(IsEnabledProperty);
                 button.ClearValue(CaptionButton.RoleProperty);
                 button.ClearValue(ContentControl.ContentProperty);

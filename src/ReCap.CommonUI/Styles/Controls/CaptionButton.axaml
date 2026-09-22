@@ -29,18 +29,12 @@
 										HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 					</rcui:AngledBorder>
-					<Border IsHitTestVisible="False"
-							Background="#40FF00FF"
-							IsVisible="{TemplateBinding IsRoleChecked}" />
 				</Panel>
 			</ControlTemplate>
 		</Setter>
 
 		<!-- Idle (inactive window) -->
 		<Style Selector="^[IsHostWindowActive=False]">
-		<!--
-			:not(:pointerover):not(:pressed):not(:disabled)
-		-->
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />

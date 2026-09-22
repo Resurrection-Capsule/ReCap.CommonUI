@@ -33,23 +33,23 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             CaptionButtonRole.KeepAbove,
         };
         public static readonly IEnumerable<CaptionButtonRole> NON_ACTIVATABLE_ROLES;
-        static readonly IReadOnlyDictionary<(CaptionButtonRole Role, bool RoleChecked), DynamicResourceExtension> _ROLES_DYNAMIC_RESOURCES;
+        static readonly IReadOnlyDictionary<(CaptionButtonRole Role, bool RoleActive), DynamicResourceExtension> _ROLES_DYNAMIC_RESOURCES;
         delegate bool TryGetCaptionButtonRoleTitleFunc<T>(T resourceSource, ThemeVariant theme, string key, out object o);
         static ManagedWindowChromeEnumsHelper()
         {
             ALL_ROLES = Enum.GetValues(typeof(CaptionButtonRole)).Cast<CaptionButtonRole>();
             NON_ACTIVATABLE_ROLES = ALL_ROLES.Where(role => !ACTIVATABLE_ROLES.Contains(role));
 
-            static void MakePair(CaptionButtonRole role, bool roleChecked, out (CaptionButtonRole Role, bool RoleChecked) keyPair, out DynamicResourceExtension dynamicResource)
+            static void MakePair(CaptionButtonRole role, bool roleActive, out (CaptionButtonRole Role, bool RoleActive) keyPair, out DynamicResourceExtension dynamicResource)
             {
-                keyPair = (role, roleChecked);
-                var key = role.GetCaptionButtonRoleTitleResourceKey(roleChecked);
+                keyPair = (role, roleActive);
+                var key = role.GetCaptionButtonRoleTitleResourceKey(roleActive);
                 dynamicResource = new(key);
             }
 
 
 
-            Dictionary<(CaptionButtonRole Role, bool RoleChecked), DynamicResourceExtension> rolesDynamicResources = new();
+            Dictionary<(CaptionButtonRole Role, bool RoleActive), DynamicResourceExtension> rolesDynamicResources = new();
 
             foreach (CaptionButtonRole role in ACTIVATABLE_ROLES)
             {
@@ -88,19 +88,19 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 goto fail;
 
             CaptionButtonRole role = button.Role;
-            bool roleChecked = button.IsRoleChecked;
+            bool roleActive = button.IsRoleActive;
 
             bindingDisposables = button.BindingDisposables ?? new();
             bindingDisposables.Add(button.Bind(ContentControl.ContentProperty, button[!CaptionButton.RoleProperty]));
 
-            IBinding isCheckedBinding;
+            IBinding isActiveBinding;
             IBinding isEnabledBinding;
             switch (role)
             {
                 case CaptionButtonRole.Minimize:
                     role.GetStateBindingsForWindowState(hostWindow
                         , Window.CanMinimizeProperty
-                        , out isCheckedBinding
+                        , out isActiveBinding
                         , out isEnabledBinding
                     );
                     break;
@@ -109,13 +109,13 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 case CaptionButtonRole.FullScreen:
                     role.GetStateBindingsForWindowState(hostWindow
                         , Window.CanMaximizeProperty
-                        , out isCheckedBinding
+                        , out isActiveBinding
                         , out isEnabledBinding
                     );
                     break;
 
                 case CaptionButtonRole.WindowMenu:
-                    isCheckedBinding = hostWindow
+                    isActiveBinding = hostWindow
                         .GetObservable(ManagedWindowChrome.ShowIconProperty)
                         .Select(showIcon => !showIcon)
                         .ToBinding()
@@ -125,23 +125,23 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 #if CAPTIONBUTTONROLES_NYI
                 case CaptionButtonRole.ShowOnAllDesktops:
-                    isCheckedBinding = //[TODO: ]
+                    isActiveBinding = //[TODO: ]
                     isEnabledBinding = //[TODO: ]
                     break;
 
                 case CaptionButtonRole.Shade:
-                    isCheckedBinding = //[TODO: ]
+                    isActiveBinding = //[TODO: ]
                     isEnabledBinding = //[TODO: ]
                     break;
 
                 case CaptionButtonRole.KeepBelow:
-                    isCheckedBinding = //[TODO: ]
+                    isActiveBinding = //[TODO: ]
                     isEnabledBinding = //[TODO: ]
                     break;
 
 #endif
                 case CaptionButtonRole.KeepAbove:
-                    isCheckedBinding = hostWindow
+                    isActiveBinding = hostWindow
                         .GetObservable(WindowBase.TopmostProperty)
                         .ToBinding()
                     ;
@@ -153,14 +153,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     goto fail;
             }
 
-            if (isCheckedBinding != null)
+            if (isActiveBinding != null)
             {
-                button.IsRoleCheckable = true;
-                bindingDisposables.Add(button.Bind(CaptionButton.IsRoleCheckedProperty, isCheckedBinding));
+                button.IsRoleActivatable = true;
+                bindingDisposables.Add(button.Bind(CaptionButton.IsRoleActiveProperty, isActiveBinding));
             }
             else
             {
-                button.IsRoleCheckable = false;
+                button.IsRoleActivatable = false;
             }
 
 
@@ -170,7 +170,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             return true;
 
             fail:
-            button.IsRoleCheckable = false;
+            button.IsRoleActivatable = false;
             bindingDisposables = null;
             return false;
         }
@@ -179,12 +179,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         static void GetStateBindingsForWindowState(this CaptionButtonRole role
             , Window hostWindow
             , AvaloniaProperty<bool> isEnabledTargetProperty
-            , out IBinding isCheckedBinding
+            , out IBinding isRoleActiveBinding
             , out IBinding isEnabledBinding
         )
         {
             WindowState windowState = (WindowState)role;
-            isCheckedBinding = hostWindow
+            isRoleActiveBinding = hostWindow
                 .GetObservable(Window.WindowStateProperty)
                 .Select(ws => ws == windowState)
                 .ToBinding()
@@ -200,16 +200,16 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static string GetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleChecked)
-            => TryGetCaptionButtonRoleTitleResourceKeyInternal(role, roleChecked, out string key, out Exception exception)
+        public static string GetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleActive)
+            => TryGetCaptionButtonRoleTitleResourceKeyInternal(role, roleActive, out string key, out Exception exception)
                 ? key
                 : throw exception
             ;
 
 
-        public static bool TryGetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleChecked, out string key)
-            => TryGetCaptionButtonRoleTitleResourceKeyInternal(role, roleChecked, out key, out _);
-        static bool TryGetCaptionButtonRoleTitleResourceKeyInternal(CaptionButtonRole role, bool roleChecked, out string key, out Exception exception)
+        public static bool TryGetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleActive, out string key)
+            => TryGetCaptionButtonRoleTitleResourceKeyInternal(role, roleActive, out key, out _);
+        static bool TryGetCaptionButtonRoleTitleResourceKeyInternal(CaptionButtonRole role, bool roleActive, out string key, out Exception exception)
         {
             if (!ALL_ROLES.Contains(role))
             {
@@ -223,7 +223,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 exception = new NullReferenceException($"{nameof(key)} 1");
                 goto fail;
             }
-            else if (roleChecked && ACTIVATABLE_ROLES.Contains(role))
+            else if (roleActive && ACTIVATABLE_ROLES.Contains(role))
             {
                 key = $"Un{key}";
             }
@@ -245,11 +245,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleChecked
+        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
             , IThemeVariantHost resourceSource
             , out string title
         )
-            => role.TryGetCaptionButtonRoleTitleInternal(roleChecked
+            => role.TryGetCaptionButtonRoleTitleInternal(roleActive
                 , TryGetCaptionButtonRoleTitleFunc_IResourceHost
                 , resourceSource
                 , resourceSource.ActualThemeVariant
@@ -267,12 +267,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             o = null;
             return false;
         }
-        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleChecked
+        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
             , IResourceHost resourceSource
             , ThemeVariant theme
             , out string title
         )
-            => role.TryGetCaptionButtonRoleTitleInternal(roleChecked
+            => role.TryGetCaptionButtonRoleTitleInternal(roleActive
                 , TryGetCaptionButtonRoleTitleFunc_IResourceHost
                 , resourceSource
                 , theme
@@ -282,12 +282,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static bool TryGetCaptionButtonRoleTitleFunc_IResourceNode(IResourceNode resourceSource, ThemeVariant theme, string key, out object o)
             => resourceSource.TryGetResource(key, theme, out o);
-        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleChecked
+        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
             , IResourceNode resourceSource
             , ThemeVariant theme
             , out string title
         )
-            => role.TryGetCaptionButtonRoleTitleInternal(roleChecked
+            => role.TryGetCaptionButtonRoleTitleInternal(roleActive
                 , TryGetCaptionButtonRoleTitleFunc_IResourceNode
                 , resourceSource
                 , theme
@@ -295,14 +295,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             );
 
 
-        static bool TryGetCaptionButtonRoleTitleInternal<T>(this CaptionButtonRole role, bool roleChecked
+        static bool TryGetCaptionButtonRoleTitleInternal<T>(this CaptionButtonRole role, bool roleActive
             , TryGetCaptionButtonRoleTitleFunc<T> func
             , T resourceSource
             , ThemeVariant theme
             , out string title
         )
         {
-            if (!role.TryGetCaptionButtonRoleTitleResourceKey(roleChecked, out string key))
+            if (!role.TryGetCaptionButtonRoleTitleResourceKey(roleActive, out string key))
                 goto fail;
             else if (!func(resourceSource, theme, key, out object o))
                 goto fail;
@@ -327,9 +327,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static bool TryGetCaptionButtonRoleTitleDynamicResource(this CaptionButtonRole role, bool roleChecked, out DynamicResourceExtension dynamicResource)
-            => (role, roleChecked).TryGetCaptionButtonRoleTitleDynamicResource(out dynamicResource);
-        public static bool TryGetCaptionButtonRoleTitleDynamicResource(this (CaptionButtonRole Role, bool RoleChecked) keyPair, out DynamicResourceExtension dynamicResource)
+        public static bool TryGetCaptionButtonRoleTitleDynamicResource(this CaptionButtonRole role, bool roleActive, out DynamicResourceExtension dynamicResource)
+            => (role, roleActive).TryGetCaptionButtonRoleTitleDynamicResource(out dynamicResource);
+        public static bool TryGetCaptionButtonRoleTitleDynamicResource(this (CaptionButtonRole Role, bool RoleActive) keyPair, out DynamicResourceExtension dynamicResource)
             => _ROLES_DYNAMIC_RESOURCES.TryGetValue(keyPair, out dynamicResource);
 
 

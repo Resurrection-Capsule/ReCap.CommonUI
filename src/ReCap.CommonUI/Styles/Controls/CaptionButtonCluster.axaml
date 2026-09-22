@@ -69,7 +69,7 @@
 				</Panel>
 			</ControlTemplate>
 		</Setter>
-		<Style Selector="^[IsRoleChecked=True] /template/ Panel#LayoutRoot">
+		<Style Selector="^:roleactive /template/ Panel#LayoutRoot">
 			<Setter Property="Opacity" Value="0.01" />
 			<Setter Property="Background" Value="#FF000000" />
 		</Style>
