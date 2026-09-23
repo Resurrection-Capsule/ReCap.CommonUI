@@ -14,6 +14,8 @@
 
         <Style Selector="Window">
             <Setter Property="rcui:ManagedWindowChrome.Hint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:ManagedWindowChrome.ShowTitleHint" Value="{Binding ShowTitleHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:ManagedWindowChrome.ShowIconHint" Value="{Binding ShowIconHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
             <Setter Property="rcui:ManagedWindowChrome.LeftCaptionButtonRoles" Value="{Binding LeftCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
             <Setter Property="rcui:ManagedWindowChrome.RightCaptionButtonRoles" Value="{Binding RightCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
         </Style>

@@ -29,9 +29,18 @@
 										HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 					</rcui:AngledBorder>
+					<Border x:Name="RoleActivationTest"
+							IsHitTestVisible="False"
+							Background="#40FF00FF" />
 				</Panel>
 			</ControlTemplate>
 		</Setter>
+		<Style Selector="^:not(:roleactive) /template/ Border#RoleActivationTest">
+			<Setter Property="IsVisible" Value="False" />
+		</Style>
+		<Style Selector="^:roleactive /template/ Border#RoleActivationTest">
+			<Setter Property="IsVisible" Value="True" />
+		</Style>
 
 		<!-- Idle (inactive window) -->
 		<Style Selector="^[IsHostWindowActive=False]">

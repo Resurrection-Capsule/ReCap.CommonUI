@@ -26,11 +26,29 @@ namespace ReCap.CommonUI.Demo
 
 
         public static readonly StyledProperty<ManagedChromeHint> ManagedChromeHintProperty =
-            AvaloniaProperty.Register<App, ManagedChromeHint>(nameof(ManagedChromeHint));
+            AvaloniaProperty.Register<App, ManagedChromeHint>(nameof(ManagedChromeHint), ManagedChromeHint.Auto);
         public ManagedChromeHint ManagedChromeHint
         {
             get => GetValue(ManagedChromeHintProperty);
             set => SetValue(ManagedChromeHintProperty, value);
+        }
+
+
+        public static readonly StyledProperty<ManagedChromeElementHint> ShowTitleHintProperty =
+            AvaloniaProperty.Register<App, ManagedChromeElementHint>(nameof(ShowTitleHint), ManagedChromeElementHint.Auto);
+        public ManagedChromeElementHint ShowTitleHint
+        {
+            get => GetValue(ShowTitleHintProperty);
+            set => SetValue(ShowTitleHintProperty, value);
+        }
+
+
+        public static readonly StyledProperty<ManagedChromeElementHint> ShowIconHintProperty =
+            AvaloniaProperty.Register<App, ManagedChromeElementHint>(nameof(ShowIconHint), ManagedChromeElementHint.Auto);
+        public ManagedChromeElementHint ShowIconHint
+        {
+            get => GetValue(ShowIconHintProperty);
+            set => SetValue(ShowIconHintProperty, value);
         }
 
 
@@ -74,7 +92,6 @@ namespace ReCap.CommonUI.Demo
 
         public override void OnFrameworkInitializationCompleted()
         {
-            ManagedChromeHint = ManagedChromeHint.Auto;
             var roles = ManagedWindowChrome.PlatformDefaultCaptionButtonRoles;
             LeftCaptionButtonRoles = roles.Left;
             RightCaptionButtonRoles = roles.Right;

@@ -61,25 +61,54 @@
 									Grid.RowSpan="3">
 				<StackPanel Orientation="Vertical"
 							Spacing="20">
-					<StackPanel Classes="leftButtons">
-						<ToggleButton Content="Auto"
-									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Auto}, Mode=TwoWay}" />
-						<ToggleButton Content="System"
-									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Never}, Mode=TwoWay}" />
-						<ToggleButton Content="Managed"
-									IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.WheneverPossible}, Mode=TwoWay}" />
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="ManagedChromeHint"
+								Classes="sh3" />
+						<StackPanel Classes="leftButtons">
+							<ToggleButton Content="Auto"
+										IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Auto}, Mode=TwoWay}" />
+							<ToggleButton Content="System"
+										IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Never}, Mode=TwoWay}" />
+							<ToggleButton Content="Managed"
+										IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.WheneverPossible}, Mode=TwoWay}" />
+						</StackPanel>
 					</StackPanel>
+					<!--
 					<StackPanel Orientation="Vertical"
 								IsVisible="{Binding $parent[Window].(rcui:ManagedWindowChrome.IsChromeManaged), Mode=OneWay}">
 						<CheckBox Content="Display window title"
 								IsChecked="{Binding $parent[Window].(rcui:ManagedWindowChrome.ShowTitle), Mode=TwoWay}" />
 						<CheckBox Content="Display window icon"
 								IsChecked="{Binding $parent[Window].(rcui:ManagedWindowChrome.ShowIcon), Mode=TwoWay}" />
+					-->
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="ShowTitleHint"
+								Classes="sh3" />
+						<StackPanel Classes="leftButtons">
+							<ToggleButton Content="Hide"
+										IsChecked="{Binding ShowTitleHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Hide}, Mode=TwoWay}" />
+							<ToggleButton Content="Auto"
+										IsChecked="{Binding ShowTitleHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Auto}, Mode=TwoWay}" />
+							<ToggleButton Content="Show"
+										IsChecked="{Binding ShowTitleHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Show}, Mode=TwoWay}" />
+						</StackPanel>
+					</StackPanel>
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="ShowIconHint"
+								Classes="sh3" />
+						<StackPanel Classes="leftButtons">
+							<ToggleButton Content="Hide"
+										IsChecked="{Binding ShowIconHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Hide}, Mode=TwoWay}" />
+							<ToggleButton Content="Auto"
+										IsChecked="{Binding ShowIconHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Auto}, Mode=TwoWay}" />
+							<ToggleButton Content="Show"
+										IsChecked="{Binding ShowIconHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Show}, Mode=TwoWay}" />
+						</StackPanel>
+					</StackPanel>
 						<!--
 						<CheckBox Content="Reserve titlebar caption area"
 								IsChecked="{Binding DataContext.UseReservedCaptionArea, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type v:UITestView}}, Mode=TwoWay}" />
 						-->
-					</StackPanel>
 				</StackPanel>
 			</HeaderedContentControl>
 		</UniformGrid>

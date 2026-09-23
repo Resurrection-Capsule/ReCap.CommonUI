@@ -50,6 +50,7 @@
 	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Base"
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
+		<Setter Property="Background" Value="#40FF00FF" />
 		<Setter Property="Height" Value="{DynamicResource CaptionButton.Height}" />
 		<Setter Property="Padding" Value="10,3" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -58,7 +59,7 @@
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Panel x:Name="LayoutRoot"
-					Background="#40FF00FF">
+					Background="{TemplateBinding Background}">
 					<ContentPresenter x:Name="PART_ContentPresenter"
 									Classes="inset"
 									Content="{TemplateBinding Content}"
@@ -69,23 +70,31 @@
 				</Panel>
 			</ControlTemplate>
 		</Setter>
-		<Style Selector="^:roleactive /template/ Panel#LayoutRoot">
-			<Setter Property="Opacity" Value="0.01" />
-			<Setter Property="Background" Value="#FF000000" />
-		</Style>
 	</ControlTheme>
 	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Left"
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource CaptionButtonCluster.Button.WindowMenu.Base}">
-		<Style Selector="^:nth-last-child(1):not(:nth-child(1)) /template/ :is(Control).inset">
-			<Setter Property="Margin" Value="20,0,-58,0" />
+		<Style Selector="^:nth-last-child(1)">
+			<Style Selector="^:not(:nth-child(1)) /template/ :is(Control).inset">
+				<Setter Property="Margin" Value="20,0,-58,0" />
+			</Style>
+			<Style Selector="^:not(:roleactive)">
+				<Setter Property="Opacity" Value="0.01" />
+				<Setter Property="Background" Value="#FF000000" />
+			</Style>
 		</Style>
 	</ControlTheme>
 	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Right"
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource CaptionButtonCluster.Button.WindowMenu.Base}">
-		<Style Selector="^:nth-child(1):not(:nth-last-child(1)) /template/ :is(Control).inset">
-			<Setter Property="Margin" Value="-58,0,20,0" />
+		<Style Selector="^:nth-child(1)">
+			<Style Selector="^:not(:nth-last-child(1)) /template/ :is(Control).inset">
+				<Setter Property="Margin" Value="-58,0,20,0" />
+			</Style>
+			<Style Selector="^:not(:roleactive)">
+				<Setter Property="Opacity" Value="0.01" />
+				<Setter Property="Background" Value="#FF000000" />
+			</Style>
 		</Style>
 	</ControlTheme>
 	<DataTemplate x:Key="CaptionButtonCluster.ItemTemplate.WindowMenu">

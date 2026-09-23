@@ -4,7 +4,6 @@ using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -180,6 +179,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             {
                 RoleProperty,
                 CurrentGlyphProperty,
+                IsRoleActiveProperty,
             };
 
             AffectsArrange<CaptionButton>(props);
@@ -256,7 +256,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             _contentBindingDisposable = null;
 
             RefreshGlyph(role, roleActive);
-            IsRoleActivatable = ManagedWindowChromeEnumsHelper.ACTIVATABLE_ROLES.Contains(role);
+            IsRoleActivatable = WindowChromeEnumsHelper.ACTIVATABLE_ROLES.Contains(role);
 
             if (!role.TryGetCaptionButtonRoleTitleDynamicResource(roleActive, out DynamicResourceExtension roleTitleDynamicResource))
                 return;

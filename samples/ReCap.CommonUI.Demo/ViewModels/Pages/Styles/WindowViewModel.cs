@@ -22,6 +22,30 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         }
 
 
+        ManagedChromeElementHint _showTitleHint = App.Current.ShowTitleHint;
+        public ManagedChromeElementHint ShowTitleHint
+        {
+            get => _showTitleHint;
+            set
+            {
+                RASIC(ref _showTitleHint, value);
+                App.Current.ShowTitleHint = _showTitleHint;
+            }
+        }
+
+
+        ManagedChromeElementHint _showIconHint = App.Current.ShowIconHint;
+        public ManagedChromeElementHint ShowIconHint
+        {
+            get => _showIconHint;
+            set
+            {
+                RASIC(ref _showIconHint, value);
+                App.Current.ShowIconHint = _showIconHint;
+            }
+        }
+
+
         bool _useReserveCaptionArea = true;
         public bool UseReservedCaptionArea
         {

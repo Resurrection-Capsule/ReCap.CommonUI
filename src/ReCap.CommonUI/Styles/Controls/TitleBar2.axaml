@@ -38,11 +38,11 @@
 											IsHitTestVisible="False"
 											DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 											IsVisible="{Binding (rcui:ManagedWindowChrome.ReserveCaptionArea), Mode=OneWay}"
-											Classes.showIcon="{Binding (rcui:ManagedWindowChrome.ShowIcon), Mode=OneWay}">
+											Classes.showIcon="{Binding (rcui:ManagedWindowChrome.IsIconVisible), Mode=OneWay}">
 									<TextBlock x:Name="TitleDisplay"
 											VerticalAlignment="Center"
 											Text="{Binding Title, Mode=OneWay}"
-											IsVisible="{Binding (rcui:ManagedWindowChrome.ShowTitle), Mode=OneWay}" />
+											IsVisible="{Binding (rcui:ManagedWindowChrome.IsTitleVisible), Mode=OneWay}" />
 								</StackPanel>
 							</Panel>
 						</DockPanel>

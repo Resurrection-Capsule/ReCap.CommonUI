@@ -6,7 +6,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml.MarkupExtensions;
@@ -15,9 +14,8 @@ using ReCap.CommonUI.Controls.AppearanceHacks;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    internal static partial class ManagedWindowChromeEnumsHelper
+    internal static partial class WindowChromeEnumsHelper
     {
-        public const CaptionButtonRole INVALID_ROLE = (CaptionButtonRole)(-1337);
         const string _CAPTIONBUTTONROLE_TITLE_KEY_FORMAT = "CaptionButton.RoleTitle.{0}";
         public static readonly IEnumerable<CaptionButtonRole> ALL_ROLES;
         public static readonly IEnumerable<CaptionButtonRole> ACTIVATABLE_ROLES = new[]
@@ -25,6 +23,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             CaptionButtonRole.Minimize,
             CaptionButtonRole.Maximize,
             CaptionButtonRole.FullScreen,
+            CaptionButtonRole.WindowMenu, //HACK: Technically not activatable, but needed for ShowIconHint/IsIconVisible
 #if CAPTIONBUTTONROLES_NYI
             CaptionButtonRole.ShowOnAllDesktops,
             CaptionButtonRole.Shade,
@@ -35,7 +34,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         public static readonly IEnumerable<CaptionButtonRole> NON_ACTIVATABLE_ROLES;
         static readonly IReadOnlyDictionary<(CaptionButtonRole Role, bool RoleActive), DynamicResourceExtension> _ROLES_DYNAMIC_RESOURCES;
         delegate bool TryGetCaptionButtonRoleTitleFunc<T>(T resourceSource, ThemeVariant theme, string key, out object o);
-        static ManagedWindowChromeEnumsHelper()
+        static WindowChromeEnumsHelper()
         {
             ALL_ROLES = Enum.GetValues(typeof(CaptionButtonRole)).Cast<CaptionButtonRole>();
             NON_ACTIVATABLE_ROLES = ALL_ROLES.Where(role => !ACTIVATABLE_ROLES.Contains(role));
@@ -116,8 +115,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
                 case CaptionButtonRole.WindowMenu:
                     isActiveBinding = hostWindow
-                        .GetObservable(ManagedWindowChrome.ShowIconProperty)
-                        .Select(showIcon => !showIcon)
+                        .GetObservable(ManagedWindowChrome.IsIconVisibleProperty)
                         .ToBinding()
                     ;
                     isEnabledBinding = null;

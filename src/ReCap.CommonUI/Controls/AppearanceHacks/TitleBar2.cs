@@ -182,7 +182,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         {
             if (count <= 0)
                 goto irrelevant;
-            else if (!ManagedWindowChrome.GetShowIcon(window))
+            else if (!ManagedWindowChrome.GetIsIconVisible(window))
                 goto irrelevant;
             else if (!hasNonWindowMenuButtons)
                 return WindowMenuPresence.Lone;

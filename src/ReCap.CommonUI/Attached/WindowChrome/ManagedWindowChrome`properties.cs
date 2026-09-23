@@ -7,115 +7,202 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     {
         public static readonly AttachedProperty<bool> MakeAvailableProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("MakeAvailable", false);
-        internal static bool GetMakeAvailable(Window control)
-            => control.GetValue(MakeAvailableProperty);
-        internal static void SetMakeAvailable(Window control, bool value)
-            => control.SetValue(MakeAvailableProperty, value);
+        internal static bool GetMakeAvailable(Window window)
+            => window.GetValue(MakeAvailableProperty);
+        internal static void SetMakeAvailable(Window window, bool value)
+            => window.SetValue(MakeAvailableProperty, value);
 
 
 
 
-#region Public hinting properties
+#region Properties
+        /// <summary>
+        /// Whether a <see cref="Window"/> would prefer to use managed or system chrome.
+        /// </summary>
         public static readonly AttachedProperty<ManagedChromeHint> HintProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, ManagedChromeHint>("Hint", ManagedChromeHint.Auto);
-        public static ManagedChromeHint GetHint(Window control)
-            => control.GetValue(HintProperty);
-        public static void SetHint(Window control, ManagedChromeHint value)
-            => control.SetValue(HintProperty, value);
+        /// <summary>
+        /// Gets the value of the Hint attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the Hint attached property.</returns>
+        public static ManagedChromeHint GetHint(Window window)
+            => window.GetValue(HintProperty);
+        /// <summary>
+        /// Sets the value of the Hint attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="control">The <see cref="Window"/>.</param>
+        /// <param name="value">The value of the Hint attached property.</param>
+        public static void SetHint(Window window, ManagedChromeHint value)
+            => window.SetValue(HintProperty, value);
 
 
+        /// <summary>
+        /// Whether a <see cref="Window"/>'s managed chrome should show its <see cref="Window.Title"/>.
+        /// </summary>
         public static readonly AttachedProperty<ManagedChromeElementHint> ShowTitleHintProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, ManagedChromeElementHint>("ShowTitleHint", ManagedChromeElementHint.Auto);
-        public static ManagedChromeElementHint GetShowTitleHint(Window control)
-            => control.GetValue(ShowTitleHintProperty);
-        public static void SetShowTitleHint(Window control, ManagedChromeElementHint value)
-            => control.SetValue(ShowTitleHintProperty, value);
+        /// <summary>
+        /// Gets the value of the ShowTitleHint attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the ShowTitleHint attached property.</returns>
+        public static ManagedChromeElementHint GetShowTitleHint(Window window)
+            => window.GetValue(ShowTitleHintProperty);
+        /// <summary>
+        /// Sets the value of the ShowTitleHint attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <param name="value">The value of the ShowTitleHint attached property.</param>
+        public static void SetShowTitleHint(Window window, ManagedChromeElementHint value)
+            => window.SetValue(ShowTitleHintProperty, value);
 
 
+        /// <summary>
+        /// Whether a <see cref="Window"/>'s managed chrome should show its <see cref="Window.Icon"/>.
+        /// </summary>
+        /// <remarks>
+        /// Only applicable if the <see cref="CaptionButtonRoles.WindowMenu"/> is the last element of LeftCaptionButtonRoles and/or the first element of RightCaptionButtonRoles, since <see cref="Window.Icon"/> is displayed on a <see cref="CaptionButtonRoles.WindowMenu"/> button, if at all.
+        /// </remarks>
         public static readonly AttachedProperty<ManagedChromeElementHint> ShowIconHintProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, ManagedChromeElementHint>("ShowIconHint", ManagedChromeElementHint.Auto);
-        public static ManagedChromeElementHint GetShowIconHint(Window control)
-            => control.GetValue(ShowIconHintProperty);
-        public static void SetShowIconHint(Window control, ManagedChromeElementHint value)
-            => control.SetValue(ShowIconHintProperty, value);
+        /// <summary>
+        /// Gets the value of the ShowIconHint attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the ShowIconHint attached property.</returns>
+        public static ManagedChromeElementHint GetShowIconHint(Window window)
+            => window.GetValue(ShowIconHintProperty);
+        /// <summary>
+        /// Sets the value of the ShowIconHint attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <param name="value">The value the the ShowIconHint attached property.</param>
+        public static void SetShowIconHint(Window window, ManagedChromeElementHint value)
+            => window.SetValue(ShowIconHintProperty, value);
+
+
+        /// <summary>
+        /// The <see cref="CaptionButtonRole"/>s on the left end of a <see cref="Window"/>'s managed chrome's title bar.
+        /// </summary>
+        public static readonly AttachedProperty<CaptionButtonRoles> LeftCaptionButtonRolesProperty =
+            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, CaptionButtonRoles>("LeftCaptionButtonRoles", PlatformDefaultCaptionButtonRoles.Left);
+        /// <summary>
+        /// Gets the value of the LeftCaptionButtonRoles attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the LeftCaptionButtonRoles attached property.</returns>
+        public static CaptionButtonRoles GetLeftCaptionButtonRoles(Window window)
+            => window.GetValue(LeftCaptionButtonRolesProperty);
+        /// <summary>
+        /// Sets the value of the LeftCaptionButtonRoles attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <param name="value">The value the the LeftCaptionButtonRoles attached property.</param>
+        public static void SetLeftCaptionButtonRoles(Window window, CaptionButtonRoles value)
+            => window.SetValue(LeftCaptionButtonRolesProperty, value);
+
+
+        /// <summary>
+        /// The <see cref="CaptionButtonRole"/>s on the right end of a <see cref="Window"/>'s managed chrome's title bar.
+        /// </summary>
+        public static readonly AttachedProperty<CaptionButtonRoles> RightCaptionButtonRolesProperty =
+            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, CaptionButtonRoles>("RightCaptionButtonRoles", PlatformDefaultCaptionButtonRoles.Right);
+        /// <summary>
+        /// Gets the value of the RightCaptionButtonRoles attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the RightCaptionButtonRoles attached property.</returns>
+        public static CaptionButtonRoles GetRightCaptionButtonRoles(Window window)
+            => window.GetValue(RightCaptionButtonRolesProperty);
+        /// <summary>
+        /// Sets the value of the RightCaptionButtonRoles attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <param name="value">The value the the RightCaptionButtonRoles attached property.</param>
+        public static void SetRightCaptionButtonRoles(Window window, CaptionButtonRoles value)
+            => window.SetValue(RightCaptionButtonRolesProperty, value);
 #endregion
 
 
 
 
-#region Actual state properties
+#region Read-only properties
+        /// <summary>
+        /// Whether a <see cref="Window"/> is currently using managed chrome.
+        /// </summary>
         public static readonly AttachedProperty<bool> IsChromeManagedProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("IsChromeManaged", false);
-        public static bool GetIsChromeManaged(Window control)
-            => control.GetValue(IsChromeManagedProperty);
-        internal static void SetIsChromeManaged(Window control, bool value)
-            => control.SetValue(IsChromeManagedProperty, value);
+        /// <summary>
+        /// Gets the value of the IsChromeManaged attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the IsChromeManaged attached property.</returns>
+        public static bool GetIsChromeManaged(Window window)
+            => window.GetValue(IsChromeManagedProperty);
+        internal static void SetIsChromeManaged(Window window, bool value)
+            => window.SetValue(IsChromeManagedProperty, value);
 
 
-        public static readonly AttachedProperty<bool> ShowTitleProperty =
-            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("ShowTitle", true);
-        public static bool GetShowTitle(Window control)
-            => control.GetValue(ShowTitleProperty);
-        internal static void SetShowTitle(Window control, bool value)
-            => control.SetValue(ShowTitleProperty, value);
+        /// <summary>
+        /// Whether a <see cref="Window"/> using managed chrome is showing its <see cref="Window.Title"/>.
+        /// </summary>
+        public static readonly AttachedProperty<bool> IsTitleVisibleProperty =
+            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("IsTitleVisible", true);
+        /// <summary>
+        /// Gets the value of the IsChromeManaged attached property on the specified <see cref="Window"/>.
+        /// </summary>
+        /// <param name="window">The <see cref="Window"/>.</param>
+        /// <returns>The value of the IsChromeManaged attached property.</returns>
+        public static bool GetIsTitleVisible(Window window)
+            => window.GetValue(IsTitleVisibleProperty);
+        internal static void SetIsTitleVisible(Window window, bool value)
+            => window.SetValue(IsTitleVisibleProperty, value);
 
 
-        public static readonly AttachedProperty<bool> ShowIconProperty =
-            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("ShowIcon", false);
-        public static bool GetShowIcon(Window control)
-            => control.GetValue(ShowIconProperty);
-        internal static void SetShowIcon(Window control, bool value)
-            => control.SetValue(ShowIconProperty, value);
+        /// <summary>
+        /// Whether a <see cref="Window"/> using managed chrome is showing its <see cref="Window.Icon"/>.
+        /// </summary>
+        public static readonly AttachedProperty<bool> IsIconVisibleProperty =
+            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("IsIconVisible", true);
+        public static bool GetIsIconVisible(Window window)
+            => window.GetValue(IsIconVisibleProperty);
+        internal static void SetIsIconVisible(Window window, bool value)
+            => window.SetValue(IsIconVisibleProperty, value);
 #endregion
 
 
         public static readonly AttachedProperty<bool> ReserveCaptionAreaProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, bool>("ReserveCaptionArea", true);
-        public static bool GetReserveCaptionArea(Window control)
-            => control.GetValue(ReserveCaptionAreaProperty);
-        public static void SetReserveCaptionArea(Window control, bool value)
-            => control.SetValue(ReserveCaptionAreaProperty, value);
+        public static bool GetReserveCaptionArea(Window window)
+            => window.GetValue(ReserveCaptionAreaProperty);
+        public static void SetReserveCaptionArea(Window window, bool value)
+            => window.SetValue(ReserveCaptionAreaProperty, value);
 
 
         public static readonly AttachedProperty<double> ReservedCaptionHeightProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, double>("ReservedCaptionHeight", 1d);
-        public static double GetReservedCaptionHeight(Window control)
-            => control.GetValue(ReservedCaptionHeightProperty);
-        public static void SetReservedCaptionHeight(Window control, double value)
-            => control.SetValue(ReservedCaptionHeightProperty, value);
+        public static double GetReservedCaptionHeight(Window window)
+            => window.GetValue(ReservedCaptionHeightProperty);
+        public static void SetReservedCaptionHeight(Window window, double value)
+            => window.SetValue(ReservedCaptionHeightProperty, value);
 
 
-
-
-        public static readonly AttachedProperty<CaptionButtonRoles> LeftCaptionButtonRolesProperty =
-            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, CaptionButtonRoles>("LeftCaptionButtonRoles", PlatformDefaultCaptionButtonRoles.Left);
-        public static CaptionButtonRoles GetLeftCaptionButtonRoles(Window control)
-            => control.GetValue(LeftCaptionButtonRolesProperty);
-        public static void SetLeftCaptionButtonRoles(Window control, CaptionButtonRoles value)
-            => control.SetValue(LeftCaptionButtonRolesProperty, value);
 
 
         public static readonly AttachedProperty<double> LeftCaptionButtonsWidthProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, double>("LeftCaptionButtonsWidth", 0d);
-        public static double GetLeftCaptionButtonsWidth(Window control)
-            => control.GetValue(LeftCaptionButtonsWidthProperty);
-        internal static void SetLeftCaptionButtonsWidth(Window control, double value)
-            => control.SetValue(LeftCaptionButtonsWidthProperty, value);
-
-
-        public static readonly AttachedProperty<CaptionButtonRoles> RightCaptionButtonRolesProperty =
-            AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, CaptionButtonRoles>("RightCaptionButtonRoles", PlatformDefaultCaptionButtonRoles.Right);
-        public static CaptionButtonRoles GetRightCaptionButtonRoles(Window control)
-            => control.GetValue(RightCaptionButtonRolesProperty);
-        public static void SetRightCaptionButtonRoles(Window control, CaptionButtonRoles value)
-            => control.SetValue(RightCaptionButtonRolesProperty, value);
+        public static double GetLeftCaptionButtonsWidth(Window window)
+            => window.GetValue(LeftCaptionButtonsWidthProperty);
+        internal static void SetLeftCaptionButtonsWidth(Window window, double value)
+            => window.SetValue(LeftCaptionButtonsWidthProperty, value);
 
 
         public static readonly AttachedProperty<double> RightCaptionButtonsWidthProperty =
             AvaloniaProperty.RegisterAttached<ManagedWindowChrome, Window, double>("RightCaptionButtonsWidth", 0d);
-        public static double GetRightCaptionButtonsWidth(Window control)
-            => control.GetValue(RightCaptionButtonsWidthProperty);
-        internal static void SetRightCaptionButtonsWidth(Window control, double value)
-            => control.SetValue(RightCaptionButtonsWidthProperty, value);
+        public static double GetRightCaptionButtonsWidth(Window window)
+            => window.GetValue(RightCaptionButtonsWidthProperty);
+        internal static void SetRightCaptionButtonsWidth(Window window, double value)
+            => window.SetValue(RightCaptionButtonsWidthProperty, value);
     }
 }

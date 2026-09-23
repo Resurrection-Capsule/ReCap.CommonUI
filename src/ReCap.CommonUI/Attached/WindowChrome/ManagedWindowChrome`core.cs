@@ -22,7 +22,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         static void AffectsAll(params AvaloniaProperty[] properties)
         {
             AffectsAll<ManagedWindowChrome>(properties);
-            AffectsAll<ManagedWindowChrome>(properties);
             AffectsAll<Window>(properties);
         }
 
@@ -40,8 +39,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
             AvaloniaProperty[] properties =
             {
-                ShowIconProperty,
-                ShowTitleProperty,
+                IsIconVisibleProperty,
+                IsTitleVisibleProperty,
                 ReserveCaptionAreaProperty,
                 ReservedCaptionHeightProperty,
                 ShowIconHintProperty,
@@ -111,7 +110,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         internal static void RefreshShowIcon(Window window)
             => RefreshShowIcon(window, GetShowIconHint(window));
         internal static void RefreshShowIcon(Window window, ManagedChromeElementHint hint)
-            => SetShowIcon(window, hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionIcon));
+            => SetIsIconVisible(window, hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionIcon));
 
 
         static void ShowTitleHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs args)
@@ -119,7 +118,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         internal static void RefreshShowTitle(Window window)
             => RefreshShowTitle(window, GetShowTitleHint(window));
         internal static void RefreshShowTitle(Window window, ManagedChromeElementHint hint)
-            => SetShowTitle(window, hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionText));
+            => SetIsTitleVisible(window, hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionText));
 
 
         static void Window_Closed(object sender, EventArgs e)

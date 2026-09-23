@@ -3,20 +3,6 @@ using Avalonia.Controls;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    public enum CaptionButtonClickState
-    {
-        Pressed,
-        Released,
-    }
-
-
-    public enum CaptionButtonsOrder
-    {
-        MinMaxClose,
-        MaxMinClose,
-    }
-
-
     public enum CaptionButtonRole
     {
         Minimize = WindowState.Minimized,
@@ -35,21 +21,45 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     }
 
 
+    /// <summary>
+    /// Defines hints for chrome on a <see cref="Window"/>.
+    /// </summary>
     public enum ManagedChromeHint
-        : byte
+        : sbyte
     {
-        Never = 0x00,
-        Auto = 0x01,
-        WheneverPossible = 0x02,
+        /// <summary>
+        /// Use system chrome if possible.
+        /// </summary>
+        Never            = ManagedChromeElementHint.Hide,
+        /// <summary>
+        /// Use system or managed chrome, depending on platform preference/convention.
+        /// </summary>
+        Auto             = ManagedChromeElementHint.Auto,
+        /// <summary>
+        /// Use managed chrome if possible.
+        /// </summary>
+        WheneverPossible = ManagedChromeElementHint.Show,
     }
 
 
+    /// <summary>
+    /// Defines hints for visibility of the managed chrome on a <see cref="Window"/>.
+    /// </summary>
     public enum ManagedChromeElementHint
-        : byte
+        : sbyte
     {
-        Hide = 0x00,
-        Show = 0x01,
-        Auto = 0x02,
+        /// <summary>
+        /// Hide the element.
+        /// </summary>
+        Hide = -1,
+        /// <summary>
+        /// Defer to platform preference/convention.
+        /// </summary>
+        Show = 0,
+        /// <summary>
+        /// Show the element.
+        /// </summary>
+        Auto = 1,
     }
 
 
