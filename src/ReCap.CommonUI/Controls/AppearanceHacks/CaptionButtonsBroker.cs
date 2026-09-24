@@ -177,8 +177,8 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             
             _mainDisposable = new()
             {
-                Bind(LeftCaptionButtonRolesProperty, hostWindow[!ManagedWindowChrome.LeftCaptionButtonRolesProperty]),
-                Bind(RightCaptionButtonRolesProperty, hostWindow[!ManagedWindowChrome.RightCaptionButtonRolesProperty]),
+                Bind(LeftCaptionButtonRolesProperty, hostWindow[!WindowChrome.LeftCaptionButtonRolesProperty]),
+                Bind(RightCaptionButtonRolesProperty, hostWindow[!WindowChrome.RightCaptionButtonRolesProperty]),
                 this
                     .GetObservable(IsVisibleProperty)
                     .Subscribe(isVisible =>
@@ -229,10 +229,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             bool hasHostWindow = TryGetHostWindow(out Window oldHost);
             _mainDisposable?.Dispose();
 
-            if (hasHostWindow)
+            if (hasHostWindow && WindowChrome.TryGetStateInfo(oldHost, out WindowChrome stateInfo))
             {
-                ManagedWindowChrome.SetLeftCaptionButtonsWidth(oldHost, 0d);
-                ManagedWindowChrome.SetRightCaptionButtonsWidth(oldHost, 0d);
+                stateInfo.LeftCaptionButtonsWidth = 0d;
+                stateInfo.RightCaptionButtonsWidth = 0d;
             }
         }
 
@@ -250,7 +250,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             if (e.PointerArgs.RoutedEvent == Button.ClickEvent)
                 roleAction?.Invoke();
             else
-                ManagedWindowChrome.PLATFORM_IMPL.ExecuteButton(hostWindow, e, roleAction);
+                WindowChrome.PLATFORM_IMPL.ExecuteButton(hostWindow, e, roleAction);
         }
 
 

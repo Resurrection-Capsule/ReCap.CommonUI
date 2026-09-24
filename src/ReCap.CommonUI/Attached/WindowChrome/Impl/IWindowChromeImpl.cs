@@ -8,12 +8,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 {
     internal interface IWindowChromeImpl
     {
-        IReadOnlyList<Window> AttachedWindows
-        {
-            get;
-        }
-
-
         bool CanUseManagedWindowChrome
         {
             get;
@@ -48,8 +42,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         void Init();
 
 
-        void AttachWindow(Window window);
-        void DetachWindow(Window window);
+        void OnWindowAttached(Window window);
+        void OnWindowDetached(Window window);
 
 
         bool GetDesiredManagedChrome(Window window, ManagedChromeHint chromeMode);

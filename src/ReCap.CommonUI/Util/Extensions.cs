@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -474,6 +475,32 @@ namespace ReCap.CommonUI.Util
 
         internal static T GetService<T>(this IServiceProvider serviceProvider)
             => (T)serviceProvider.GetService(typeof(T));
+
+
+#if PSEUDOCLASS_HACK
+        static readonly PropertyInfo _PSEUDOCLASSES_PROPERTY = typeof(StyledElement)
+            .GetProperty("PseudoClasses", BindingFlags.NonPublic | BindingFlags.Instance)
+        ;
+        internal static bool TryGetPseudoClasses(this StyledElement element, out IPseudoClasses pseudoClasses)
+        {
+            try
+            {
+                if (_PSEUDOCLASSES_PROPERTY.GetValue(element) is IPseudoClasses ps)
+                {
+                    pseudoClasses = ps;
+                    return true;
+                }
+            }
+            catch (Exception exception)
+            {
+                // Fail """""gracefully""""" - cursed Reflection can explode without warning
+                Console.WriteLine(exception);
+            }
+
+            pseudoClasses = null;
+            return false;
+        }
+#endif
     }
 
 

@@ -51,7 +51,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             button.BindingDisposables ??= new();
             button.BindingDisposables.Add(button.Bind(ThemeProperty, themeBinding));
             button.BindingDisposables.Add(button.Bind(ContentControl.ContentTemplateProperty, contentTemplateBinding));
-            ManagedWindowChrome.PLATFORM_IMPL.Prepare(button);
+            WindowChrome.PLATFORM_IMPL.Prepare(button);
         }
 
 

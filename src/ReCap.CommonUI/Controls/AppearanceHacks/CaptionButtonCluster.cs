@@ -348,17 +348,17 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
         void SetWindowCaptionButtonsSize(double newSize)
         {
-            if (_hostWindow == null)
+            if (!WindowChrome.TryGetStateInfo(_hostWindow, out WindowChrome stateInfo))
                 return;
 
             switch (Position)
             {
                 case CaptionButtonClusterPosition.Left:
-                    ManagedWindowChrome.SetLeftCaptionButtonsWidth(_hostWindow, newSize);
+                    stateInfo.LeftCaptionButtonsWidth = newSize;
                     break;
 
                 case CaptionButtonClusterPosition.Right:
-                    ManagedWindowChrome.SetRightCaptionButtonsWidth(_hostWindow, newSize);
+                    stateInfo.RightCaptionButtonsWidth = newSize;
                     break;
             }
         }

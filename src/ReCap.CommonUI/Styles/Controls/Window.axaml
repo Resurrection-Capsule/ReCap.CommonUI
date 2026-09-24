@@ -29,8 +29,8 @@
 		<Setter Property="FontFamily" Value="{DynamicResource BodyFont}" />
 		<Setter Property="FontSize" Value="12" />
         
-		<Setter Property="rcui:ManagedWindowChrome.MakeAvailable" Value="True" />
-        <Setter Property="rcui:ManagedWindowChrome.ReservedCaptionHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
+		<Setter Property="rcui:WindowChrome.MakeAvailable" Value="True" />
+        <Setter Property="rcui:WindowChrome.ReservedCaptionHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
         <!--
 		<Setter Property="TransparencyBackgroundFallback" Value="#00FF00FF" />
 		-->
@@ -72,9 +72,9 @@
                                 <DockPanel>
                                     <Control x:Name="TitleBarHeightStandIn"
                                             Classes.fullScreen="{TemplateBinding WindowState, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static WindowState.FullScreen}}"
-                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:ManagedWindowChrome.ReserveCaptionArea), Mode=OneWay}"
+                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChrome.ReserveCaptionArea), Mode=OneWay}"
                                             IsVisible="False"
-                                            Height="{TemplateBinding (rcui:ManagedWindowChrome.ReservedCaptionHeight)}"
+                                            Height="{TemplateBinding (rcui:WindowChrome.ReservedCaptionHeight)}"
                                             DockPanel.Dock="Top" />
                                     <Control DockPanel.Dock="Bottom"
                                             Classes="bottom-edge" />
@@ -116,7 +116,7 @@
 
 
         <!-- System decorations -->
-		<Style Selector="^[(rcui|ManagedWindowChrome.IsChromeManaged)=False]">
+		<Style Selector="^:not(:managedchrome)">
             <Style Selector="^ /template/ :is(Panel)#TemplateRoot">
                 <Setter Property="Margin" Value="-2,-4,-2,-10" />
             </Style>
@@ -152,7 +152,7 @@
 
 
         <!-- Managed decorations -->
-        <Style Selector="^[(rcui|ManagedWindowChrome.IsChromeManaged)=True]">
+        <Style Selector="^:managedchrome">
             <Setter Property="TransparencyLevelHint" Value="Transparent" />
             <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
             <Setter Property="rcui:WindowTransparencyHack.UseHack" Value="True" />

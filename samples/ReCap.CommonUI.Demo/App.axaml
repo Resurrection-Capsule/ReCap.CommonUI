@@ -13,11 +13,11 @@
         <rcui:ReCapTheme />
 
         <Style Selector="Window">
-            <Setter Property="rcui:ManagedWindowChrome.Hint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:ManagedWindowChrome.ShowTitleHint" Value="{Binding ShowTitleHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:ManagedWindowChrome.ShowIconHint" Value="{Binding ShowIconHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:ManagedWindowChrome.LeftCaptionButtonRoles" Value="{Binding LeftCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
-            <Setter Property="rcui:ManagedWindowChrome.RightCaptionButtonRoles" Value="{Binding RightCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChrome.Hint" Value="{Binding ManagedChromeHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChrome.ShowTitleHint" Value="{Binding ShowTitleHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChrome.ShowIconHint" Value="{Binding ShowIconHint, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChrome.LeftCaptionButtonRoles" Value="{Binding LeftCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
+            <Setter Property="rcui:WindowChrome.RightCaptionButtonRoles" Value="{Binding RightCaptionButtonRoles, Source={x:Static local:App.Current}, Mode=OneWay}" />
         </Style>
 
         <Style Selector="HeaderedContentControl">
@@ -36,6 +36,30 @@
 
 
 
+        <StreamGeometry x:Key="Icons.ZoomIn.Geometry">
+            M 16 16 M 0 0
+            M 3 6 L 6 6 L 6 3
+            L 10 3 L 10 6 L 13 6
+            L 13 10 L 10 10 L 10 13
+            L 6 13 L 6 10 L 3 10
+            Z
+        </StreamGeometry>
+        <StreamGeometry x:Key="Icons.ZoomOut.Geometry">
+            M 16 16 M 0 0
+            M 3 6 H 13 V 10 H 3
+            Z
+        </StreamGeometry>
+
+
+        <StreamGeometry x:Key="Icons.Reset.Geometry">
+            M 16 16 M 0 0
+            M 11 1 3 2.25 9 7.5 V 5 c 1.493512 0.7134428 2.5 2.0987801 2.5 3.625 C 11.5 11.041246 9.511424 13 6.75 13 2.4575 13 1.2207031 8.656732 1.2207031 6.8183594 1.0711441 7.3765379 0.999944 7.9410148 1 8.5 1.000357 12.08993 3.910149 15 7.5 15 11.089851 15 14 12.089851 14 8.5 14 5.7599189 11.994611 3.1684289 9.5 2.5
+            Z
+        </StreamGeometry>
+
+
+        <StaticResource x:Key="Icons.Add.Geometry" ResourceKey="Icons.ZoomIn.Geometry" />
+        <StaticResource x:Key="Icons.Remove.Geometry" ResourceKey="Icons.ZoomOut.Geometry" />
         <!--
         <ControlTheme x:Key="HeaderedContentControl.WindowCustomization.Base"
 					TargetType="{x:Type HeaderedContentControl}"
@@ -128,7 +152,7 @@
                             </StackPanel>
                             - ->
                             <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.Hint}"
-                                                    DataContext="{Binding $parent[Window].(rcui:ManagedWindowChrome.Hint), Mode=TwoWay}" />
+                                                    DataContext="{Binding $parent[Window].(rcui:WindowChrome.Hint), Mode=TwoWay}" />
                             <HeaderedContentControl Theme="{DynamicResource HeaderedContentControl.WindowCustomization.ExtendClientAreaTitleBarHeightHint}"
                                                     DataContext="{Binding $parent[Window].ExtendClientAreaTitleBarHeightHint, Mode=TwoWay}" />
                         </StackPanel>

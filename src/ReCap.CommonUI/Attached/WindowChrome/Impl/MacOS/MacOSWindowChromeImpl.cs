@@ -8,6 +8,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     internal sealed class MacOSWindowChromeImpl
         : WindowChromeImplBase
     {
+        public override bool DefaultShowCaptionIcon
+        {
+            get => false;
+        }
+
+
         public override bool CanUseManagedWindowChrome
         {
             get => true;
@@ -39,11 +45,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     CaptionButtonRole.Close,
                     CaptionButtonRole.Minimize,
                     CaptionButtonRole.Maximize,
-                    CaptionButtonRole.WindowMenu,
                 },
-                Right = new()
-                {
-                },
+                Right = new(),
             };
 
 

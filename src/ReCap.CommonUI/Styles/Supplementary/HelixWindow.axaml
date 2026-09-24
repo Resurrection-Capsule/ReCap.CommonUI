@@ -37,7 +37,7 @@
         </Style>
 
 		-->
-		<Style Selector="^[(rcui|ManagedWindowChrome.IsChromeManaged)=False]">
+		<Style Selector="^:not(:managedchrome)">
 			<Style Selector="^ /template/ rcui|AngledBorderEx#TopEdgeTrim">
 				<!--
 				<Setter Property="Height" Value="110" />

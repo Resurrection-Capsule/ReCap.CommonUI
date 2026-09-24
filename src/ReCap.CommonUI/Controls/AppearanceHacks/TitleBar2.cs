@@ -21,15 +21,18 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
 
-    [PseudoClasses(_PSEUD_MINIMIZED, _PSEUD_NORMAL, _PSEUD_MAXIMIZED, _PSEUD_FULLSCREEN, _LEFT_SIDE_BUTTONS)]
+#if TITLEBAR2_PSEUDOCLASSES
+    [PseudoClasses(_PSEUD_MINIMIZED, _PSEUD_NORMAL, _PSEUD_MAXIMIZED, _PSEUD_FULLSCREEN)]
+#endif
     public sealed class TitleBar2
         : TitleBar
     {
+#if TITLEBAR2_PSEUDOCLASSES
         const string _PSEUD_MINIMIZED = ":minimized";
         const string _PSEUD_NORMAL = ":normal";
         const string _PSEUD_MAXIMIZED = ":maximized";
         const string _PSEUD_FULLSCREEN = ":fullscreen";
-        const string _LEFT_SIDE_BUTTONS = ":left-side-buttons";
+#endif
 
         const string _PART_CAPTIONBUTTONS = "PART_CaptionButtons";
 
@@ -174,7 +177,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 }
             }
 
-            IsVisible = ManagedWindowChrome.GetIsChromeManaged(window);
+            IsVisible = WindowChrome.GetStateInfo(window).IsChromeManaged;
         }
 
 
@@ -182,7 +185,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         {
             if (count <= 0)
                 goto irrelevant;
-            else if (!ManagedWindowChrome.GetIsIconVisible(window))
+            else if (!WindowChrome.GetStateInfo(window).IsIconVisible)
                 goto irrelevant;
             else if (!hasNonWindowMenuButtons)
                 return WindowMenuPresence.Lone;
@@ -255,28 +258,50 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             _hostWindow = hostWindow;
             _disposables = new CompositeDisposable(6)
             {
-                _hostWindow.GetObservable(Window.WindowDecorationMarginProperty)
-                    .Subscribe(HostWindow_PropertyChanged),
-                _hostWindow.GetObservable(ManagedWindowChrome.IsChromeManagedProperty)
-                    .Subscribe(HostWindow_PropertyChanged),
-                _hostWindow.GetObservable(Window.SystemDecorationsProperty)
-                    .Subscribe(_ => HostWindowRefresh()),
-                _hostWindow.GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
-                    .Subscribe(_ => HostWindowRefresh()),
-                _hostWindow.GetObservable(Window.OffScreenMarginProperty)
-                    .Subscribe(HostWindow_PropertyChanged),
-                _hostWindow.GetObservable(Window.ExtendClientAreaChromeHintsProperty)
-                    .Subscribe(_ => HostWindowRefresh()),
-                _hostWindow.GetObservable(Window.WindowStateProperty)
+                _hostWindow
+                    .GetObservable(Window.WindowDecorationMarginProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                WindowChrome
+                    .GetStateInfo(_hostWindow)
+                    .GetObservable(WindowChrome.IsChromeManagedProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.SystemDecorationsProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.OffScreenMarginProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.ExtendClientAreaChromeHintsProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.WindowStateProperty)
+#if TITLEBAR2_PSEUDOCLASSES
                     .Subscribe(x =>
                     {
                         PseudoClasses.Set(_PSEUD_MINIMIZED, x == WindowState.Minimized);
                         PseudoClasses.Set(_PSEUD_NORMAL, x == WindowState.Normal);
                         PseudoClasses.Set(_PSEUD_MAXIMIZED, x == WindowState.Maximized);
                         PseudoClasses.Set(_PSEUD_FULLSCREEN, x == WindowState.FullScreen);
-                    }),
-                _hostWindow.GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
-                    .Subscribe(HostWindow_PropertyChanged),
+                        HostWindowRefresh();
+                    })
+#else
+                    .Subscribe(HostWindow_PropertyChanged)
+#endif
+                ,
+                _hostWindow
+                    .GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
             };
 
             HostWindowRefresh();

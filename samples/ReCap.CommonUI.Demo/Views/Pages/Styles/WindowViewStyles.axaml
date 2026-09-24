@@ -32,13 +32,12 @@
 		</ControlTheme>
 
 
-		<ControlTheme x:Key="WindowView.TitleBar.Container"
+		<ControlTheme x:Key="WindowView.TitleBar.FakeWindow"
 				  	TargetType="{x:Type HeaderedContentControl}"
 					BasedOn="{StaticResource WindowView.TitleBar.Base}">
 			<Setter Property="Background" Value="{DynamicResource Window.Body.Background}" />
 			<Setter Property="BorderBrush" Value="{DynamicResource Window.Body.BorderBrush}" />
 			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="ClipToBounds" Value="False" />
 			<Setter Property="Padding" Value="8" />
 			<Setter Property="Template">
 				<ControlTemplate>
@@ -55,7 +54,8 @@
 											Height="{DynamicResource Window.TitleBar.ReservedHeight}"
 											Content="{TemplateBinding Header}"
 											ContentTemplate="{TemplateBinding HeaderTemplate}"
-											ClipToBounds="False" />
+											ClipToBounds="False"
+											ZIndex="9999" />
 							<rcui:AngledBorderEx MinHeight="32"
 												Background="{TemplateBinding Background}"
 												BorderBrush="{TemplateBinding BorderBrush}"
@@ -180,13 +180,37 @@
 				</DataTemplate>
 			</Setter>
 			<Style Selector="^:empty">
+				<Setter Property="ClipToBounds" Value="False" />
 				<Setter Property="Template">
 					<ControlTemplate>
-						<TextBlock Text="+ Drag here to add"
-								HorizontalAlignment="Center"
-								VerticalAlignment="Center" />
+						<Panel>
+							<Panel Classes="center"
+								Width="0"
+								Height="0">
+								<ItemsPresenter x:Name="PART_ItemsPresenter"
+												Classes="center"
+												ItemsPanel="{TemplateBinding ItemsPanel}"
+												Width="{Binding Bounds.Width, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+												Height="{Binding Bounds.Height, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+							</Panel>
+							<StackPanel Orientation="Horizontal"
+									Spacing="8"
+									Classes="center">
+								<Path x:Name="DragDropIcon"
+									Data="{DynamicResource Icons.Add.Geometry}"
+									Fill="{Binding Foreground, ElementName=DragDropLabel, Mode=OneWay}"
+									Classes="center" />
+								<TextBlock x:Name="DragDropLabel"
+										Text="Drop to Add"
+										Classes="h4 center" />
+							</StackPanel>
+						</Panel>
 					</ControlTemplate>
 				</Setter>
+				<Style Selector="^ /template/ :is(Control).center">
+					<Setter Property="HorizontalAlignment" Value="Center" />
+					<Setter Property="VerticalAlignment" Value="Center" />
+				</Style>
 			</Style>
 		</ControlTheme>
 		<ControlTheme x:Key="WindowView.CaptionButtons.Cluster.Left"
@@ -194,20 +218,12 @@
 					BasedOn="{StaticResource WindowView.CaptionButtons.Cluster.Base}">
 			<Setter Property="HorizontalAlignment" Value="Left" />
 			<Setter Property="Margin" Value="5,0,0,0" />
-
-			<Style Selector="^:empty /template/ ItemsPresenter">
-				<Setter Property="Margin" Value="0,0,-43,0" />
-			</Style>
 		</ControlTheme>
 		<ControlTheme x:Key="WindowView.CaptionButtons.Cluster.Right"
 				  	TargetType="{x:Type ItemsControl}"
 					BasedOn="{StaticResource WindowView.CaptionButtons.Cluster.Base}">
 			<Setter Property="HorizontalAlignment" Value="Right" />
 			<Setter Property="Margin" Value="0,0,13,0" />
-
-			<Style Selector="^:empty /template/ ItemsPresenter">
-				<Setter Property="Margin" Value="-43,0,0,0" />
-			</Style>
 		</ControlTheme>
 
 		<ControlTheme x:Key="WindowView.CaptionButtons.RolesPool"

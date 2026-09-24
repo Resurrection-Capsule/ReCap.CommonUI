@@ -47,7 +47,7 @@
 					Margin="0,0,0,-5">
 						<Panel Classes="outward">
 							<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
-													Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:ManagedWindowChrome.IsChromeManaged), Mode=OneWay}" />
+													Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:WindowChrome.StateInfo).IsChromeManaged, Mode=OneWay}" />
 							<!--
 							<rcui:AngledBorderEx x:Name="LeftCaptionButtonsFrame"
 											Classes="caption-buttons-frame"
@@ -70,14 +70,14 @@
 			<Setter Property="TopLeftInset" Value="0" />
 		</Style>
 		<Style Selector="^:not(^[LeftWindowMenuPresence=Lone]) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
-			<Setter Property="TopLeftInset" Value="{Binding $parent[Window].(rcui:ManagedWindowChrome.LeftCaptionButtonsWidth), Mode=OneWay}" />
+			<Setter Property="TopLeftInset" Value="{Binding $parent[Window].(rcui:WindowChrome.StateInfo).LeftCaptionButtonsWidth, Mode=OneWay}" />
 		</Style>
 
 		<Style Selector="^[RightWindowMenuPresence=Lone] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
 			<Setter Property="TopRightInset" Value="0" />
 		</Style>
 		<Style Selector="^:not(^[RightWindowMenuPresence=Lone]) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
-			<Setter Property="TopRightInset" Value="{Binding $parent[Window].(rcui:ManagedWindowChrome.RightCaptionButtonsWidth), Mode=OneWay}" />
+			<Setter Property="TopRightInset" Value="{Binding $parent[Window].(rcui:WindowChrome.StateInfo).RightCaptionButtonsWidth, Mode=OneWay}" />
 		</Style>
 
 		<Style Selector="^[HostWindowState=Maximized], ^[HostWindowState=FullScreen]">

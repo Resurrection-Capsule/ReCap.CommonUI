@@ -8,22 +8,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     internal abstract class WindowChromeImplBaseBase
         : IWindowChromeImpl
     {
-        readonly List<WeakReference<Window>> _windowRefs = new();
-        public IReadOnlyList<Window> AttachedWindows
-        {
-            get
-            {
-                List<Window> windows = new();
-                foreach (var windowRef in _windowRefs)
-                {
-                    if (windowRef.TryGetTarget(out Window window))
-                        windows.Add(window);
-                }
-                return windows;
-            }
-        }
-
-
         public abstract bool CanUseManagedWindowChrome
         {
             get;
@@ -67,29 +51,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public void AttachWindow(Window window)
-        {
-            _windowRefs.Add(new(window));
-            AttachWindowOverride(window);
-        }
-        protected virtual void AttachWindowOverride(Window window)
+        public virtual void OnWindowAttached(Window window)
         {}
 
 
-        public void DetachWindow(Window window)
-        {
-            for (int i = 0; i < _windowRefs.Count; i++)
-            {
-                var windowRef = _windowRefs[i];
-                if (windowRef.TryGetTarget(out Window target) && (target == window))
-                {
-                    DetachWindowOverride(window);
-                    _windowRefs.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-        protected virtual void DetachWindowOverride(Window window)
+        public virtual void OnWindowDetached(Window window)
         {}
 
 

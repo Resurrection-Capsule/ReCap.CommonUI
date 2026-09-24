@@ -109,7 +109,7 @@
 
 	<ControlTheme x:Key="{x:Type rcui:CaptionButtonCluster}"
 				TargetType="{x:Type rcui:CaptionButtonCluster}">
-		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:ManagedWindowChrome.IsChromeManaged), Mode=OneWay}" />
+		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:WindowChrome.StateInfo).IsChromeManaged, Mode=OneWay}" />
 		<Setter Property="ItemTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate}" />
 		<Setter Property="WindowMenuItemTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate.WindowMenu}" />
 		<Setter Property="ClipToBounds" Value="False" />

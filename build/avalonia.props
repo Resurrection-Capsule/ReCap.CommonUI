@@ -1,12 +1,12 @@
 ﻿<Project>
 	<PropertyGroup>
-		<AvVer>11.3.12</AvVer>
+		<AvVer>[11.3.12]</AvVer>
 	</PropertyGroup>
 
 	<!-- Library-safe Avalonia deps (ship in the ReCap.CommonUI package). -->
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvVer)" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="[11.3.8]" />
 		<!--
 		<PackageReference Include="ReactiveUI.Avalonia" Version="$(AvVer)" />
 		-->

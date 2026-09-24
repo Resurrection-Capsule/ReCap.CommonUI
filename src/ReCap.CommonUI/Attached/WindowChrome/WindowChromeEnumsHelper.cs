@@ -114,8 +114,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     break;
 
                 case CaptionButtonRole.WindowMenu:
-                    isActiveBinding = hostWindow
-                        .GetObservable(ManagedWindowChrome.IsIconVisibleProperty)
+                    isActiveBinding = WindowChrome.GetStateInfo(hostWindow)
+                        .GetObservable(WindowChrome.IsIconVisibleProperty)
                         .ToBinding()
                     ;
                     isEnabledBinding = null;

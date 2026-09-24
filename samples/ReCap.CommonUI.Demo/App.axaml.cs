@@ -92,7 +92,7 @@ namespace ReCap.CommonUI.Demo
 
         public override void OnFrameworkInitializationCompleted()
         {
-            var roles = ManagedWindowChrome.PlatformDefaultCaptionButtonRoles;
+            var roles = WindowChrome.PlatformDefaultCaptionButtonRoles;
             LeftCaptionButtonRoles = roles.Left;
             RightCaptionButtonRoles = roles.Right;
             MainVM = new UITestViewModel();

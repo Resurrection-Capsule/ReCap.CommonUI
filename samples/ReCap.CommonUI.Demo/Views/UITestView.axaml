@@ -28,23 +28,14 @@
 							DockPanel.Dock="Bottom">
 					<Button Command="{Binding AdjustScaleFactorCommand, Mode=OneWay}"
 							CommandParameter="False">
-						<Rectangle Width="10"
-								Height="4" />
+						<Path Data="{DynamicResource Icons.ZoomOut.Geometry}" />
 					</Button>
 					<Button Command="{Binding ResetScaleFactorCommand, Mode=OneWay}">
-						<Path Data="
-								M 16 16 M 0 0
-								M 11 1 3 2.25 9 7.5 V 5 c 1.493512 0.7134428 2.5 2.0987801 2.5 3.625 C 11.5 11.041246 9.511424 13 6.75 13 2.4575 13 1.2207031 8.656732 1.2207031 6.8183594 1.0711441 7.3765379 0.999944 7.9410148 1 8.5 1.000357 12.08993 3.910149 15 7.5 15 11.089851 15 14 12.089851 14 8.5 14 5.7599189 11.994611 3.1684289 9.5 2.5
-								Z" />
+						<Path Data="{DynamicResource Icons.Reset.Geometry}" />
 					</Button>
 					<Button Command="{Binding AdjustScaleFactorCommand, Mode=OneWay}"
 							CommandParameter="True">
-						<Path Data="
-								M 0 3 L 3 3 L 3 0
-								L 7 0 L 7 3 L 10 3
-								L 10 7 L 7 7 L 7 10
-								L 3 10 L 3 7 L 0 7
-								Z" />
+						<Path Data="{DynamicResource Icons.ZoomIn.Geometry}" />
 					</Button>
 				</UniformGrid>
 				<TextBlock Text="{Binding ScaleFactor, Converter={StaticResource MultiplierToPercentageConverter}, StringFormat='\{0\}%', Mode=OneWay}"

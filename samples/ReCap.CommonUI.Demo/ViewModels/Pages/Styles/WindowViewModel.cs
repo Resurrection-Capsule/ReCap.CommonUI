@@ -91,7 +91,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         public WindowViewModel()
             : base()
         {
-            AllCaptionButtonRoles = ManagedWindowChrome.ValidCaptionButtonRoles
+            AllCaptionButtonRoles = WindowChrome.ValidCaptionButtonRoles
                 .ToList()
                 .AsReadOnly()
             ;
