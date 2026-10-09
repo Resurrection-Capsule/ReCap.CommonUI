@@ -47,9 +47,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         */
         const string _GTK3_SPLIT_2 = ",";
         static readonly char[] _GTK3_SPLIT_2_ARR = _GTK3_SPLIT_2.ToCharArray();
-        static CaptionButtonRoles ParseRolesGTK3(string gtkCaptionButtonsStr)
+        static List<CaptionButtonRole> ParseRolesGTK3(string gtkCaptionButtonsStr)
         {
-            CaptionButtonRoles roles = new();
+            List<CaptionButtonRole> roles = new();
             if (string.IsNullOrWhiteSpace(gtkCaptionButtonsStr))
                 return roles;
 
@@ -86,8 +86,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 string gtkCaptionButtonsStrL = gtkCaptionButtonsLR[0].Trim();
                 string gtkCaptionButtonsStrR = gtkCaptionButtonsLR[gtkCaptionButtonsLR.Length - 1].Trim();
 
-                CaptionButtonRoles captionButtonsRolesL = ParseRolesGTK3(gtkCaptionButtonsStrL);
-                CaptionButtonRoles captionButtonsRolesR = ParseRolesGTK3(gtkCaptionButtonsStrR);
+                var captionButtonsRolesL = ParseRolesGTK3(gtkCaptionButtonsStrL);
+                var captionButtonsRolesR = ParseRolesGTK3(gtkCaptionButtonsStrR);
                 rolesPair = new(captionButtonsRolesL, captionButtonsRolesR);
                 Console.WriteLine("CaptionButtons imported from GTK3!");
                 return true;
@@ -108,9 +108,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             ['F'] = CaptionButtonRole.KeepAbove,
             ['M'] = CaptionButtonRole.WindowMenu,
         };
-        static CaptionButtonRoles ParseCaptionButtonsKWin(string kwinButtons)
+        static List<CaptionButtonRole> ParseCaptionButtonsKWin(string kwinButtons)
         {
-            CaptionButtonRoles roles = new();
+            List<CaptionButtonRole> roles = new();
             if (string.IsNullOrWhiteSpace(kwinButtons))
                 return roles;
 
@@ -137,11 +137,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 bool hasRightButtons = kwinrc.TryGetValue("org.kde.kdecoration2:ButtonsOnRight", out string kwinButtonsOnRight);
                 if (hasLeftButtons || hasRightButtons)
                 {
-                    CaptionButtonRoles leftButtons = hasLeftButtons
+                    var leftButtons = hasLeftButtons
                         ? ParseCaptionButtonsKWin(kwinButtonsOnLeft)
                         : new() // [TODO: is this correct?]
                     ;
-                    CaptionButtonRoles rightButtons = hasRightButtons
+                    var rightButtons = hasRightButtons
                         ? ParseCaptionButtonsKWin(kwinButtonsOnRight)
                         : new()
                         {

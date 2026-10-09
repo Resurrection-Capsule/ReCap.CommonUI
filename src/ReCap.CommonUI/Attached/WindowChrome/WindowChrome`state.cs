@@ -1,12 +1,23 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
+using ReCap.CommonUI.Controls.AppearanceHacks;
 using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
     partial class WindowChrome
     {
+        internal const string PSEUD_MINIMIZED = ":minimized";
+        internal const string PSEUD_NORMAL = ":normal";
+        internal const string PSEUD_MAXIMIZED = ":maximized";
+        internal const string PSEUD_FULLSCREEN = ":fullscreen";
+
+
+
+
         /// <summary>
         /// Whether a <see cref="Window"/> is currently using managed chrome.
         /// </summary>
@@ -78,14 +89,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 , getter: o => o.LeftCaptionButtonsWidth
                 , unsetValue: _DEFAULT_LeftCaptionButtonsWidth
             );
-        double _LeftCaptionButtonsWidth = _DEFAULT_LeftCaptionButtonsWidth;
+        double _leftCaptionButtonsWidth = _DEFAULT_LeftCaptionButtonsWidth;
         /// <summary>
         /// Whether a <see cref="Window"/> using managed chrome is showing its <see cref="Window.Icon"/>.
         /// </summary>
         public double LeftCaptionButtonsWidth
         {
-            get => _LeftCaptionButtonsWidth;
-            internal set => SetAndRaise(LeftCaptionButtonsWidthProperty, ref _LeftCaptionButtonsWidth, value);
+            get => _leftCaptionButtonsWidth;
+            internal set => SetAndRaise(LeftCaptionButtonsWidthProperty, ref _leftCaptionButtonsWidth, value);
         }
 
 
@@ -123,8 +134,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         void OnPropertyWithClassChanged(AvaloniaPropertyChangedEventArgs args, string className)
         {
-            if (_windowRef.TryGetTarget(out Window window))
-                PropertySetClass(window, className, args.GetNewValue<bool>());
+            RefreshElements();
+            PropertySetClass(HostWindow, className, args.GetNewValue<bool>());
         }
         static void PropertySetClass(Window window, string className, bool value)
         {
@@ -137,23 +148,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        WeakReference<Window> _windowRef = null;
-        internal WindowChrome(Window window)
-            : this()
-        {
-            _windowRef = new(window);
-        }
-        private WindowChrome()
-            : base()
-        {}
-
-
 
 
         internal void RefreshShowIcon()
         {
-            if (_windowRef.TryGetTarget(out Window window))
-                RefreshShowIcon(GetShowIconHint(window));
+            RefreshShowIcon(GetShowIconHint(HostWindow));
         }
         internal void RefreshShowIcon(ManagedChromeElementHint hint)
             => IsIconVisible = hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionIcon);
@@ -161,8 +160,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         internal void RefreshShowTitle()
         {
-            if (_windowRef.TryGetTarget(out Window window))
-                RefreshShowTitle(GetShowTitleHint(window));
+            RefreshShowTitle(GetShowTitleHint(HostWindow));
         }
         internal void RefreshShowTitle(ManagedChromeElementHint hint)
             => IsTitleVisible = hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionText);
@@ -174,10 +172,154 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public void PoorMansDispose()
+        public void Dispose()
         {
-            _windowRef.SetTarget(null);
-            _windowRef = null;
+            if (_disposables != null)
+            {
+                _disposables.Dispose();
+                _disposables = null;
+            }
+
+            if (_elements != null)
+            {
+                int elementCount = _elements.Count;
+                for (int i = 0; i < elementCount; i++)
+                {
+                    DetachElement(_elements[0]);
+                }
+                _elements = null;
+            }
+
+            HostWindow = null;
+        }
+
+
+
+        List<IChromeElement> _elements = new();
+        internal void AttachElement(IChromeElement element)
+        {
+            _elements.Add(element);
+            RefreshElements();
+        }
+        internal void DetachElement(IChromeElement element)
+        {
+            _elements.Remove(element);
+            element.IsHostWindowActive = true;
+            element.HostWindowState = WindowState.Normal;
+        }
+
+
+        void RefreshElements()
+        {
+            EvaluateSideProperties(CaptionButtonClusterPosition.Left
+                , out bool leftHasNonWindowMenuButtons
+                , out bool leftHasWindowMenuAtMergeIndex
+                , out int leftButtonCount
+                , out WindowMenuPresence leftWindowMenuPresence
+            );
+            EvaluateSideProperties(CaptionButtonClusterPosition.Right
+                , out bool rightHasNonWindowMenuButtons
+                , out bool rightHasWindowMenuAtMergeIndex
+                , out int rightButtonCount
+                , out WindowMenuPresence rightWindowMenuPresence
+            );
+
+
+            Window window = HostWindow;
+
+            bool isHostWindowActive = window.IsActive;
+            WindowState hostWindowState = window.WindowState;
+
+            bool isHostWindowMinimized = hostWindowState == WindowState.Minimized;
+            bool isHostWindowNormal = hostWindowState == WindowState.Normal;
+            bool isHostWindowMaximized = hostWindowState == WindowState.Maximized;
+            bool isHostWindowFullScreen = hostWindowState == WindowState.FullScreen;
+
+            foreach (var element in _elements)
+            {
+                /*
+                element.Update(isHostWindowActive, hostWindowState
+                    , leftHasNonWindowMenuButtons, leftHasWindowMenuAtMergeIndex, leftButtonCount, leftWindowMenuPresence
+                    , rightHasNonWindowMenuButtons, rightHasWindowMenuAtMergeIndex, rightButtonCount, rightWindowMenuPresence
+                );
+                */
+                element.IsHostWindowActive = isHostWindowActive;
+                element.HostWindowState = hostWindowState;
+
+                var pseudoClasses = element.PseudoClasses;
+                pseudoClasses.Set(PSEUD_MINIMIZED, isHostWindowMinimized);
+                pseudoClasses.Set(PSEUD_NORMAL, isHostWindowNormal);
+                pseudoClasses.Set(PSEUD_MAXIMIZED, isHostWindowMaximized);
+                pseudoClasses.Set(PSEUD_FULLSCREEN, isHostWindowFullScreen);
+
+                element.LeftHasNonWindowMenuButtons = leftHasNonWindowMenuButtons;
+                element.LeftHasWindowMenuAtMergeIndex = leftHasWindowMenuAtMergeIndex;
+                element.LeftButtonCount = leftButtonCount;
+                element.LeftWindowMenuPresence = leftWindowMenuPresence;
+
+                element.RightHasNonWindowMenuButtons = rightHasNonWindowMenuButtons;
+                element.RightHasWindowMenuAtMergeIndex = rightHasWindowMenuAtMergeIndex;
+                element.RightButtonCount = rightButtonCount;
+                element.RightWindowMenuPresence = rightWindowMenuPresence;
+            }
+        }
+
+
+        void EvaluateRoles(bool left
+            , out List<CaptionButtonRole> roles
+            , out int count
+            , out int mergeTargetIndex
+        )
+        {
+            roles = new(left
+                ? LeftCaptionButtonRoles
+                : RightCaptionButtonRoles
+            );
+            count = roles.Count();
+            mergeTargetIndex = left
+                ? count - 1
+                : 0
+            ;
+        }
+        void EvaluateSideProperties(CaptionButtonClusterPosition position
+            , out bool hasNonWindowMenuButtons
+            , out bool hasWindowMenuAtMergeIndex
+            , out int buttonCount
+            , out WindowMenuPresence windowMenuPresence
+        )
+        {
+            Window window = HostWindow;
+            EvaluateRoles(position.IsLeft()
+                , out List<CaptionButtonRole> roles
+                , out buttonCount
+                , out int mergeTargetIndex
+            );
+
+            hasNonWindowMenuButtons = false;
+            hasWindowMenuAtMergeIndex = false;
+            //CaptionButtonRoles roles;
+
+            for (int i = 0; i < buttonCount; i++)
+            {
+                var role = roles[i];
+
+                if (role != CaptionButtonRole.WindowMenu)
+                    hasNonWindowMenuButtons = true;
+                else if (i == mergeTargetIndex)
+                    hasWindowMenuAtMergeIndex = true;
+            }
+
+
+            windowMenuPresence = WindowMenuPresence.Irrelevant;
+
+            if (buttonCount <= 0)
+                return;
+            else if (!IsIconVisible)
+                return;
+            else if (!hasNonWindowMenuButtons)
+                windowMenuPresence = WindowMenuPresence.Lone;
+            else if (hasWindowMenuAtMergeIndex && hasNonWindowMenuButtons)
+                windowMenuPresence =  WindowMenuPresence.Innermost;
         }
     }
 }

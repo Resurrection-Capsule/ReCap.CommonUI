@@ -1,16 +1,17 @@
-using System;
 using System.Collections.Generic;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
     public readonly struct CaptionButtonRolesPair
     {
-        public CaptionButtonRoles Left
+        public IEnumerable<CaptionButtonRole> Left
         {
             get;
             init;
         }
-        public CaptionButtonRoles Right
+
+
+        public IEnumerable<CaptionButtonRole> Right
         {
             get;
             init;
@@ -21,13 +22,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         public CaptionButtonRolesPair(IEnumerable<CaptionButtonRole> left, IEnumerable<CaptionButtonRole> right)
         {
-            Left = AsObservableCollection(left);
-            Right = AsObservableCollection(right);
+            Left = left;
+            Right = right;
         }
-        static CaptionButtonRoles AsObservableCollection(IEnumerable<CaptionButtonRole> enumerable)
-            => enumerable is CaptionButtonRoles roles
-                ? roles
-                : new(enumerable)
-            ;
+
+
+
+
+        public override string ToString()
+            => $"({nameof(Left)}: '{WindowChromeEnumsHelper.FormatCaptionButtonRoles(Left)}', {nameof(Right)}: '{WindowChromeEnumsHelper.FormatCaptionButtonRoles(Right)}')";
     }
 }

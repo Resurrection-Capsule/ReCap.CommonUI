@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -10,6 +11,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 {
     public sealed partial class WindowChrome
         : Layoutable
+        , IDisposable
     {
         internal static readonly IWindowChromeImpl PLATFORM_IMPL = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeImpl>();
         static readonly List<Window> AttachedWindows = new();
@@ -26,27 +28,49 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => window.SetValue(MakeAvailableProperty, value);
 
 
-        public static readonly AttachedProperty<WindowChrome> StateInfoProperty =
-            AvaloniaProperty.RegisterAttached<WindowChrome, Window, WindowChrome>("StateInfo", null);
-        public static WindowChrome GetStateInfo(Window window)
-            => window.GetValue(StateInfoProperty);
-        static void SetStateInfo(Window window, WindowChrome value)
-            => window.SetValue(StateInfoProperty, value);
+        public static readonly AttachedProperty<WindowChrome> ChromeProperty =
+            AvaloniaProperty.RegisterAttached<WindowChrome, Window, WindowChrome>("Chrome", null);
+        public static WindowChrome GetChrome(Window window)
+            => window.GetValue(ChromeProperty);
+        static void SetChrome(Window window, WindowChrome value)
+            => window.SetValue(ChromeProperty, value);
+
+
+
+
+        WeakReference<Window> _hostWindowRef = null;
+        internal Window HostWindow
+        {
+            get
+            {
+                _hostWindowRef.TryGetTarget(out Window hostWindow);
+                return hostWindow;
+            }
+            private set
+            {
+                _hostWindowRef?.SetTarget(null);
+                
+                _hostWindowRef = value != null
+                    ? new(value)
+                    : null
+                ;
+            }
+        }
 #endregion
 
 
 
 
-        internal static bool TryGetStateInfo(Window window, out WindowChrome stateInfo)
+        internal static bool TryGetChrome(Window window, out WindowChrome chrome)
         {
             if (window != null)
             {
-                stateInfo = GetStateInfo(window);
-                return stateInfo != null;
+                chrome = GetChrome(window);
+                return chrome != null;
             }
             else
             {
-                stateInfo = null;
+                chrome = null;
                 return false;
             }
         }
@@ -103,6 +127,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
+        static readonly IEnumerable<AvaloniaProperty> _WINDOW_OBSERVE_PROPERTIES;
+        static readonly IEnumerable<AvaloniaProperty> _WINDOWCHROME_OBSERVE_PROPERTIES;
         static WindowChrome()
         {
             PLATFORM_IMPL.Init();
@@ -112,6 +138,34 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             StateInit();
 
             MakeAvailableProperty.Changed.AddClassHandler<Window>(MakeAvailableProperty_Changed);
+
+
+            _WINDOW_OBSERVE_PROPERTIES = new AvaloniaProperty[]
+            {
+                WindowBase.IsActiveProperty,
+                Window.WindowStateProperty,
+                Window.SystemDecorationsProperty,
+                Window.ExtendClientAreaTitleBarHeightHintProperty,
+                Window.OffScreenMarginProperty,
+                Window.ExtendClientAreaChromeHintsProperty,
+                Window.IsExtendedIntoWindowDecorationsProperty,
+                /*
+                ReserveCaptionAreaProperty,
+                ReservedCaptionHeightProperty,
+                */
+                /*
+                MakeAvailableProperty,
+                ChromeProperty,
+                */
+            };
+
+            _WINDOWCHROME_OBSERVE_PROPERTIES = new AvaloniaProperty[]
+            {
+                LeftCaptionButtonsWidthProperty,
+                RightCaptionButtonsWidthProperty,
+                LeftCaptionButtonRolesProperty,
+                RightCaptionButtonRolesProperty,
+            };
         }
 
 
@@ -132,7 +186,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static void MakeAvailableProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"{nameof(MakeAvailableProperty_Changed)}({window} ({window.Title}), {e})");
             (bool oldValue, bool newValue) = e.GetOldAndNewValue<bool>();
             if (newValue == oldValue)
                 return;
@@ -156,9 +209,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
         static void AttachWindow(Window window)
         {
-            if (GetStateInfo(window) != null)
+            if (GetChrome(window) != null)
                 return;
-            SetStateInfo(window, new(window));
+            SetChrome(window, new(window));
             PLATFORM_IMPL.OnWindowAttached(window);
             window.Closed += Window_Closed;
             RefreshShowIconAndTitle(window);
@@ -177,8 +230,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
         static void DetachWindow(Window window)
         {
-            GetStateInfo(window)?.PoorMansDispose();
-            SetStateInfo(window, null);
+            GetChrome(window)?.Dispose();
+            SetChrome(window, null);
             PLATFORM_IMPL.OnWindowDetached(window);
             window.Closed -= Window_Closed;
         }
@@ -196,11 +249,102 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             bool useManagedChrome = PLATFORM_IMPL.GetDesiredManagedChrome(window, hint ?? GetHint(window));
             PLATFORM_IMPL.ApplyDesiredManagedChrome(window
                 , useManagedChrome
-                , v => GetStateInfo(window).IsChromeManaged = v
+                , v => GetChrome(window).IsChromeManaged = v
             );
 
             //RefreshShowIconAndTitle(window);
             Dispatcher.UIThread.Post(() => RefreshShowIconAndTitle(window));
         }
+
+
+
+
+        CompositeDisposable _disposables = null;
+        internal WindowChrome(Window window)
+            : this()
+        {
+            HostWindow = window;
+            Dispatcher.UIThread.Post(BuildDisposables);
+            RefreshOverrideCaptionButtonRoles();
+            RefreshCaptionAreaProperties();
+        }
+        void BuildDisposables()
+        {
+            _disposables = new()
+            /*
+            {
+                window
+                    .GetObservable(ChromeProperty)
+                    .Subscribe(windowChrome =>
+                    {
+                        if (windowChrome != null)
+                            RefreshElements();
+                    })
+                ,
+                window
+                    .GetObservable(WindowBase.IsActiveProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                window
+                    .GetObservable(Window.WindowStateProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                window
+                    .GetObservable(Window.SystemDecorationsProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                window
+                    .GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                window
+                    .GetObservable(Window.OffScreenMarginProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                window
+                    .GetObservable(Window.ExtendClientAreaChromeHintsProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                window
+                    .GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                this
+                    .GetObservable(LeftCaptionButtonRolesProperty)
+                    .Subscribe(HandleObserver)
+                ,
+                this
+                    .GetObservable(RightCaptionButtonRolesProperty)
+                    .Subscribe(HandleObserver)
+                ,
+            }
+            */
+            ;
+
+            var window = HostWindow;
+            foreach (var property in _WINDOW_OBSERVE_PROPERTIES)
+            {
+                _disposables.Add(window
+                    .GetObservable(property)
+                    .Subscribe(HandleObserver)
+                );
+            }
+
+            foreach (var property in _WINDOWCHROME_OBSERVE_PROPERTIES)
+            {
+                _disposables.Add(this
+                    .GetObservable(property)
+                    .Subscribe(HandleObserver)
+                );
+            }
+
+            _disposables.Add(Disposable.Create(() => _disposables = null));
+            RefreshElements();
+        }
+        private WindowChrome()
+            : base()
+        {}
+        void HandleObserver<T>(T _)
+            => RefreshElements();
     }
 }

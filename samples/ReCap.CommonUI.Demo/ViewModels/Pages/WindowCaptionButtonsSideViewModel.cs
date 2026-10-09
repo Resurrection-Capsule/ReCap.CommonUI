@@ -1,9 +1,12 @@
-#define MANUAL_DROP
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using Avalonia.Threading;
 using ReCap.CommonUI.Attached.WindowChrome;
+using ReCap.CommonUI.Controls.AppearanceHacks;
 using ReCap.CommonUI.Util;
 using Sortable.Avalonia;
 
@@ -27,41 +30,131 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
         public IEnumerable<object> Errors
         {
             get => _errors;
-            set =>  RASIC(ref _errors, value);
+            set => RASIC(ref _errors, value);
         }
 
 
-        CaptionButtonRoles _captionButtons = null;
-        public CaptionButtonRoles CaptionButtons
+        ObservableCollection<CaptionButtonRole> _roles = null;
+        public ObservableCollection<CaptionButtonRole> CaptionButtons
         {
-            get => _captionButtons;
-            set => RASIC(ref _captionButtons, value);
+            get => _roles;
+            set
+            {
+                if (_roles != null)
+                    _roles.CollectionChanged -= CaptionButtons_CollectionChanged;
+
+                RASIC(ref _roles, value ?? new());
+
+                _roles.CollectionChanged += CaptionButtons_CollectionChanged;
+            }
         }
 
 
-        readonly Func<CaptionButtonRoles> _getter;
-        readonly Action<CaptionButtonRoles> _setter;
-        CaptionButtonRoles ExternalCaptionButtons
+        ObservableCollection<CaptionButtonRole> GetUpdatedCaptionButtons(IEnumerable<CaptionButtonRole> roles)
         {
-            get => _getter();
-            set => _setter(value);
+            ObservableCollection<CaptionButtonRole> captionButtons = CaptionButtons;
+
+            if (roles != null)
+                captionButtons = new(roles);
+            else if (captionButtons != null)
+                captionButtons.Clear();
+            else
+                captionButtons = new();
+
+            return captionButtons;
         }
+        void SetCaptionButtons(IEnumerable<CaptionButtonRole> roles)
+            => CaptionButtons = roles != null
+                ? new(roles)
+                : new()
+            ;
+            //=> CaptionButtons = GetUpdatedCaptionButtons(roles);
+
+
+        readonly Func<IEnumerable<CaptionButtonRole>> _getter;
+        IEnumerable<CaptionButtonRole> GetRoles()
+            => _getter();
+        void PropagateRoles()
+            => Dispatcher.UIThread.Post(() => App.Current?.UpdateCaptionButtonRoles(CaptionButtons, _position));
 
 
 
 
-        public WindowCaptionButtonsSideViewModel(Func<CaptionButtonRoles> getter, Action<CaptionButtonRoles> setter)
+        static CaptionButtonRolesPair GetAppOrPlatformDefaultCaptionButtonRoles()
+            => TryGetAppCaptionButtonRoles(out CaptionButtonRolesPair rolesPair)
+                ? rolesPair
+                : WindowChrome.PlatformDefaultCaptionButtonRoles
+            ;
+        static bool TryGetAppCaptionButtonRoles(out CaptionButtonRolesPair rolesPair)
         {
-            _getter = getter;
-            _setter = setter;
+            var app = App.Current;
+            if (app == null)
+                goto fail;
 
-            var extCaptionButtons = ExternalCaptionButtons;
-            CaptionButtons = extCaptionButtons;
-            InputText = extCaptionButtons.ToString();
+            CaptionButtonRolesPair? rolesMaybe = app.CaptionButtonRoles;
+            if (!rolesMaybe.HasValue)
+                goto fail;
 
-            PropertyChanged += This_PropertyChanged;
+            rolesPair = rolesMaybe.Value;
+            return true;
+
+            fail:
+            rolesPair = default;
+            return false;
         }
+        /*
+        CaptionButtonRoles GetAppCaptionButtonRoles(Func<CaptionButtonRolesPair, CaptionButtonRoles> getter, CaptionButtonRoles fallback = null)
+            => App.Current?.CaptionButtonRoles ?? fallback;
+        CaptionButtonRoles LeftGetFrom(CaptionButtonRolesPair pair)
+            => pair.Left;
+        CaptionButtonRoles LeftGet()
+            => GetAppCaptionButtonRoles(LeftGetFrom);
+        CaptionButtonRoles RightGetFrom(CaptionButtonRolesPair pair)
+            => pair.Right;
+        CaptionButtonRoles RightGet()
+            => GetAppCaptionButtonRoles(RightGetFrom);
+        */
 
+
+        static IEnumerable<CaptionButtonRole> LeftGet()
+            => GetAppOrPlatformDefaultCaptionButtonRoles().Left;
+        static IEnumerable<CaptionButtonRole> RightGet()
+            => GetAppOrPlatformDefaultCaptionButtonRoles().Right;
+
+
+
+
+        readonly CaptionButtonClusterPosition _position;
+        public WindowCaptionButtonsSideViewModel(CaptionButtonClusterPosition position)
+            : this()
+        {
+            _position = position;
+            _getter = position switch
+            {
+                CaptionButtonClusterPosition.Left => LeftGet,
+                CaptionButtonClusterPosition.Right => RightGet,
+                _ => throw new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition)),
+            };
+
+            /*
+            Dispatcher.UIThread.Post(() => 
+            {
+            */
+                var roles = GetRoles();
+                SetCaptionButtons(roles);
+                //CaptionButtons = new(roles);
+                InputText = roles.ToString();
+
+                PropertyChanged += This_PropertyChanged;
+                //CaptionButtons.CollectionChanged += CaptionButtons_CollectionChanged;
+            //});
+        }
+        private WindowCaptionButtonsSideViewModel()
+            : base()
+        {}
+
+        void CaptionButtons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            => OnCaptionButtonsChanged();
 
         void This_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -84,9 +177,10 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
 
         void OnInputTextChanged()
         {
-            if (CaptionButtonRoles.TryParse(InputText, out CaptionButtonRoles captionButtons))
+            if (WindowChromeEnumsHelper.TryParseCaptionButtonRoles(InputText, out IEnumerable<CaptionButtonRole> roles))
             {
-                CaptionButtons = captionButtons;
+                SetCaptionButtons(roles);
+                //CaptionButtons = new(roles);
                 Errors = _ERRORS_NONE;
             }
             else
@@ -97,9 +191,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
 
 
         void OnCaptionButtonsChanged()
-        {
-            ExternalCaptionButtons = CaptionButtons;
-        }
+            => PropagateRoles();
 
 
 
@@ -108,67 +200,13 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
             => null;
 
 
-        public bool MoveCommand(object parameter)
-        {
-            if (parameter is (int sourceIndex, int targetIndex))
-            {
-                var captionButtons = CaptionButtons;
-                captionButtons.Move(sourceIndex, targetIndex);
-                return true;
-            }
-            return false;
-        }
-
-
 #region Sortable.Avalonia
         public void CBSideUpdateCommand(object parameter)
             => CBSideUpdate((SortableUpdateEventArgs)parameter);
         public void CBSideUpdate(SortableUpdateEventArgs e)
         {
-#if MANUAL_UPDATE
-            var captionButtons = CaptionButtons;
-            int oldIdx = e.OldIndex;
-            int newIdx = e.OldIndex;
-            //Debug.WriteLine($"{nameof(StUpdate)}({e}):");
-            Debug.WriteLine($"[{oldIdx}] => [{newIdx}]");
-
-            switch (e.Mode)
-            {
-                case SortableMode.Sort:
-                {
-                    captionButtons.Move(oldIdx, newIdx);
-                    break;
-                }
-
-                case SortableMode.Swap:
-                {
-                    var oldItem = captionButtons[oldIdx];
-                    var newItem = captionButtons[newIdx];
-
-                    if (newIdx > oldIdx)
-                    {
-                        captionButtons.RemoveAt(newIdx);
-                        captionButtons.RemoveAt(oldIdx);
-                        captionButtons.Insert(oldIdx, newItem);
-                        captionButtons.Insert(newIdx, oldItem);
-                    }
-                    else if (oldIdx > newIdx)
-                    {
-                        captionButtons.RemoveAt(oldIdx);
-                        captionButtons.RemoveAt(newIdx);
-                        captionButtons.Insert(newIdx, oldItem);
-                        captionButtons.Insert(oldIdx, newItem);
-                    }
-                    break;
-                }
-
-                default:
-                    break;
-            }
-#else
-            var mutationResult = e.ApplyUpdateMutation();
-            Debug.WriteLine($"{nameof(CBSideUpdate)}({nameof(e)})\n    => {mutationResult};");
-#endif
+            var result = e.ApplyUpdateMutation();
+            Debug.WriteLine($"{nameof(CBSideUpdate)}({e}) => {result};");
         }
 
 
@@ -176,68 +214,8 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
             => CBSideDrop((SortableDropEventArgs)parameter);
         public void CBSideDrop(SortableDropEventArgs e)
         {
-#if MANUAL_DROP
-#if NO
-            var captionButtons = CaptionButtons;
-            int oldIdx = e.OldIndex;
-            int newIdx = e.OldIndex;
-            Debug.WriteLine($"[{oldIdx}] => [{newIdx}]");
-
-            switch (e.TransferMode)
-            {
-                case SortableTransferMode.Move:
-                {
-                    captionButtons.Move(oldIdx, newIdx);
-                    break;
-                }
-
-                case SortableTransferMode.Swap:
-                {
-                    var oldItem = captionButtons[oldIdx];
-                    var newItem = captionButtons[newIdx];
-
-                    if (newIdx > oldIdx)
-                    {
-                        captionButtons.RemoveAt(newIdx);
-                        captionButtons.RemoveAt(oldIdx);
-                        captionButtons.Insert(oldIdx, newItem);
-                        captionButtons.Insert(newIdx, oldItem);
-                    }
-                    else if (oldIdx > newIdx)
-                    {
-                        captionButtons.RemoveAt(oldIdx);
-                        captionButtons.RemoveAt(newIdx);
-                        captionButtons.Insert(newIdx, oldItem);
-                        captionButtons.Insert(oldIdx, newItem);
-                    }
-                    break;
-                }
-
-                default:
-                    break;
-            }
-#else
-            object mutationResult;
-
-            if (e.SourceCollection == e.TargetCollection)
-            {
-                mutationResult = "skipped";
-            }
-            else if (e.SourceCollection.IsReadOnly)
-            {
-                CaptionButtons.Insert(e.NewIndex, (CaptionButtonRole)e.Item);
-                mutationResult = 2;
-            }
-            else
-            {
-                mutationResult = e.ApplyDropMutation();
-            }
-
-            Debug.WriteLine($"{nameof(CBSideDrop)}({nameof(e)})\n    => {mutationResult};");
-#endif
-#else
-            e.ApplyDropMutation();
-#endif
+            var result = e.ApplyDropMutation();
+            Debug.WriteLine($"{nameof(CBSideDrop)}({e}) => {result};");
         }
 
 
@@ -246,8 +224,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
         public void CBSideRelease(SortableReleaseEventArgs e)
         {
             int oldIdx = e.OldIndex;
-            if (oldIdx >= 0)
-                CaptionButtons.RemoveAt(oldIdx);
+            CaptionButtons.RemoveAt(oldIdx);
         }
 #endregion
     }

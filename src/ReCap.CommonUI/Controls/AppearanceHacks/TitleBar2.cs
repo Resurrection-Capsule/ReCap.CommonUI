@@ -23,9 +23,12 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 #if TITLEBAR2_PSEUDOCLASSES
     [PseudoClasses(_PSEUD_MINIMIZED, _PSEUD_NORMAL, _PSEUD_MAXIMIZED, _PSEUD_FULLSCREEN)]
+#else
+    [PseudoClasses(WindowChrome.PSEUD_MINIMIZED, WindowChrome.PSEUD_NORMAL, WindowChrome.PSEUD_MAXIMIZED, WindowChrome.PSEUD_FULLSCREEN)]
 #endif
     public sealed class TitleBar2
         : TitleBar
+        , IChromeElement
     {
 #if TITLEBAR2_PSEUDOCLASSES
         const string _PSEUD_MINIMIZED = ":minimized";
@@ -39,13 +42,40 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
 
 
-        const bool _DEFAULT_LeftHasWindowMenuAtMergeIndex = false;
+#region Properties
+        public static readonly DirectProperty<TitleBar2, bool> IsHostWindowActiveProperty =
+            AvaloniaProperty.RegisterDirect<TitleBar2, bool>(
+                nameof(IsHostWindowActive)
+                , s => s.IsHostWindowActive
+            );
+        bool _isHostWindowActive = false;
+        public bool IsHostWindowActive
+        {
+            get => _isHostWindowActive;
+            internal set => SetAndRaise(IsHostWindowActiveProperty, ref _isHostWindowActive, value);
+        }
+
+
+        public static readonly DirectProperty<TitleBar2, WindowState> HostWindowStateProperty =
+            AvaloniaProperty.RegisterDirect<TitleBar2, WindowState>(
+                nameof(HostWindowState)
+                , s => s.HostWindowState
+            );
+        WindowState _hostWindowState = WindowState.Normal;
+        public WindowState HostWindowState
+        {
+            get => _hostWindowState;
+            internal set => SetAndRaise(HostWindowStateProperty, ref _hostWindowState, value);
+        }
+
+
+        internal const bool DEFAULT_LeftHasWindowMenuAtMergeIndex = false;
         public static readonly DirectProperty<TitleBar2, bool> LeftHasWindowMenuAtMergeIndexProperty
             = AvaloniaProperty.RegisterDirect<TitleBar2, bool>(nameof(LeftHasWindowMenuAtMergeIndex)
                 , getter: o => o.LeftHasWindowMenuAtMergeIndex
-                , unsetValue: _DEFAULT_LeftHasWindowMenuAtMergeIndex
+                , unsetValue: DEFAULT_LeftHasWindowMenuAtMergeIndex
             );
-        bool _leftHasWindowMenuAtMergeIndex = _DEFAULT_LeftHasWindowMenuAtMergeIndex;
+        bool _leftHasWindowMenuAtMergeIndex = DEFAULT_LeftHasWindowMenuAtMergeIndex;
         public bool LeftHasWindowMenuAtMergeIndex
         {
             get => _leftHasWindowMenuAtMergeIndex;
@@ -53,13 +83,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        const bool _DEFAULT_LeftHasNonWindowMenuButtons = false;
+        internal const bool DEFAULT_LeftHasNonWindowMenuButtons = false;
         public static readonly DirectProperty<TitleBar2, bool> LeftHasNonWindowMenuButtonsProperty
             = AvaloniaProperty.RegisterDirect<TitleBar2, bool>(nameof(LeftHasNonWindowMenuButtons)
                 , getter: o => o.LeftHasNonWindowMenuButtons
-                , unsetValue: _DEFAULT_LeftHasNonWindowMenuButtons
+                , unsetValue: DEFAULT_LeftHasNonWindowMenuButtons
             );
-        bool _leftHasNonWindowMenuButtons = _DEFAULT_LeftHasNonWindowMenuButtons;
+        bool _leftHasNonWindowMenuButtons = DEFAULT_LeftHasNonWindowMenuButtons;
         public bool LeftHasNonWindowMenuButtons
         {
             get => _leftHasNonWindowMenuButtons;
@@ -67,13 +97,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        const int _DEFAULT_LeftButtonCount = 0;
+        internal const int DEFAULT_LeftButtonCount = 0;
         public static readonly DirectProperty<TitleBar2, int> LeftButtonCountProperty
             = AvaloniaProperty.RegisterDirect<TitleBar2, int>(nameof(LeftButtonCount)
                 , getter: o => o.LeftButtonCount
-                , unsetValue: _DEFAULT_LeftButtonCount
+                , unsetValue: DEFAULT_LeftButtonCount
             );
-        int _leftButtonCount = _DEFAULT_LeftButtonCount;
+        int _leftButtonCount = DEFAULT_LeftButtonCount;
         public int LeftButtonCount
         {
             get => _leftButtonCount;
@@ -95,13 +125,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        internal const bool DEFAULT_rightHasWindowMenuAtMergeIndex = false;
+        internal const bool DEFAULT_RightHasWindowMenuAtMergeIndex = false;
         public static readonly DirectProperty<TitleBar2, bool> RightHasWindowMenuAtMergeIndexProperty
             = AvaloniaProperty.RegisterDirect<TitleBar2, bool>(nameof(RightHasWindowMenuAtMergeIndex)
                 , getter: o => o.RightHasWindowMenuAtMergeIndex
-                , unsetValue: DEFAULT_rightHasWindowMenuAtMergeIndex
+                , unsetValue: DEFAULT_RightHasWindowMenuAtMergeIndex
             );
-        bool _rightHasWindowMenuAtMergeIndex = DEFAULT_rightHasWindowMenuAtMergeIndex;
+        bool _rightHasWindowMenuAtMergeIndex = DEFAULT_RightHasWindowMenuAtMergeIndex;
         public bool RightHasWindowMenuAtMergeIndex
         {
             get => _rightHasWindowMenuAtMergeIndex;
@@ -109,13 +139,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        const bool _DEFAULT_rightHasNonWindowMenuButtons = false;
+        internal const bool DEFAULT_RightHasNonWindowMenuButtons = false;
         public static readonly DirectProperty<TitleBar2, bool> RightHasNonWindowMenuButtonsProperty
             = AvaloniaProperty.RegisterDirect<TitleBar2, bool>(nameof(RightHasNonWindowMenuButtons)
                 , getter: o => o.RightHasNonWindowMenuButtons
-                , unsetValue: _DEFAULT_rightHasNonWindowMenuButtons
+                , unsetValue: DEFAULT_RightHasNonWindowMenuButtons
             );
-        bool _rightHasNonWindowMenuButtons = _DEFAULT_rightHasNonWindowMenuButtons;
+        bool _rightHasNonWindowMenuButtons = DEFAULT_RightHasNonWindowMenuButtons;
         public bool RightHasNonWindowMenuButtons
         {
             get => _rightHasNonWindowMenuButtons;
@@ -123,13 +153,13 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        const int _DEFAULT_RightButtonCount = 0;
+        internal const int DEFAULT_RightButtonCount = 0;
         public static readonly DirectProperty<TitleBar2, int> RightButtonCountProperty
             = AvaloniaProperty.RegisterDirect<TitleBar2, int>(nameof(RightButtonCount)
                 , getter: o => o.RightButtonCount
-                , unsetValue: _DEFAULT_RightButtonCount
+                , unsetValue: DEFAULT_RightButtonCount
             );
-        int _rightButtonCount = _DEFAULT_RightButtonCount;
+        int _rightButtonCount = DEFAULT_RightButtonCount;
         public int RightButtonCount
         {
             get => _rightButtonCount;
@@ -149,6 +179,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             get => _rightWindowMenuPresence;
             private set => SetAndRaise(RightWindowMenuPresenceProperty, ref _rightWindowMenuPresence, value);
         }
+#endregion
 
 
 
@@ -177,58 +208,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 }
             }
 
-            IsVisible = WindowChrome.GetStateInfo(window).IsChromeManaged;
-        }
-
-
-        WindowMenuPresence GetPresence(Window window, bool hasWindowMenuAtMergeIndex, bool hasNonWindowMenuButtons, int count)
-        {
-            if (count <= 0)
-                goto irrelevant;
-            else if (!WindowChrome.GetStateInfo(window).IsIconVisible)
-                goto irrelevant;
-            else if (!hasNonWindowMenuButtons)
-                return WindowMenuPresence.Lone;
-            else if (hasWindowMenuAtMergeIndex && hasNonWindowMenuButtons)
-                return WindowMenuPresence.Innermost;
-
-            irrelevant:
-            return WindowMenuPresence.Irrelevant;
-        }
-        internal void UpdateLeftClusterProperties(Window window, bool hasWindowMenuAtMergeIndex, bool hasNonWindowMenuButtons, int count)
-        {
-            LeftHasWindowMenuAtMergeIndex = hasWindowMenuAtMergeIndex;
-            LeftHasNonWindowMenuButtons = hasNonWindowMenuButtons;
-            LeftButtonCount = count;
-            LeftWindowMenuPresence = GetPresence(window
-                , hasWindowMenuAtMergeIndex
-                , hasNonWindowMenuButtons
-                , count
-            );
-        }
-        internal void UpdateRightClusterProperties(Window window, bool hasWindowMenuAtMergeIndex, bool hasNonWindowMenuButtons, int count)
-        {
-            RightHasWindowMenuAtMergeIndex = hasWindowMenuAtMergeIndex;
-            RightHasNonWindowMenuButtons = hasNonWindowMenuButtons;
-            RightButtonCount = count;
-            RightWindowMenuPresence = GetPresence(window
-                , hasWindowMenuAtMergeIndex
-                , hasNonWindowMenuButtons
-                , count
-            );
-        }
-        internal void UpdateClustersProperties()
-        {
-            if (_captionButtons == null)
-                return;
-
-            var leftCluster = _captionButtons.LeftCluster;
-            if (leftCluster != null)
-                UpdateLeftClusterProperties(_hostWindow, leftCluster.HasWindowMenuAtMergeIndex, leftCluster.HasNonWindowMenuButtons, leftCluster.ItemCount);
-
-            var rightCluster = _captionButtons.RightCluster;
-            if (rightCluster != null)
-                UpdateRightClusterProperties(_hostWindow, rightCluster.HasWindowMenuAtMergeIndex, rightCluster.HasNonWindowMenuButtons, rightCluster.ItemCount);
+            IsVisible = WindowChrome.GetChrome(window).IsChromeManaged;
         }
 
 
@@ -256,17 +236,20 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 return;
 
             _hostWindow = hostWindow;
+
+            var chrome = WindowChrome.GetChrome(_hostWindow);
+            chrome.AttachElement(this);
             _disposables = new CompositeDisposable(6)
             {
                 _hostWindow
                     .GetObservable(Window.WindowDecorationMarginProperty)
                     .Subscribe(HostWindow_PropertyChanged)
                 ,
-                WindowChrome
-                    .GetStateInfo(_hostWindow)
+                chrome
                     .GetObservable(WindowChrome.IsChromeManagedProperty)
                     .Subscribe(HostWindow_PropertyChanged)
                 ,
+                /*
                 _hostWindow
                     .GetObservable(Window.SystemDecorationsProperty)
                     .Subscribe(HostWindow_PropertyChanged)
@@ -298,6 +281,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                     .Subscribe(HostWindow_PropertyChanged)
 #endif
                 ,
+                */
                 _hostWindow
                     .GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
                     .Subscribe(HostWindow_PropertyChanged)
@@ -309,15 +293,16 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         void HostWindow_PropertyChanged<D>(D _)
             => HostWindowRefresh();
         void HostWindowRefresh()
-        {
-            UpdateSize(_hostWindow);
-            UpdateClustersProperties();
-        }
+            => UpdateSize(_hostWindow);
 
 
         protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnDetachedFromVisualTree(e);
+            WindowChrome
+                .GetChrome(_hostWindow)
+                .DetachElement(this)
+            ;
 
             _disposables?.Dispose();
 
@@ -325,5 +310,94 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             _captionButtons = null;
             _hostWindow = null;
         }
+
+
+
+
+#region IChromeElement
+        /*
+        void IChromeElement.Update(bool isHostWindowActive, WindowState hostWindowState
+            , bool leftHasNonWindowMenuButtons, bool leftHasWindowMenuAtMergeIndex, int leftButtonCount, WindowMenuPresence leftPresence
+            , bool rightHasNonWindowMenuButtons, bool rightHasWindowMenuAtMergeIndex, int rightButtonCount, WindowMenuPresence rightPresence
+        )
+        {
+            IsHostWindowActive = isHostWindowActive;
+            HostWindowState = hostWindowState;
+            PseudoClasses.ApplyWindowState(hostWindowState);
+
+            LeftHasNonWindowMenuButtons = leftHasNonWindowMenuButtons;
+            LeftHasWindowMenuAtMergeIndex = leftHasWindowMenuAtMergeIndex;
+            LeftButtonCount = leftButtonCount;
+            LeftWindowMenuPresence = leftPresence;
+
+            RightHasNonWindowMenuButtons = rightHasNonWindowMenuButtons;
+            RightHasWindowMenuAtMergeIndex = rightHasWindowMenuAtMergeIndex;
+            RightButtonCount = rightButtonCount;
+            RightWindowMenuPresence = rightPresence;
+        }
+        */
+        bool IChromeElement.IsHostWindowActive
+        {
+            get => IsHostWindowActive;
+            set => IsHostWindowActive = value;
+        }
+        WindowState IChromeElement.HostWindowState
+        {
+            get => HostWindowState;
+            set => HostWindowState = value;
+        }
+
+
+        bool IChromeElement.LeftHasWindowMenuAtMergeIndex
+        {
+            get => LeftHasWindowMenuAtMergeIndex;
+            set => LeftHasWindowMenuAtMergeIndex = value;
+        }
+        bool IChromeElement.LeftHasNonWindowMenuButtons
+        {
+            get => LeftHasNonWindowMenuButtons;
+            set => LeftHasNonWindowMenuButtons = value;
+        }
+        int IChromeElement.LeftButtonCount
+        {
+            get => LeftButtonCount;
+            set => LeftButtonCount = value;
+        }
+        WindowMenuPresence IChromeElement.LeftWindowMenuPresence
+        {
+            get => LeftWindowMenuPresence;
+            set => LeftWindowMenuPresence = value;
+        }
+
+
+        bool IChromeElement.RightHasWindowMenuAtMergeIndex
+        {
+            get => RightHasWindowMenuAtMergeIndex;
+            set => RightHasWindowMenuAtMergeIndex = value;
+        }
+        bool IChromeElement.RightHasNonWindowMenuButtons
+        {
+            get => RightHasNonWindowMenuButtons;
+            set => RightHasNonWindowMenuButtons = value;
+        }
+        int IChromeElement.RightButtonCount
+        {
+            get => RightButtonCount;
+            set => RightButtonCount = value;
+        }
+        WindowMenuPresence IChromeElement.RightWindowMenuPresence
+        {
+            get => RightWindowMenuPresence;
+            set => RightWindowMenuPresence = value;
+        }
+
+
+
+
+        IPseudoClasses IChromeElement.PseudoClasses
+        {
+            get => PseudoClasses;
+        }
+#endregion
     }
 }

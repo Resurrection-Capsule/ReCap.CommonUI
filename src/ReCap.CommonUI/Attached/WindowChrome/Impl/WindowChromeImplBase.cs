@@ -153,19 +153,18 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         protected virtual CaptionButtonRolesPair InitDefaultButtonRoles()
-            => new()
-        {
-            Left = new()
-            {
-                CaptionButtonRole.WindowMenu,
-            },
-            Right = new()
-            {
-                CaptionButtonRole.Minimize,
-                CaptionButtonRole.Maximize,
-                CaptionButtonRole.Close,
-            },
-        };
+            => new(
+                new[]
+                {
+                    CaptionButtonRole.WindowMenu,
+                },
+                new[]
+                {
+                    CaptionButtonRole.Minimize,
+                    CaptionButtonRole.Maximize,
+                    CaptionButtonRole.Close,
+                }
+            );
         protected abstract IEnumerable<CaptionButtonRole> InitValidButtonRoles();
     }
 }

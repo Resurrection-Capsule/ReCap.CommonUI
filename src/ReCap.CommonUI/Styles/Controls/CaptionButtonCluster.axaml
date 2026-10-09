@@ -109,7 +109,7 @@
 
 	<ControlTheme x:Key="{x:Type rcui:CaptionButtonCluster}"
 				TargetType="{x:Type rcui:CaptionButtonCluster}">
-		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:WindowChrome.StateInfo).IsChromeManaged, Mode=OneWay}" />
+		<Setter Property="IsVisible" Value="{Binding $parent[Window].(rcui:WindowChrome.Chrome).IsChromeManaged, Mode=OneWay}" />
 		<Setter Property="ItemTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate}" />
 		<Setter Property="WindowMenuItemTemplate" Value="{DynamicResource CaptionButtonCluster.ItemTemplate.WindowMenu}" />
 		<Setter Property="ClipToBounds" Value="False" />
@@ -129,10 +129,38 @@
 
 
 		<Style Selector="^[Position=Left]">
+			<Style Selector="^[IsVisible=True]">
+				<Setter Property="ItemsSource">
+					<MultiBinding Converter="{x:Static rcui:WindowChromeToCaptionButtonRolesConverter.Instance}">
+						<Binding Path="(rcui:WindowChrome.Chrome)"
+								RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+								Mode="OneWay" />
+						<Binding Path="(rcui:WindowChrome.Chrome).LeftCaptionButtonRoles"
+								RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+								Mode="OneWay" />
+					</MultiBinding>
+				</Setter>
+			</Style>
+			<!--
+			-->
 			<Setter Property="ItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.Left}" />
 			<Setter Property="WindowMenuItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.WindowMenu.Left}" />
 		</Style>
 		<Style Selector="^[Position=Right]">
+			<Style Selector="^[IsVisible=True]">
+				<Setter Property="ItemsSource">
+					<MultiBinding Converter="{x:Static rcui:WindowChromeToCaptionButtonRolesConverter.Instance}">
+						<Binding Path="(rcui:WindowChrome.Chrome)"
+								RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+								Mode="OneWay" />
+						<Binding Path="(rcui:WindowChrome.Chrome).RightCaptionButtonRoles"
+								RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+								Mode="OneWay" />
+					</MultiBinding>
+				</Setter>
+			</Style>
+			<!--
+			-->
 			<Setter Property="ItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.Right}" />
 			<Setter Property="WindowMenuItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.WindowMenu.Right}" />
 		</Style>

@@ -14,11 +14,11 @@ using ReCap.CommonUI.Controls.AppearanceHacks;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    internal static partial class WindowChromeEnumsHelper
+    public static partial class WindowChromeEnumsHelper
     {
         const string _CAPTIONBUTTONROLE_TITLE_KEY_FORMAT = "CaptionButton.RoleTitle.{0}";
-        public static readonly IEnumerable<CaptionButtonRole> ALL_ROLES;
-        public static readonly IEnumerable<CaptionButtonRole> ACTIVATABLE_ROLES = new[]
+        internal static readonly IEnumerable<CaptionButtonRole> ALL_ROLES;
+        internal static readonly IEnumerable<CaptionButtonRole> ACTIVATABLE_ROLES = new[]
         {
             CaptionButtonRole.Minimize,
             CaptionButtonRole.Maximize,
@@ -31,7 +31,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 #endif
             CaptionButtonRole.KeepAbove,
         };
-        public static readonly IEnumerable<CaptionButtonRole> NON_ACTIVATABLE_ROLES;
+        internal static readonly IEnumerable<CaptionButtonRole> NON_ACTIVATABLE_ROLES;
         static readonly IReadOnlyDictionary<(CaptionButtonRole Role, bool RoleActive), DynamicResourceExtension> _ROLES_DYNAMIC_RESOURCES;
         delegate bool TryGetCaptionButtonRoleTitleFunc<T>(T resourceSource, ThemeVariant theme, string key, out object o);
         static WindowChromeEnumsHelper()
@@ -73,7 +73,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 #region CaptionButton state binding
-        public static bool BindState(this CaptionButton button, Window hostWindow)
+        internal static bool BindState(this CaptionButton button, Window hostWindow)
         {
             if (!TryBindStateInternal(button, hostWindow, out CompositeDisposable bindingDisposables))
                 return false;
@@ -114,7 +114,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     break;
 
                 case CaptionButtonRole.WindowMenu:
-                    isActiveBinding = WindowChrome.GetStateInfo(hostWindow)
+                    isActiveBinding = WindowChrome.GetChrome(hostWindow)
                         .GetObservable(WindowChrome.IsIconVisibleProperty)
                         .ToBinding()
                     ;
@@ -198,14 +198,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static string GetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleActive)
+        internal static string GetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleActive)
             => TryGetCaptionButtonRoleTitleResourceKeyInternal(role, roleActive, out string key, out Exception exception)
                 ? key
                 : throw exception
             ;
 
 
-        public static bool TryGetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleActive, out string key)
+        internal static bool TryGetCaptionButtonRoleTitleResourceKey(this CaptionButtonRole role, bool roleActive, out string key)
             => TryGetCaptionButtonRoleTitleResourceKeyInternal(role, roleActive, out key, out _);
         static bool TryGetCaptionButtonRoleTitleResourceKeyInternal(CaptionButtonRole role, bool roleActive, out string key, out Exception exception)
         {
@@ -243,7 +243,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
+        internal static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
             , IThemeVariantHost resourceSource
             , out string title
         )
@@ -265,7 +265,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             o = null;
             return false;
         }
-        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
+        internal static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
             , IResourceHost resourceSource
             , ThemeVariant theme
             , out string title
@@ -280,7 +280,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static bool TryGetCaptionButtonRoleTitleFunc_IResourceNode(IResourceNode resourceSource, ThemeVariant theme, string key, out object o)
             => resourceSource.TryGetResource(key, theme, out o);
-        public static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
+        internal static bool TryGetCaptionButtonRoleTitle(this CaptionButtonRole role, bool roleActive
             , IResourceNode resourceSource
             , ThemeVariant theme
             , out string title
@@ -325,9 +325,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static bool TryGetCaptionButtonRoleTitleDynamicResource(this CaptionButtonRole role, bool roleActive, out DynamicResourceExtension dynamicResource)
+        internal static bool TryGetCaptionButtonRoleTitleDynamicResource(this CaptionButtonRole role, bool roleActive, out DynamicResourceExtension dynamicResource)
             => (role, roleActive).TryGetCaptionButtonRoleTitleDynamicResource(out dynamicResource);
-        public static bool TryGetCaptionButtonRoleTitleDynamicResource(this (CaptionButtonRole Role, bool RoleActive) keyPair, out DynamicResourceExtension dynamicResource)
+        internal static bool TryGetCaptionButtonRoleTitleDynamicResource(this (CaptionButtonRole Role, bool RoleActive) keyPair, out DynamicResourceExtension dynamicResource)
             => _ROLES_DYNAMIC_RESOURCES.TryGetValue(keyPair, out dynamicResource);
 
 
@@ -340,5 +340,91 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 ManagedChromeElementHint.Show => true,
                 _ => auto,
             };
+
+
+        static readonly string _SEPARATOR = ",";
+        static readonly char[] _SEPARATOR_ARRAY = _SEPARATOR.ToCharArray();
+        public static string FormatCaptionButtonRoles(IEnumerable<CaptionButtonRole> roles)
+            => string.Join(_SEPARATOR, roles);
+        public static bool TryParseCaptionButtonRoles(string text, out IEnumerable<CaptionButtonRole> roles)
+        {
+            List<CaptionButtonRole> rolesList = null;
+            bool result = TryParseCaptionButtonRolesInternal(text, ref rolesList);
+            roles = rolesList;
+            return result;
+        }
+        static bool TryParseCaptionButtonRolesInternal(string text, ref List<CaptionButtonRole> roles)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                roles = new();
+                return true;
+            }
+
+
+            string[] parts = text.Split(_SEPARATOR_ARRAY, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length <= 0)
+                goto fail;
+
+            roles = new();
+            foreach (string part in parts)
+            {
+                if (Enum.TryParse(part, out CaptionButtonRole role))
+                    roles.Add(role);
+                else
+                    goto fail;
+            }
+            return true;
+
+
+            fail:
+            roles = default;
+            return false;
+        }
+
+
+        public static bool IsLeft(this CaptionButtonClusterPosition position, out bool isValid)
+        {
+            try
+            {
+                bool result = position.IsLeft();
+                isValid = true;
+                return true;
+            }
+            catch (InvalidEnumArgumentException)
+            {
+                isValid = false;
+                return default;
+            }
+        }
+        public static bool IsLeft(this CaptionButtonClusterPosition position)
+            => position switch
+            {
+                CaptionButtonClusterPosition.Left => true,
+                CaptionButtonClusterPosition.Right => false,
+                _ => throw new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition)),
+            };
+        /*
+        static bool TryGetIsLeft(CaptionButtonClusterPosition position, out bool isLeft)
+        {
+            switch (position)
+            {
+                case CaptionButtonClusterPosition.Left:
+                    isLeft = true;
+                    break;
+
+                case CaptionButtonClusterPosition.Right:
+                    exception = null;
+                    isLeft = false;
+                    break;
+
+                default:
+                    exception = new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition));
+                    isLeft = default;
+                    return false;
+            };
+            return true;
+        }
+        */
     }
 }

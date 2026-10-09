@@ -38,16 +38,15 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
         protected override CaptionButtonRolesPair InitDefaultButtonRoles()
-            => new()
-            {
-                Left = new()
+            => new(
+                new[]
                 {
                     CaptionButtonRole.Close,
                     CaptionButtonRole.Minimize,
                     CaptionButtonRole.Maximize,
                 },
-                Right = new(),
-            };
+                Array.Empty<CaptionButtonRole>()
+            );
 
 
         public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)

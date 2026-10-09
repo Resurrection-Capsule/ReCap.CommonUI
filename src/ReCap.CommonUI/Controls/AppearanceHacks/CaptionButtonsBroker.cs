@@ -16,6 +16,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 {
     public sealed partial class CaptionButtonsBroker
         : CaptionButtons
+        , IChromeElement
     {
         new internal Window HostWindow
         {
@@ -34,35 +35,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             hostTitleBar = _hostTitleBar;
             return hostTitleBar != null;
         }
-        
-
-
-#nullable enable
-        internal static readonly DirectProperty<CaptionButtonsBroker, CaptionButtonRoles> LeftCaptionButtonRolesProperty =
-                AvaloniaProperty.RegisterDirect<CaptionButtonsBroker, CaptionButtonRoles>(nameof(LeftCaptionButtonRoles)
-                    , s => s.LeftCaptionButtonRoles
-                    , (s, v) => s.LeftCaptionButtonRoles = v
-                );
-        CaptionButtonRoles _leftCaptionButtonRoles = new();
-        internal CaptionButtonRoles LeftCaptionButtonRoles
-        {
-            get => _leftCaptionButtonRoles;
-            set => SetAndRaise(LeftCaptionButtonRolesProperty, ref _leftCaptionButtonRoles, value);
-        }
-
-
-        internal static readonly DirectProperty<CaptionButtonsBroker, CaptionButtonRoles> RightCaptionButtonRolesProperty =
-                AvaloniaProperty.RegisterDirect<CaptionButtonsBroker, CaptionButtonRoles>(nameof(RightCaptionButtonRoles)
-                    , s => s.RightCaptionButtonRoles
-                    , (s, v) => s.RightCaptionButtonRoles = v
-                );
-        CaptionButtonRoles _rightCaptionButtonRoles = new();
-        internal CaptionButtonRoles RightCaptionButtonRoles
-        {
-            get => _rightCaptionButtonRoles;
-            set => SetAndRaise(RightCaptionButtonRolesProperty, ref _rightCaptionButtonRoles, value);
-        }
-#nullable restore
 
 
         public static readonly DirectProperty<CaptionButtonsBroker, CaptionButtonCluster> LeftClusterProperty =
@@ -130,26 +102,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        static bool HasTrailingMenu(CaptionButtonRoles roles, out CaptionButtonRoles modified)
-        {
-            int count = roles.Count;
-            if (roles.Count <= 0)
-                goto preserve;
-
-            if (roles.Last() != CaptionButtonRole.WindowMenu)
-                goto preserve;
-
-            var stripped = roles.ToList();
-            stripped.RemoveAt(count - 1);
-            modified = new(stripped);
-            return true;
-
-            preserve:
-            modified = default;
-            return false;
-        }
-
-
 
 
 
@@ -175,10 +127,11 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             if (hasRightCluster)
                 rightCluster.Attach(this, hostWindow, CaptionButtonClusterPosition.Right);
             
+            WindowChrome chrome = WindowChrome.GetChrome(hostWindow);
+            chrome.AttachElement(this);
+
             _mainDisposable = new()
             {
-                Bind(LeftCaptionButtonRolesProperty, hostWindow[!WindowChrome.LeftCaptionButtonRolesProperty]),
-                Bind(RightCaptionButtonRolesProperty, hostWindow[!WindowChrome.RightCaptionButtonRolesProperty]),
                 this
                     .GetObservable(IsVisibleProperty)
                     .Subscribe(isVisible =>
@@ -188,38 +141,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                     })
                 ,
             };
-
-            if (hasLeftCluster)
-            {
-                _mainDisposable.Add(leftCluster
-                    .GetObservable(CaptionButtonCluster.HasWindowMenuAtMergeIndexProperty)
-                    .Subscribe(hasWindowMenuAtMergeIndex => _hostTitleBar?.UpdateLeftClusterProperties(HostWindow, hasWindowMenuAtMergeIndex, leftCluster.HasNonWindowMenuButtons, leftCluster.ItemCount))
-                );
-                _mainDisposable.Add(leftCluster
-                    .GetObservable(CaptionButtonCluster.HasNonWindowMenuButtonsProperty)
-                    .Subscribe(hasNonWindowMenuButtonsProperty => _hostTitleBar?.UpdateLeftClusterProperties(HostWindow, leftCluster.HasWindowMenuAtMergeIndex, hasNonWindowMenuButtonsProperty, leftCluster.ItemCount))
-                );
-                _mainDisposable.Add(leftCluster
-                    .GetObservable(ItemsControl.ItemCountProperty)
-                    .Subscribe(count => _hostTitleBar?.UpdateLeftClusterProperties(HostWindow, leftCluster.HasWindowMenuAtMergeIndex, leftCluster.HasNonWindowMenuButtons, count))
-                );
-            }
-
-            if (hasRightCluster)
-            {
-                _mainDisposable.Add(rightCluster
-                    .GetObservable(CaptionButtonCluster.HasWindowMenuAtMergeIndexProperty)
-                    .Subscribe(hasWindowMenuAtMergeIndex => _hostTitleBar?.UpdateRightClusterProperties(HostWindow, hasWindowMenuAtMergeIndex, rightCluster.HasNonWindowMenuButtons, rightCluster.ItemCount))
-                );
-                _mainDisposable.Add(rightCluster
-                    .GetObservable(CaptionButtonCluster.HasNonWindowMenuButtonsProperty)
-                    .Subscribe(hasNonWindowMenuButtonsProperty => _hostTitleBar?.UpdateRightClusterProperties(HostWindow, rightCluster.HasWindowMenuAtMergeIndex, hasNonWindowMenuButtonsProperty, rightCluster.ItemCount))
-                );
-                _mainDisposable.Add(rightCluster
-                    .GetObservable(ItemsControl.ItemCountProperty)
-                    .Subscribe(count => _hostTitleBar?.UpdateRightClusterProperties(HostWindow, rightCluster.HasWindowMenuAtMergeIndex, rightCluster.HasNonWindowMenuButtons, count))
-                );
-            }
         }
 
 
@@ -229,10 +150,14 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             bool hasHostWindow = TryGetHostWindow(out Window oldHost);
             _mainDisposable?.Dispose();
 
-            if (hasHostWindow && WindowChrome.TryGetStateInfo(oldHost, out WindowChrome stateInfo))
+            if (!hasHostWindow)
+                return;
+            else if (WindowChrome.TryGetChrome(oldHost, out WindowChrome chrome))
             {
-                stateInfo.LeftCaptionButtonsWidth = 0d;
-                stateInfo.RightCaptionButtonsWidth = 0d;
+                chrome.LeftCaptionButtonsWidth = 0d;
+                chrome.RightCaptionButtonsWidth = 0d;
+
+                chrome.DetachElement(this);
             }
         }
 
@@ -254,25 +179,171 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        sealed class CaptionButtonsRemoveTrailingMenuConverter
-            : IValueConverter
+
+
+#region IChromeElement
+        IPseudoClasses IChromeElement.PseudoClasses
         {
-            public static readonly CaptionButtonsRemoveTrailingMenuConverter Instance = new();
-            private CaptionButtonsRemoveTrailingMenuConverter()
-            {}
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                if (value is not CaptionButtonRoles roles)
-                    return BindingOperations.DoNothing;
-
-                if (HasTrailingMenu(roles, out CaptionButtonRoles modified))
-                    return modified;
-
-                return roles;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-                => throw new NotSupportedException();
+            get => PseudoClasses;
         }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, bool> IsHostWindowActiveProperty
+            = TitleBar2.IsHostWindowActiveProperty.AddOwner<CaptionButtonsBroker>(s => s.IsHostWindowActive);
+        bool _isHostWindowActive = false;
+        public bool IsHostWindowActive
+        {
+            get => _isHostWindowActive;
+            private set => SetAndRaise(IsHostWindowActiveProperty, ref _isHostWindowActive, value);
+        }
+        bool IChromeElement.IsHostWindowActive
+        {
+            get => IsHostWindowActive;
+            set => IsHostWindowActive = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, WindowState> HostWindowStateProperty
+            = TitleBar2.HostWindowStateProperty.AddOwner<CaptionButtonsBroker>(s => s.HostWindowState);
+        WindowState _hostWindowState = WindowState.Normal;
+        public WindowState HostWindowState
+        {
+            get => _hostWindowState;
+            private set => SetAndRaise(HostWindowStateProperty, ref _hostWindowState, value);
+        }
+        WindowState IChromeElement.HostWindowState
+        {
+            get => HostWindowState;
+            set => HostWindowState = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, bool> LeftHasWindowMenuAtMergeIndexProperty
+            = TitleBar2.LeftHasWindowMenuAtMergeIndexProperty.AddOwner<CaptionButtonsBroker>(o => o.LeftHasWindowMenuAtMergeIndex);
+        bool _leftHasWindowMenuAtMergeIndex = TitleBar2.DEFAULT_LeftHasWindowMenuAtMergeIndex;
+        public bool LeftHasWindowMenuAtMergeIndex
+        {
+            get => _leftHasWindowMenuAtMergeIndex;
+            private set => SetAndRaise(LeftHasWindowMenuAtMergeIndexProperty, ref _leftHasWindowMenuAtMergeIndex, value);
+        }
+        bool IChromeElement.LeftHasWindowMenuAtMergeIndex
+        {
+            get => LeftHasWindowMenuAtMergeIndex;
+            set => LeftHasWindowMenuAtMergeIndex = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, bool> LeftHasNonWindowMenuButtonsProperty
+            = TitleBar2.LeftHasNonWindowMenuButtonsProperty.AddOwner<CaptionButtonsBroker>(o => o.LeftHasNonWindowMenuButtons);
+        bool _leftHasNonWindowMenuButtons = TitleBar2.DEFAULT_LeftHasNonWindowMenuButtons;
+        public bool LeftHasNonWindowMenuButtons
+        {
+            get => _leftHasNonWindowMenuButtons;
+            private set => SetAndRaise(LeftHasNonWindowMenuButtonsProperty, ref _leftHasNonWindowMenuButtons, value);
+        }
+        bool IChromeElement.LeftHasNonWindowMenuButtons
+        {
+            get => LeftHasNonWindowMenuButtons;
+            set => LeftHasNonWindowMenuButtons = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, int> LeftButtonCountProperty
+            = TitleBar2.LeftButtonCountProperty.AddOwner<CaptionButtonsBroker>(o => o.LeftButtonCount);
+        int _leftButtonCount = TitleBar2.DEFAULT_LeftButtonCount;
+        public int LeftButtonCount
+        {
+            get => _leftButtonCount;
+            private set => SetAndRaise(LeftButtonCountProperty, ref _leftButtonCount, value);
+        }
+        int IChromeElement.LeftButtonCount
+        {
+            get => LeftButtonCount;
+            set => LeftButtonCount = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, WindowMenuPresence> LeftWindowMenuPresenceProperty
+            = TitleBar2.LeftWindowMenuPresenceProperty.AddOwner<CaptionButtonsBroker>(
+                getter: o => o.LeftWindowMenuPresence
+                , unsetValue: TitleBar2.DEFAULT_LeftWindowMenuPresence
+            );
+        WindowMenuPresence _leftWindowMenuPresence = TitleBar2.DEFAULT_LeftWindowMenuPresence;
+        public WindowMenuPresence LeftWindowMenuPresence
+        {
+            get => _leftWindowMenuPresence;
+            private set => SetAndRaise(LeftWindowMenuPresenceProperty, ref _leftWindowMenuPresence, value);
+        }
+        WindowMenuPresence IChromeElement.LeftWindowMenuPresence
+        {
+            get => LeftWindowMenuPresence;
+            set => LeftWindowMenuPresence = value;
+        }
+
+
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, bool> RightHasWindowMenuAtMergeIndexProperty
+            = TitleBar2.RightHasWindowMenuAtMergeIndexProperty.AddOwner<CaptionButtonsBroker>(o => o.RightHasWindowMenuAtMergeIndex);
+        bool _rightHasWindowMenuAtMergeIndex = TitleBar2.DEFAULT_RightHasWindowMenuAtMergeIndex;
+        public bool RightHasWindowMenuAtMergeIndex
+        {
+            get => _rightHasWindowMenuAtMergeIndex;
+            private set => SetAndRaise(RightHasWindowMenuAtMergeIndexProperty, ref _rightHasWindowMenuAtMergeIndex, value);
+        }
+        bool IChromeElement.RightHasWindowMenuAtMergeIndex
+        {
+            get => RightHasWindowMenuAtMergeIndex;
+            set => RightHasWindowMenuAtMergeIndex = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, bool> RightHasNonWindowMenuButtonsProperty
+            = TitleBar2.RightHasNonWindowMenuButtonsProperty.AddOwner<CaptionButtonsBroker>(o => o.RightHasNonWindowMenuButtons);
+        bool _rightHasNonWindowMenuButtons = TitleBar2.DEFAULT_RightHasNonWindowMenuButtons;
+        public bool RightHasNonWindowMenuButtons
+        {
+            get => _rightHasNonWindowMenuButtons;
+            private set => SetAndRaise(RightHasNonWindowMenuButtonsProperty, ref _rightHasNonWindowMenuButtons, value);
+        }
+        bool IChromeElement.RightHasNonWindowMenuButtons
+        {
+            get => RightHasNonWindowMenuButtons;
+            set => RightHasNonWindowMenuButtons = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, int> RightButtonCountProperty
+            = TitleBar2.RightButtonCountProperty.AddOwner<CaptionButtonsBroker>(o => o.RightButtonCount);
+        int _rightButtonCount = TitleBar2.DEFAULT_RightButtonCount;
+        public int RightButtonCount
+        {
+            get => _rightButtonCount;
+            private set => SetAndRaise(RightButtonCountProperty, ref _rightButtonCount, value);
+        }
+        int IChromeElement.RightButtonCount
+        {
+            get => RightButtonCount;
+            set => RightButtonCount = value;
+        }
+
+
+        public static readonly DirectProperty<CaptionButtonsBroker, WindowMenuPresence> RightWindowMenuPresenceProperty
+            = TitleBar2.RightWindowMenuPresenceProperty.AddOwner<CaptionButtonsBroker>(
+                getter: o => o.RightWindowMenuPresence
+                , unsetValue: TitleBar2.DEFAULT_RightWindowMenuPresence
+            );
+        WindowMenuPresence _rightWindowMenuPresence = TitleBar2.DEFAULT_RightWindowMenuPresence;
+        public WindowMenuPresence RightWindowMenuPresence
+        {
+            get => _rightWindowMenuPresence;
+            private set => SetAndRaise(RightWindowMenuPresenceProperty, ref _rightWindowMenuPresence, value);
+        }
+        WindowMenuPresence IChromeElement.RightWindowMenuPresence
+        {
+            get => RightWindowMenuPresence;
+            set => RightWindowMenuPresence = value;
+        }
+#endregion
     }
 }

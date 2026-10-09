@@ -239,9 +239,9 @@
 			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBPoolDropCommand, Mode=OneWay}" />
 			-->
 
-			<Setter Property="st:Sortable.CrossCollectionTransferMode" Value="Copy" />
-			<!--
-			-->
+			<Setter Property="st:Sortable.CrossCollectionTransferMode" Value="Move" />
+			<Setter Property="st:Sortable.AnimationDuration" Value="0:0:0.01" />
+
 			<Setter Property="ItemTemplate">
 				<DataTemplate DataType="{x:Type rcui:CaptionButtonRole}">
 					<StackPanel x:Name="ItemLayoutRoot"

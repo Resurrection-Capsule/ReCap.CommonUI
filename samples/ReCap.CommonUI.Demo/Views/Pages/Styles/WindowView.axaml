@@ -4,7 +4,7 @@
 			xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI"
 			xmlns:demo="using:ReCap.CommonUI.Demo"
 			xmlns:v="using:ReCap.CommonUI.Demo.Views"
-			Classes.IsWindowUsingManagedChrome="{Binding Path=(rcui:WindowChrome.StateInfo).IsChromeManaged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=False}">
+			Classes.IsWindowUsingManagedChrome="{Binding Path=(rcui:WindowChrome.Chrome).IsChromeManaged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=False}">
 	<UserControl.Styles>
 		<StyleInclude Source="avares://ReCap.CommonUI.Demo/Views/Pages/Styles/WindowViewStyles.axaml" />
 	</UserControl.Styles>
@@ -64,7 +64,8 @@
 					<StackPanel Orientation="Vertical">
 						<TextBlock Text="ManagedChromeHint"
 								Classes="sh3" />
-						<StackPanel Classes="leftButtons">
+						<StackPanel Classes="leftButtons"
+									DataContext="{Binding Source={x:Static demo:App.Current}, Mode=OneWay}">
 							<ToggleButton Content="Auto"
 										IsChecked="{Binding ManagedChromeHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeHint.Auto}, Mode=TwoWay}" />
 							<ToggleButton Content="System"
@@ -76,7 +77,8 @@
 					<StackPanel Orientation="Vertical">
 						<TextBlock Text="ShowTitleHint"
 								Classes="sh3" />
-						<StackPanel Classes="leftButtons">
+						<StackPanel Classes="leftButtons"
+									DataContext="{Binding Source={x:Static demo:App.Current}, Mode=OneWay}">
 							<ToggleButton Content="Hide"
 										IsChecked="{Binding ShowTitleHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Hide}, Mode=TwoWay}" />
 							<ToggleButton Content="Auto"
@@ -88,7 +90,8 @@
 					<StackPanel Orientation="Vertical">
 						<TextBlock Text="ShowIconHint"
 								Classes="sh3" />
-						<StackPanel Classes="leftButtons">
+						<StackPanel Classes="leftButtons"
+									DataContext="{Binding Source={x:Static demo:App.Current}, Mode=OneWay}">
 							<ToggleButton Content="Hide"
 										IsChecked="{Binding ShowIconHint, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static rcui:ManagedChromeElementHint.Hide}, Mode=TwoWay}" />
 							<ToggleButton Content="Auto"
@@ -149,10 +152,10 @@
 		<HeaderedContentControl Header="Bridged caption buttons widths">
 			<DockPanel LastChildFill="False">
 				<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
-								DataContext="{Binding Path=(rcui:WindowChrome.StateInfo).LeftCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+								DataContext="{Binding Path=(rcui:WindowChrome.Chrome).LeftCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 								DockPanel.Dock="Left" />
 				<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
-								DataContext="{Binding Path=(rcui:WindowChrome.StateInfo).RightCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+								DataContext="{Binding Path=(rcui:WindowChrome.Chrome).RightCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
 								DockPanel.Dock="Right" />
 			</DockPanel>
 		</HeaderedContentControl>

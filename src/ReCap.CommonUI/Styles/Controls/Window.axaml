@@ -30,7 +30,7 @@
 		<Setter Property="FontSize" Value="12" />
         
 		<Setter Property="rcui:WindowChrome.MakeAvailable" Value="True" />
-        <Setter Property="rcui:WindowChrome.ReservedCaptionHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
+        <Setter Property="rcui:WindowChrome.DefaultCaptionAreaHeight" Value="{DynamicResource Window.TitleBar.ReservedHeight}" />
         <!--
 		<Setter Property="TransparencyBackgroundFallback" Value="#00FF00FF" />
 		-->
@@ -71,10 +71,11 @@
                                 </DockPanel>
                                 <DockPanel>
                                     <Control x:Name="TitleBarHeightStandIn"
+                                            DataContext="{TemplateBinding (rcui:WindowChrome.Chrome), Mode=OneWay}"
                                             Classes.fullScreen="{TemplateBinding WindowState, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static WindowState.FullScreen}}"
-                                            Classes.reserveCaptionArea="{Binding $parent[Window].(rcui:WindowChrome.ReserveCaptionArea), Mode=OneWay}"
+                                            Classes.reserveCaptionArea="{Binding ReserveCaptionArea, Mode=OneWay}"
                                             IsVisible="False"
-                                            Height="{TemplateBinding (rcui:WindowChrome.ReservedCaptionHeight)}"
+                                            Height="{Binding CaptionAreaHeight, Mode=OneWay}"
                                             DockPanel.Dock="Top" />
                                     <Control DockPanel.Dock="Bottom"
                                             Classes="bottom-edge" />

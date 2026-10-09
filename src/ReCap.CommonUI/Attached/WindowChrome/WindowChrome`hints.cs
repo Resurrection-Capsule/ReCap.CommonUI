@@ -64,7 +64,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         /// Whether a <see cref="Window"/>'s managed chrome should show its <see cref="Window.Icon"/>.
         /// </summary>
         /// <remarks>
-        /// Only applicable if the <see cref="CaptionButtonRoles.WindowMenu"/> is the last element of LeftCaptionButtonRoles and/or the first element of RightCaptionButtonRoles, since <see cref="Window.Icon"/> is displayed on a <see cref="CaptionButtonRoles.WindowMenu"/> button, if at all.
+        /// Only applicable if the <see cref="CaptionButtonRole.WindowMenu"/> is the last element of <see cref="LeftCaptionButtonRoles"/> and/or the first element of <see cref="RightCaptionButtonRoles"/>, since <see cref="Window.Icon"/> is displayed on a <see cref="CaptionButtonRole.WindowMenu"/> button, if at all.
         /// </remarks>
         public static readonly AttachedProperty<ManagedChromeElementHint> ShowIconHintProperty =
             AvaloniaProperty.RegisterAttached<WindowChrome, Window, ManagedChromeElementHint>("ShowIconHint", ManagedChromeElementHint.Auto);
@@ -111,24 +111,24 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static void RefreshShowIconAndTitle(Window window)
         {
-            if (!TryGetStateInfo(window, out WindowChrome stateInfo))
+            if (!TryGetChrome(window, out WindowChrome chrome))
                 return;
 
-            stateInfo.RefreshShowIcon();
-            stateInfo.RefreshShowTitle();
+            chrome.RefreshShowIcon();
+            chrome.RefreshShowTitle();
         }
 
 
         static void ShowIconHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs args)
         {
-            if (TryGetStateInfo(window, out WindowChrome stateInfo))
-                stateInfo.RefreshShowIcon();
+            if (TryGetChrome(window, out WindowChrome chrome))
+                chrome.RefreshShowIcon();
         }
         static void ShowTitleHintProperty_Changed(Window window, AvaloniaPropertyChangedEventArgs args)
         {
             
-            if (TryGetStateInfo(window, out WindowChrome stateInfo))
-                stateInfo.RefreshShowTitle();
+            if (TryGetChrome(window, out WindowChrome chrome))
+                chrome.RefreshShowTitle();
         }
     }
 }

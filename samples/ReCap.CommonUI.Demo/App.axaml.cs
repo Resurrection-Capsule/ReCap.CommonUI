@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReCap.CommonUI.Attached.WindowChrome;
+using ReCap.CommonUI.Controls.AppearanceHacks;
 using ReCap.CommonUI.Demo.ViewModels;
 using ReCap.CommonUI.Demo.Views;
 
@@ -52,6 +55,7 @@ namespace ReCap.CommonUI.Demo
         }
 
 
+        /*
         public static readonly StyledProperty<CaptionButtonRoles> LeftCaptionButtonRolesProperty =
             AvaloniaProperty.Register<App, CaptionButtonRoles>(nameof(LeftCaptionButtonRoles));
         public CaptionButtonRoles LeftCaptionButtonRoles
@@ -67,6 +71,16 @@ namespace ReCap.CommonUI.Demo
         {
             get => GetValue(RightCaptionButtonRolesProperty);
             set => SetValue(RightCaptionButtonRolesProperty, value);
+        }
+        */
+
+
+        public static readonly StyledProperty<CaptionButtonRolesPair?> CaptionButtonRolesProperty =
+            AvaloniaProperty.Register<App, CaptionButtonRolesPair?>(nameof(CaptionButtonRoles), null);
+        public CaptionButtonRolesPair? CaptionButtonRoles
+        {
+            get => GetValue(CaptionButtonRolesProperty);
+            set => SetValue(CaptionButtonRolesProperty, value);
         }
 
 
@@ -92,9 +106,11 @@ namespace ReCap.CommonUI.Demo
 
         public override void OnFrameworkInitializationCompleted()
         {
+            /*
             var roles = WindowChrome.PlatformDefaultCaptionButtonRoles;
             LeftCaptionButtonRoles = roles.Left;
             RightCaptionButtonRoles = roles.Right;
+            */
             MainVM = new UITestViewModel();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -109,6 +125,18 @@ namespace ReCap.CommonUI.Demo
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+
+        public void UpdateCaptionButtonRoles(IEnumerable<CaptionButtonRole> roles, CaptionButtonClusterPosition position)
+        {
+            var prevPair = CaptionButtonRoles ?? WindowChrome.PlatformDefaultCaptionButtonRoles;
+            CaptionButtonRoles = position switch
+            {
+                CaptionButtonClusterPosition.Left => new(roles, prevPair.Right),
+                CaptionButtonClusterPosition.Right => new(prevPair.Left, roles),
+                _ => null,
+            };
         }
     }
 }

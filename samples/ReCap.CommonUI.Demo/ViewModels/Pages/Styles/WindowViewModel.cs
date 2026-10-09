@@ -1,7 +1,9 @@
-using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using Avalonia.Threading;
 using ReCap.CommonUI.Attached.WindowChrome;
 using Sortable.Avalonia;
 
@@ -10,6 +12,12 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
     public partial class WindowViewModel
         : PageViewModelBase
     {
+        static readonly IEnumerable<CaptionButtonRole> _VALID_CAPTION_BUTTON_ROLES
+            = WindowChrome.ValidCaptionButtonRoles
+                .ToList()
+                .AsReadOnly()
+            ;
+        /*
         ManagedChromeHint _managedChromeHint = App.Current.ManagedChromeHint;
         public ManagedChromeHint ManagedChromeHint
         {
@@ -56,33 +64,61 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
                 App.Current.MainVM.UseReservedCaptionArea = _useReserveCaptionArea;
             }
         }
+        */
 
 
-        readonly WindowCaptionButtonsSideViewModel _leftCaptionButtonRoles = new(
+        readonly WindowCaptionButtonsSideViewModel _leftCaptionButtonRoles = new(CommonUI.Controls.AppearanceHacks.CaptionButtonClusterPosition.Left);
+        /*
             () => App.Current.LeftCaptionButtonRoles,
             v => App.Current.LeftCaptionButtonRoles = v
         );
+        */
         public WindowCaptionButtonsSideViewModel LeftCaptionButtonRoles
         {
             get => _leftCaptionButtonRoles;
         }
 
 
-        readonly WindowCaptionButtonsSideViewModel _rightCaptionButtonRoles = new(
+        readonly WindowCaptionButtonsSideViewModel _rightCaptionButtonRoles = new(CommonUI.Controls.AppearanceHacks.CaptionButtonClusterPosition.Right);
+        /*
             () => App.Current.RightCaptionButtonRoles,
             v => App.Current.RightCaptionButtonRoles = v
         );
+        */
         public WindowCaptionButtonsSideViewModel RightCaptionButtonRoles
         {
             get => _rightCaptionButtonRoles;
         }
 
 
+        /*
         readonly IReadOnlyCollection<CaptionButtonRole> _allCaptionButtonRoles;
         public IReadOnlyCollection<CaptionButtonRole> AllCaptionButtonRoles
         {
             get => _allCaptionButtonRoles;
             private init => RASIC(ref _allCaptionButtonRoles, value);
+        }
+        */
+        /*
+        ObservableCollection<CaptionButtonRole> _allCaptionButtonRoles = new();
+        public ObservableCollection<CaptionButtonRole> AllCaptionButtonRoles
+        {
+            get => _allCaptionButtonRoles;
+            private set
+            {
+                if (_allCaptionButtonRoles != null)
+                    _allCaptionButtonRoles.CollectionChanged -= AllCaptionButtonRoles_CollectionChanged;
+
+                RASIC(ref _allCaptionButtonRoles, value ?? new());
+
+                _allCaptionButtonRoles.CollectionChanged += AllCaptionButtonRoles_CollectionChanged;
+            }
+        }
+        */
+        readonly ObservableCollection<CaptionButtonRole> _allCaptionButtonRoles = new();
+        public ObservableCollection<CaptionButtonRole> AllCaptionButtonRoles
+        {
+            get => _allCaptionButtonRoles;
         }
 
 
@@ -91,17 +127,45 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         public WindowViewModel()
             : base()
         {
-            AllCaptionButtonRoles = WindowChrome.ValidCaptionButtonRoles
-                .ToList()
-                .AsReadOnly()
-            ;
+            RefreshAllCaptionButtonRoles();
+            AllCaptionButtonRoles.CollectionChanged += AllCaptionButtonRoles_CollectionChanged;
+        }
+        void AllCaptionButtonRoles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            => RefreshAllCaptionButtonRoles();
+
+
+        bool _refreshingAllCaptionButtonRoles = false;
+        void RefreshAllCaptionButtonRoles()
+        {
+            if (_refreshingAllCaptionButtonRoles)
+                return;
+
+            _refreshingAllCaptionButtonRoles = true;
+            AllCaptionButtonRoles.CollectionChanged -= AllCaptionButtonRoles_CollectionChanged;
+            /*
+            */
+            Dispatcher.UIThread.Post(() =>
+            {
+                AllCaptionButtonRoles.Clear();
+                foreach (var role in _VALID_CAPTION_BUTTON_ROLES)
+                {
+                    AllCaptionButtonRoles.Add(role);
+                }
+
+                _refreshingAllCaptionButtonRoles = false;
+                AllCaptionButtonRoles.CollectionChanged += AllCaptionButtonRoles_CollectionChanged;
+            }
+            //, DispatcherPriority.ApplicationIdle
+            );
+            /*
+            */
         }
 
 
 
 
-#region Sortable.Avalonia
-            public void CBPoolUpdateCommand(object parameter)
+        #region Sortable.Avalonia
+        public void CBPoolUpdateCommand(object parameter)
                 => CBPoolUpdate((SortableUpdateEventArgs)parameter);
             public void CBPoolUpdate(SortableUpdateEventArgs e)
             {

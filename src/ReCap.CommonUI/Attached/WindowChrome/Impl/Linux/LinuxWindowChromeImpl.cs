@@ -98,21 +98,20 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             }
             else
             {
-                _defaultCaptionButtonRoles = new()
-                {
+                _defaultCaptionButtonRoles = new(
                     //[TODO: Detect e.g. Unity DE?]
                     //[TODO: platform-level user settings?]
-                    Left = new()
+                    new[]
                     {
                         CaptionButtonRole.WindowMenu,
                     },
-                    Right = new()
+                    new[]
                     {
                         CaptionButtonRole.Minimize,
                         CaptionButtonRole.Maximize,
                         CaptionButtonRole.Close,
-                    },
-                };
+                    }
+                );
             }
         }
 
