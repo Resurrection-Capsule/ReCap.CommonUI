@@ -139,25 +139,53 @@
 								DockPanel.Dock="Left" />
 				<TemplatedControl Theme="{DynamicResource WindowView.CaptionButtons.HintArrow.Right}"
 								DockPanel.Dock="Right" />
-				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Drag from below to the left or right groups above to add."
-							TextAlignment="Center"
-							Classes="sh3" />
-					<ItemsControl Theme="{DynamicResource WindowView.CaptionButtons.RolesPool}"
-								HorizontalAlignment="Center"
-								ItemsSource="{Binding AllCaptionButtonRoles, Mode=OneWay}" />
+				<StackPanel Orientation="Vertical"
+							HorizontalAlignment="Center"
+							Spacing="8">
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="Drag from below to the left or right groups above to add."
+								Classes="sh3" />
+						<ItemsControl Theme="{DynamicResource WindowView.CaptionButtons.RolesPool}"
+									HorizontalAlignment="Center"
+									ItemsSource="{Binding AllCaptionButtonRoles, Mode=OneWay}" />
+					</StackPanel>
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="Or, select a preset from below:"
+								Classes="sh3" />
+						<ComboBox ItemsSource="{Binding CaptionButtonPresets, Mode=OneWay}"
+								SelectedItem="{Binding SelectedCaptionButtonPreset, Mode=TwoWay}"
+								DisplayMemberBinding="{Binding Key, Mode=OneWay}"
+								HorizontalAlignment="Stretch" />
+					</StackPanel>
 				</StackPanel>
 			</DockPanel>
 		</HeaderedContentControl>
+
+
 		<HeaderedContentControl Header="Bridged caption buttons widths">
-			<DockPanel LastChildFill="False">
-				<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
-								DataContext="{Binding Path=(rcui:WindowChrome.Chrome).LeftCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
-								DockPanel.Dock="Left" />
-				<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
-								DataContext="{Binding Path=(rcui:WindowChrome.Chrome).RightCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
-								DockPanel.Dock="Right" />
-			</DockPanel>
+			<StackPanel Orientation="Vertical"
+						Spacing="8">
+				<DockPanel LastChildFill="False">
+					<TextBlock Text="Content Layout"
+							DockPanel.Dock="Top" />
+					<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
+									DataContext="{Binding Path=(rcui:WindowChrome.Chrome).LeftCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+									DockPanel.Dock="Left" />
+					<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
+									DataContext="{Binding Path=(rcui:WindowChrome.Chrome).RightCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+									DockPanel.Dock="Right" />
+				</DockPanel>
+				<DockPanel LastChildFill="False">
+					<TextBlock Text="Cosmetic"
+							DockPanel.Dock="Top" />
+					<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
+									DataContext="{Binding Path=(rcui:WindowChrome.Chrome).CosmeticLeftCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+									DockPanel.Dock="Left" />
+					<ContentControl Theme="{DynamicResource WindowView.CaptionButtons.BridgedWidth}"
+									DataContext="{Binding Path=(rcui:WindowChrome.Chrome).CosmeticRightCaptionButtonsWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
+									DockPanel.Dock="Right" />
+				</DockPanel>
+			</StackPanel>
 		</HeaderedContentControl>
 	</StackPanel>
 </UserControl>

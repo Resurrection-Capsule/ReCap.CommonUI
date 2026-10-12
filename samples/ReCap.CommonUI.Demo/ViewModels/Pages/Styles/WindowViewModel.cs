@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Avalonia.Threading;
@@ -17,62 +19,9 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
                 .ToList()
                 .AsReadOnly()
             ;
-        /*
-        ManagedChromeHint _managedChromeHint = App.Current.ManagedChromeHint;
-        public ManagedChromeHint ManagedChromeHint
-        {
-            get => _managedChromeHint;
-            set
-            {
-                RASIC(ref _managedChromeHint, value);
-                App.Current.ManagedChromeHint = _managedChromeHint;
-            }
-        }
-
-
-        ManagedChromeElementHint _showTitleHint = App.Current.ShowTitleHint;
-        public ManagedChromeElementHint ShowTitleHint
-        {
-            get => _showTitleHint;
-            set
-            {
-                RASIC(ref _showTitleHint, value);
-                App.Current.ShowTitleHint = _showTitleHint;
-            }
-        }
-
-
-        ManagedChromeElementHint _showIconHint = App.Current.ShowIconHint;
-        public ManagedChromeElementHint ShowIconHint
-        {
-            get => _showIconHint;
-            set
-            {
-                RASIC(ref _showIconHint, value);
-                App.Current.ShowIconHint = _showIconHint;
-            }
-        }
-
-
-        bool _useReserveCaptionArea = true;
-        public bool UseReservedCaptionArea
-        {
-            get => _useReserveCaptionArea;
-            set
-            {
-                RASIC(ref _useReserveCaptionArea, value);
-                App.Current.MainVM.UseReservedCaptionArea = _useReserveCaptionArea;
-            }
-        }
-        */
 
 
         readonly WindowCaptionButtonsSideViewModel _leftCaptionButtonRoles = new(CommonUI.Controls.AppearanceHacks.CaptionButtonClusterPosition.Left);
-        /*
-            () => App.Current.LeftCaptionButtonRoles,
-            v => App.Current.LeftCaptionButtonRoles = v
-        );
-        */
         public WindowCaptionButtonsSideViewModel LeftCaptionButtonRoles
         {
             get => _leftCaptionButtonRoles;
@@ -80,45 +29,79 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 
 
         readonly WindowCaptionButtonsSideViewModel _rightCaptionButtonRoles = new(CommonUI.Controls.AppearanceHacks.CaptionButtonClusterPosition.Right);
-        /*
-            () => App.Current.RightCaptionButtonRoles,
-            v => App.Current.RightCaptionButtonRoles = v
-        );
-        */
         public WindowCaptionButtonsSideViewModel RightCaptionButtonRoles
         {
             get => _rightCaptionButtonRoles;
         }
 
 
-        /*
-        readonly IReadOnlyCollection<CaptionButtonRole> _allCaptionButtonRoles;
-        public IReadOnlyCollection<CaptionButtonRole> AllCaptionButtonRoles
-        {
-            get => _allCaptionButtonRoles;
-            private init => RASIC(ref _allCaptionButtonRoles, value);
-        }
-        */
-        /*
-        ObservableCollection<CaptionButtonRole> _allCaptionButtonRoles = new();
-        public ObservableCollection<CaptionButtonRole> AllCaptionButtonRoles
-        {
-            get => _allCaptionButtonRoles;
-            private set
-            {
-                if (_allCaptionButtonRoles != null)
-                    _allCaptionButtonRoles.CollectionChanged -= AllCaptionButtonRoles_CollectionChanged;
-
-                RASIC(ref _allCaptionButtonRoles, value ?? new());
-
-                _allCaptionButtonRoles.CollectionChanged += AllCaptionButtonRoles_CollectionChanged;
-            }
-        }
-        */
         readonly ObservableCollection<CaptionButtonRole> _allCaptionButtonRoles = new();
         public ObservableCollection<CaptionButtonRole> AllCaptionButtonRoles
         {
             get => _allCaptionButtonRoles;
+        }
+
+
+        
+        static readonly KeyValuePair<string, CaptionButtonRolesPair?> _PLATFORM_DEFAULTS = new("Platform Defaults", null);
+        readonly ObservableCollection<KeyValuePair<string, CaptionButtonRolesPair?>> _captionButtonPresets = new()
+        {
+            _PLATFORM_DEFAULTS,
+            new("Lone WindowMenus", new(
+                new[]
+                {
+                    CaptionButtonRole.WindowMenu,
+                },
+                new[]
+                {
+                    CaptionButtonRole.WindowMenu,
+                }
+            )),
+            new("Innermost WindowMenus", new(
+                new[]
+                {
+                    CaptionButtonRole.FullScreen,
+                    CaptionButtonRole.WindowMenu,
+                },
+                new[]
+                {
+                    CaptionButtonRole.WindowMenu,
+                    CaptionButtonRole.Minimize,
+                    CaptionButtonRole.Maximize,
+                    CaptionButtonRole.Close,
+                }
+            )),
+            new("Sandwiched WindowMenus", new(
+                new[]
+                {
+                    CaptionButtonRole.FullScreen,
+                    CaptionButtonRole.WindowMenu,
+                    CaptionButtonRole.Minimize,
+                },
+                new[]
+                {
+                    CaptionButtonRole.Maximize,
+                    CaptionButtonRole.WindowMenu,
+                    CaptionButtonRole.Close,
+                }
+            )),
+            new("Empty", new(
+                Array.Empty<CaptionButtonRole>(),
+                Array.Empty<CaptionButtonRole>()
+            )),
+        };
+        public ObservableCollection<KeyValuePair<string, CaptionButtonRolesPair?>> CaptionButtonPresets
+        {
+            get => _captionButtonPresets;
+        }
+
+
+        static readonly KeyValuePair<string, CaptionButtonRolesPair?> _NO_PRESET = new(null, null);
+        KeyValuePair<string, CaptionButtonRolesPair?> _selectedCaptionButtonPreset = _NO_PRESET;
+        public KeyValuePair<string, CaptionButtonRolesPair?> SelectedCaptionButtonPreset
+        {
+            get => _selectedCaptionButtonPreset;
+            set => RASIC(ref _selectedCaptionButtonPreset, value);
         }
 
 
@@ -127,9 +110,56 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         public WindowViewModel()
             : base()
         {
+            SelectedCaptionButtonPreset = _PLATFORM_DEFAULTS;
             RefreshAllCaptionButtonRoles();
+            PropertyChanged += This_PropertyChanged;
+            LeftCaptionButtonRoles.CaptionButtonsChanged += CaptionButtonsSide_CaptionButtonsChanged;
+            RightCaptionButtonRoles.CaptionButtonsChanged += CaptionButtonsSide_CaptionButtonsChanged;
             AllCaptionButtonRoles.CollectionChanged += AllCaptionButtonRoles_CollectionChanged;
         }
+
+
+        int _presetChanging = 0;
+        void CaptionButtonsSide_CaptionButtonsChanged(object sender, EventArgs e)
+        {
+            if (_presetChanging > 0)
+                _presetChanging--;
+            else
+                SelectedCaptionButtonPreset = _NO_PRESET;
+        }
+
+
+        void This_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(SelectedCaptionButtonPreset))
+                return;
+
+            var kvp = SelectedCaptionButtonPreset;
+            if (_NO_PRESET.Equals(kvp))
+                return;
+
+            if (_PLATFORM_DEFAULTS.Equals(kvp))
+                ApplyPreset(WindowChrome.PlatformDefaultCaptionButtonRoles);
+            else
+                ApplyPreset(kvp);
+        }
+        bool ApplyPreset(KeyValuePair<string, CaptionButtonRolesPair?> preset)
+        {
+            var pairMaybe = preset.Value;
+            if (!pairMaybe.HasValue)
+                return false;
+
+            ApplyPreset(pairMaybe.Value);
+            return true;
+        }
+        void ApplyPreset(CaptionButtonRolesPair preset)
+        {
+            _presetChanging = 2;
+            LeftCaptionButtonRoles.CaptionButtons = new(preset.Left);
+            RightCaptionButtonRoles.CaptionButtons = new(preset.Right);
+        }
+
+
         void AllCaptionButtonRoles_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             => RefreshAllCaptionButtonRoles();
 
@@ -142,8 +172,7 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 
             _refreshingAllCaptionButtonRoles = true;
             AllCaptionButtonRoles.CollectionChanged -= AllCaptionButtonRoles_CollectionChanged;
-            /*
-            */
+
             Dispatcher.UIThread.Post(() =>
             {
                 AllCaptionButtonRoles.Clear();
@@ -154,17 +183,13 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
 
                 _refreshingAllCaptionButtonRoles = false;
                 AllCaptionButtonRoles.CollectionChanged += AllCaptionButtonRoles_CollectionChanged;
-            }
-            //, DispatcherPriority.ApplicationIdle
-            );
-            /*
-            */
+            });
         }
 
 
 
 
-        #region Sortable.Avalonia
+#region Sortable.Avalonia
         public void CBPoolUpdateCommand(object parameter)
                 => CBPoolUpdate((SortableUpdateEventArgs)parameter);
             public void CBPoolUpdate(SortableUpdateEventArgs e)

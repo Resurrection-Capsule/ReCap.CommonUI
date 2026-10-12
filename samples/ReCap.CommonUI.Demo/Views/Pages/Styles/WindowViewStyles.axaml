@@ -100,19 +100,6 @@
 			<Setter Property="Template">
 				<ControlTemplate>
 					<Panel>
-						<!--
-						<rcui:AngledBorderEx x:Name="TitleBarBackground"
-											Classes.IsWindowActive="{Binding Path=IsActive, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay, FallbackValue=True}"
-											BorderBrush="{DynamicResource Window.TitleBar.BorderBrush}"
-											StrokeThickness="1"
-											IsHitTestVisible="False"
-											TopLeftCut="6"
-											TopRightCut="31"
-											BottomLeftInset="18"
-											BottomLeftCut="6"
-											InvertSide="Bottom"
-											Margin="0,0,0,-5" />
-						-->
 						<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
 												TopLeftInset="{TemplateBinding Padding, Converter={x:Static rcui:ThicknessToDoubleConverters.Left}, Mode=OneWay}"
 												TopRightInset="{TemplateBinding Padding, Converter={x:Static rcui:ThicknessToDoubleConverters.Right}, Mode=OneWay}"
@@ -197,7 +184,7 @@
 									Spacing="8"
 									Classes="center">
 								<Path x:Name="DragDropIcon"
-									Data="{DynamicResource Icons.Add.Geometry}"
+									Data="{DynamicResource Icon.Add.Geometry}"
 									Fill="{Binding Foreground, ElementName=DragDropLabel, Mode=OneWay}"
 									Classes="center" />
 								<TextBlock x:Name="DragDropLabel"
@@ -231,13 +218,6 @@
 					BasedOn="{StaticResource WindowView.CaptionButtons.Roles.Base}">
 			<Setter Property="st:Sortable.Sortable" Value="True" />
 			<Setter Property="st:Sortable.UpdateCommand" Value="{Binding CBPoolUpdateCommand, Mode=OneWay}" />
-			<!--
-			-->
-
-			<!--
-			<Setter Property="st:Sortable.Droppable" Value="True" />
-			<Setter Property="st:Sortable.DropCommand" Value="{Binding CBPoolDropCommand, Mode=OneWay}" />
-			-->
 
 			<Setter Property="st:Sortable.CrossCollectionTransferMode" Value="Move" />
 			<Setter Property="st:Sortable.AnimationDuration" Value="0:0:0.01" />
@@ -382,12 +362,9 @@
 							</TextBlock.Text>
 						</TextBlock>
 						<Border x:Name="CaptionButtonsWidthIndicator"
-								Background="#0000FF"
-								BorderBrush="#FF0000"
-								BorderThickness="1"
-								Width="{Binding Mode=OneWay}"
-								Height="4"
-								Classes="align" />
+								Theme="{DynamicResource CaptionButtons.BridgedWidth.Display}"
+								Classes="align"
+								Width="{Binding Mode=OneWay}" />
 					</StackPanel>
 				</ControlTemplate>
 			</Setter>

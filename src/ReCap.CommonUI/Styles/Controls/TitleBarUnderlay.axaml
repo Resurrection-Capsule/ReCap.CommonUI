@@ -46,8 +46,7 @@
 					Background="#01000000"
 					Margin="0,0,0,-5">
 						<Panel Classes="outward">
-							<rcui:TitleBarAngledBorder x:Name="TitleBarBackground"
-													Classes.isWindowUsingSystemChrome="{Binding !$parent[Window].(rcui:WindowChrome.Chrome).IsChromeManaged, Mode=OneWay}" />
+							<rcui:TitleBarAngledBorder x:Name="TitleBarBackground" />
 							<!--
 							<rcui:AngledBorderEx x:Name="LeftCaptionButtonsFrame"
 											Classes="caption-buttons-frame"
@@ -66,21 +65,21 @@
 		</Setter>
 
 
-		<Style Selector="^[LeftWindowMenuPresence=Lone] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+		<Style Selector="^:window-leftbuttons-any:not(:window-leftbuttons-multiple):window-leftbuttons-has-windowmenu /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
 			<Setter Property="TopLeftInset" Value="0" />
 		</Style>
-		<Style Selector="^:not(^[LeftWindowMenuPresence=Lone]) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
-			<Setter Property="TopLeftInset" Value="{Binding $parent[Window].(rcui:WindowChrome.Chrome).LeftCaptionButtonsWidth, Mode=OneWay}" />
+		<Style Selector="^:not(:window-leftbuttons-any:not(:window-leftbuttons-multiple):window-leftbuttons-has-windowmenu) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+			<Setter Property="TopLeftInset" Value="{Binding $parent[Window].(rcui:WindowChrome.Chrome).CosmeticLeftCaptionButtonsWidth, Mode=OneWay}" />
 		</Style>
 
-		<Style Selector="^[RightWindowMenuPresence=Lone] /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+		<Style Selector="^:window-rightbuttons-any:not(:window-rightbuttons-multiple):window-rightbuttons-has-windowmenu /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
 			<Setter Property="TopRightInset" Value="0" />
 		</Style>
-		<Style Selector="^:not(^[RightWindowMenuPresence=Lone]) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
-			<Setter Property="TopRightInset" Value="{Binding $parent[Window].(rcui:WindowChrome.Chrome).RightCaptionButtonsWidth, Mode=OneWay}" />
+		<Style Selector="^:not(:window-rightbuttons-any:not(:window-rightbuttons-multiple):window-rightbuttons-has-windowmenu) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
+			<Setter Property="TopRightInset" Value="{Binding $parent[Window].(rcui:WindowChrome.Chrome).CosmeticRightCaptionButtonsWidth, Mode=OneWay}" />
 		</Style>
 
-		<Style Selector="^[HostWindowState=Maximized], ^[HostWindowState=FullScreen]">
+		<Style Selector="^:window-maximized, ^:window-fullscreen">
 			<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackground[TopLeftInset=0]">
 				<Setter Property="TopLeftMinorCut" Value="0" />
 			</Style>
@@ -91,7 +90,7 @@
 		</Style>
 
 
-		<Style Selector="^ /template/ rcui|TitleBarAngledBorder#TitleBarBackground.isWindowUsingSystemChrome">
+		<Style Selector="^:not(:window-managed-chrome) /template/ rcui|TitleBarAngledBorder#TitleBarBackground">
 			<Setter Property="TopLeftMajorCut" Value="0" />
 			<Setter Property="TopLeftMinorCut" Value="0" />
 			<Setter Property="TopRightMajorCut" Value="0" />
@@ -99,13 +98,13 @@
 		</Style>
 
 
-		<Style Selector="^[IsHostWindowActive=False] /template/ :is(rcui|AngledBorderBase)#TitleBarBackground">
+		<Style Selector="^:not(:window-active) /template/ :is(rcui|AngledBorderBase)#TitleBarBackground">
 			<Setter Property="Background" Value="{DynamicResource Window.TitleBar.BackgroundBrush.Inactive}" />
 		</Style>
 
 
 		<Style Selector=":is(Window)[(rcui|WindowTransparencyHack.ActualIsTransparent)=True] /template/ ^, :is(Window)[ActualTransparencyLevel=Transparent] /template/ ^">
-			<Style Selector="^:not(^[HostWindowState=Maximized]):not(^[HostWindowState=FullScreen])">
+			<Style Selector="^:not(:window-maximized):not(:window-fullscreen)">
 				<Style Selector="^ /template/ rcui|AngledBorderEx#TitleBarBackground">
 					<Setter Property="TopLeftCut" Value="6" />
 				</Style>

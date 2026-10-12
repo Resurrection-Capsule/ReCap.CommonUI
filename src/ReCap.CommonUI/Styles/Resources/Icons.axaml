@@ -1,0 +1,36 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<StreamGeometry x:Key="Icon.ZoomIn.Geometry">
+		M 16 16 M 0 0
+		M 3 6 L 6 6 L 6 3
+		L 10 3 L 10 6 L 13 6
+		L 13 10 L 10 10 L 10 13
+		L 6 13 L 6 10 L 3 10
+		Z
+	</StreamGeometry>
+	<StreamGeometry x:Key="Icon.ZoomOut.Geometry">
+		M 16 16 M 0 0
+		M 3 6 H 13 V 10 H 3
+		Z
+	</StreamGeometry>
+
+
+	<StreamGeometry x:Key="Icon.Reset.Geometry">
+		M 16 16 M 0 0
+		M 11 1 3 2.25 9 7.5 V 5 c 1.493512 0.7134428 2.5 2.0987801 2.5 3.625 C 11.5 11.041246 9.511424 13 6.75 13 2.4575 13 1.2207031 8.656732 1.2207031 6.8183594 1.0711441 7.3765379 0.999944 7.9410148 1 8.5 1.000357 12.08993 3.910149 15 7.5 15 11.089851 15 14 12.089851 14 8.5 14 5.7599189 11.994611 3.1684289 9.5 2.5
+		Z
+	</StreamGeometry>
+
+
+	<StaticResource x:Key="Icon.Add.Geometry" ResourceKey="Icon.ZoomIn.Geometry" />
+	<StaticResource x:Key="Icon.Remove.Geometry" ResourceKey="Icon.ZoomOut.Geometry" />
+
+
+	<PathGeometry x:Key="Icon.Close.Geometry">
+		M 0 0 H 3 L 5.5 2.5 L 8 0 H 11
+		V 1 L 7.5 4.5 L 11 8 V 9
+		H 8 L 5.5 6.5 L 3 9 H 0
+		V 8 L 3.5 4.5 L 0 1 Z
+	</PathGeometry>
+</ResourceDictionary>

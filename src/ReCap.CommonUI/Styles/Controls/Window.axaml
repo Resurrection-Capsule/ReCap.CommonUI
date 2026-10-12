@@ -72,8 +72,6 @@
                                 <DockPanel>
                                     <Control x:Name="TitleBarHeightStandIn"
                                             DataContext="{TemplateBinding (rcui:WindowChrome.Chrome), Mode=OneWay}"
-                                            Classes.fullScreen="{TemplateBinding WindowState, Converter={x:Static rcui:EnumToBoolConverter.Instance}, ConverterParameter={x:Static WindowState.FullScreen}}"
-                                            Classes.reserveCaptionArea="{Binding ReserveCaptionArea, Mode=OneWay}"
                                             IsVisible="False"
                                             Height="{Binding CaptionAreaHeight, Mode=OneWay}"
                                             DockPanel.Dock="Top" />
@@ -117,7 +115,7 @@
 
 
         <!-- System decorations -->
-		<Style Selector="^:not(:managedchrome)">
+		<Style Selector="^:not(:window-managed-chrome)">
             <Style Selector="^ /template/ :is(Panel)#TemplateRoot">
                 <Setter Property="Margin" Value="-2,-4,-2,-10" />
             </Style>
@@ -153,7 +151,7 @@
 
 
         <!-- Managed decorations -->
-        <Style Selector="^:managedchrome">
+        <Style Selector="^:window-managed-chrome">
             <Setter Property="TransparencyLevelHint" Value="Transparent" />
             <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
             <Setter Property="rcui:WindowTransparencyHack.UseHack" Value="True" />
@@ -188,13 +186,11 @@
 				</Style>
 			</Style>
 
-            <Style Selector="^ /template/ Control#TitleBarHeightStandIn:not(.reserveCaptionArea)">
+            <Style Selector="^:not(:window-reserve-caption-area) /template/ Control#TitleBarHeightStandIn">
                 <Setter Property="Height" Value="0" />
             </Style>
-            <Style Selector="^:not(^[WindowState=FullScreen])">
-                <Style Selector="^ /template/ Control#TitleBarHeightStandIn.reserveCaptionArea">
-                    <Setter Property="IsVisible" Value="True" />
-                </Style>
+            <Style Selector="^:not(^[WindowState=FullScreen]):window-reserve-caption-area /template/ Control#TitleBarHeightStandIn">
+                <Setter Property="IsVisible" Value="True" />
             </Style>
 
 

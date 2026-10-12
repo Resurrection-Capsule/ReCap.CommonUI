@@ -8,7 +8,7 @@
     <QuinticEaseIn x:Key="Closeable.Animation.ScaleYEasing" />
     
     
-    <ControlTheme x:Key="CloseButton"
+    <ControlTheme x:Key="Closeable.CloseButton"
                 TargetType="{x:Type Button}"
                 BasedOn="{StaticResource CaptionButton}">
         <Setter Property="HorizontalAlignment" Value="Right" />
@@ -17,7 +17,7 @@
         <Setter Property="Content" Value="X" />
         <Setter Property="ContentTemplate">
             <DataTemplate>
-                <Path Data="{DynamicResource CloseButtonGlyphGeometry}"
+                <Path Data="{DynamicResource Icon.Close.Geometry}"
                     Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
             </DataTemplate>
         </Setter>
@@ -63,7 +63,7 @@
                                     CornerRadius="{Binding #NormalHoloShadow.CornerRadius, Mode=OneWay}"
                                     Margin="{Binding #NormalHoloShadow.Margin, Mode=OneWay}" />
                     <Button x:Name="PART_CloseButton"
-                            Theme="{DynamicResource CloseButton}"
+                            Theme="{DynamicResource Closeable.CloseButton}"
 
                             Command="{TemplateBinding Command}"
                             CommandParameter="{TemplateBinding CommandParameter}"

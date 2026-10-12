@@ -55,7 +55,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
             string[] gtkCaptionButtons = gtkCaptionButtonsStr.Contains(_GTK3_SPLIT_2)
                 ? gtkCaptionButtonsStr.Split(_GTK3_SPLIT_2_ARR, StringSplitOptions.None)
-                : Helpers.LonerArray(gtkCaptionButtonsStr)
+                : new[]
+                {
+                    gtkCaptionButtonsStr,
+                }
             ;
             foreach (string gtkCaptionButton in gtkCaptionButtons)
             {

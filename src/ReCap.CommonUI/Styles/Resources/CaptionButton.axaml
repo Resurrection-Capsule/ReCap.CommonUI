@@ -52,12 +52,7 @@
 		M 1 5 L 3 3 V 7 H 7 L 5 9 H 1 Z
 	</PathGeometry>
 	<StaticResource x:Key="CaptionButton.RoleGlyph.UnFullScreen" ResourceKey="CaptionButton.RoleGlyph.FullScreen" />
-	<PathGeometry x:Key="CaptionButton.RoleGlyph.Close">
-		M 0 0 H 3 L 5.5 2.5 L 8 0 H 11
-		V 1 L 7.5 4.5 L 11 8 V 9
-		H 8 L 5.5 6.5 L 3 9 H 0
-		V 8 L 3.5 4.5 L 0 1 Z
-	</PathGeometry>
+	<StaticResource x:Key="CaptionButton.RoleGlyph.Close" ResourceKey="Icon.Close.Geometry" />
 	<PathGeometry x:Key="CaptionButton.RoleGlyph.WindowMenu">
 		M 4.5 -2 L 7.5 1 L 4.5 4 L 1.5 1 Z
 		M 8 1.5 L 11 4.5 L 8 7.5 L 5 4.5 Z

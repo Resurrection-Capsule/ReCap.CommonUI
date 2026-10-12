@@ -4,6 +4,7 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Global.axaml" />
+				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Icons.axaml" />
 
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/Button.axaml" />
 				<ResourceInclude Source="avares://ReCap.CommonUI/Styles/Resources/CaptionButton.axaml" />

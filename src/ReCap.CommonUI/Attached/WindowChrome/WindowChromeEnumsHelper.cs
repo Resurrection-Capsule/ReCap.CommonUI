@@ -23,7 +23,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             CaptionButtonRole.Minimize,
             CaptionButtonRole.Maximize,
             CaptionButtonRole.FullScreen,
-            CaptionButtonRole.WindowMenu, //HACK: Technically not activatable, but needed for ShowIconHint/IsIconVisible
 #if CAPTIONBUTTONROLES_NYI
             CaptionButtonRole.ShowOnAllDesktops,
             CaptionButtonRole.Shade,
@@ -383,48 +382,33 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        public static bool IsLeft(this CaptionButtonClusterPosition position, out bool isValid)
+        public static bool Evaluate(this CaptionButtonClusterPosition position
+            , out bool left
+            , out bool right
+            , bool throwIfInvalid = false
+        )
         {
-            try
-            {
-                bool result = position.IsLeft();
-                isValid = true;
+            left = position == CaptionButtonClusterPosition.Left;
+            right = position == CaptionButtonClusterPosition.Right;
+
+            if (left || right)
                 return true;
-            }
-            catch (InvalidEnumArgumentException)
-            {
-                isValid = false;
-                return default;
-            }
+            else if (throwIfInvalid)
+                throw new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition));
+            else
+                return false;
         }
-        public static bool IsLeft(this CaptionButtonClusterPosition position)
-            => position switch
-            {
-                CaptionButtonClusterPosition.Left => true,
-                CaptionButtonClusterPosition.Right => false,
-                _ => throw new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition)),
-            };
-        /*
-        static bool TryGetIsLeft(CaptionButtonClusterPosition position, out bool isLeft)
+
+
+        internal static void Expand(this WindowMenuPresence windowMenuPresence
+            , out bool irrelevant
+            , out bool lone
+            , out bool innermost
+        )
         {
-            switch (position)
-            {
-                case CaptionButtonClusterPosition.Left:
-                    isLeft = true;
-                    break;
-
-                case CaptionButtonClusterPosition.Right:
-                    exception = null;
-                    isLeft = false;
-                    break;
-
-                default:
-                    exception = new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition));
-                    isLeft = default;
-                    return false;
-            };
-            return true;
+            irrelevant = windowMenuPresence == WindowMenuPresence.Irrelevant;
+            lone = windowMenuPresence == WindowMenuPresence.Lone;
+            innermost = windowMenuPresence == WindowMenuPresence.Innermost;
         }
-        */
     }
 }

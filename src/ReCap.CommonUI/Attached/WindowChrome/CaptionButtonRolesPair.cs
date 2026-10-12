@@ -7,14 +7,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         public IEnumerable<CaptionButtonRole> Left
         {
             get;
-            init;
+            private init;
         }
 
 
         public IEnumerable<CaptionButtonRole> Right
         {
             get;
-            init;
+            private init;
         }
 
 

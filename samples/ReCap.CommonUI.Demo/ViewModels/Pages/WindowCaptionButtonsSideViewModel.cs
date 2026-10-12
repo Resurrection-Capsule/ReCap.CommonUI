@@ -25,7 +25,10 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
 
 
         static readonly IEnumerable<object> _ERRORS_NONE = Array.Empty<object>();
-        static readonly IEnumerable<object> _ERRORS_FAIL = Helpers.LonerArray<Exception>(new("Invalid input"));
+        static readonly IEnumerable<object> _ERRORS_FAIL = new[]
+        {
+            new Exception("Invalid input"),
+        };
         IEnumerable<object> _errors = Array.Empty<object>();
         public IEnumerable<object> Errors
         {
@@ -68,14 +71,11 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
                 ? new(roles)
                 : new()
             ;
-            //=> CaptionButtons = GetUpdatedCaptionButtons(roles);
 
 
         readonly Func<IEnumerable<CaptionButtonRole>> _getter;
         IEnumerable<CaptionButtonRole> GetRoles()
             => _getter();
-        void PropagateRoles()
-            => Dispatcher.UIThread.Post(() => App.Current?.UpdateCaptionButtonRoles(CaptionButtons, _position));
 
 
 
@@ -102,18 +102,6 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
             rolesPair = default;
             return false;
         }
-        /*
-        CaptionButtonRoles GetAppCaptionButtonRoles(Func<CaptionButtonRolesPair, CaptionButtonRoles> getter, CaptionButtonRoles fallback = null)
-            => App.Current?.CaptionButtonRoles ?? fallback;
-        CaptionButtonRoles LeftGetFrom(CaptionButtonRolesPair pair)
-            => pair.Left;
-        CaptionButtonRoles LeftGet()
-            => GetAppCaptionButtonRoles(LeftGetFrom);
-        CaptionButtonRoles RightGetFrom(CaptionButtonRolesPair pair)
-            => pair.Right;
-        CaptionButtonRoles RightGet()
-            => GetAppCaptionButtonRoles(RightGetFrom);
-        */
 
 
         static IEnumerable<CaptionButtonRole> LeftGet()
@@ -136,18 +124,11 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
                 _ => throw new InvalidEnumArgumentException(nameof(position), (int)position, typeof(CaptionButtonClusterPosition)),
             };
 
-            /*
-            Dispatcher.UIThread.Post(() => 
-            {
-            */
-                var roles = GetRoles();
-                SetCaptionButtons(roles);
-                //CaptionButtons = new(roles);
-                InputText = roles.ToString();
+            var roles = GetRoles();
+            SetCaptionButtons(roles);
+            InputText = roles.ToString();
 
-                PropertyChanged += This_PropertyChanged;
-                //CaptionButtons.CollectionChanged += CaptionButtons_CollectionChanged;
-            //});
+            PropertyChanged += This_PropertyChanged;
         }
         private WindowCaptionButtonsSideViewModel()
             : base()
@@ -180,7 +161,6 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
             if (WindowChromeEnumsHelper.TryParseCaptionButtonRoles(InputText, out IEnumerable<CaptionButtonRole> roles))
             {
                 SetCaptionButtons(roles);
-                //CaptionButtons = new(roles);
                 Errors = _ERRORS_NONE;
             }
             else
@@ -191,7 +171,12 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
 
 
         void OnCaptionButtonsChanged()
-            => PropagateRoles();
+            => Dispatcher.UIThread.Post(OnCaptionButtonsChangedInternal);
+        void OnCaptionButtonsChangedInternal()
+        {
+            App.Current?.UpdateCaptionButtonRoles(CaptionButtons, _position);
+            CaptionButtonsChanged?.Invoke(this, new());
+        }
 
 
 
@@ -227,5 +212,10 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages
             CaptionButtons.RemoveAt(oldIdx);
         }
 #endregion
+
+
+
+
+        public event EventHandler CaptionButtonsChanged;
     }
 }

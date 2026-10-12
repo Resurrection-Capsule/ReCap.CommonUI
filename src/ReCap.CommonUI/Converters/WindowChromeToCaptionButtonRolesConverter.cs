@@ -27,49 +27,10 @@ namespace ReCap.CommonUI.Converters
         }
 
 
-        //delegate bool ConvertInternal_EvaluateValue(object value, ref IEnumerable<CaptionButtonRole> enumerable);
         static bool TryConvertInternal(IList<object> values, CaptionButtonClusterPosition position, out IEnumerable<CaptionButtonRole> enumerable)
         {
             WindowChrome windowChrome = null;
-            bool isLeft = position.IsLeft(out bool isValid);
-            /*
-            static bool EvaluateValue(object value, ref IEnumerable<CaptionButtonRole> enumerable)
-            {
-                if (value is IEnumerable<CaptionButtonRole> roles)
-                {
-                    enumerable = roles;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            bool EvaluateValue_ValidPosition(object value, ref IEnumerable<CaptionButtonRole> enumerable)
-            {
-                if (EvaluateValue(value, ref enumerable))
-                    return true;
-
-                if (value is WindowChrome chrome)
-                    windowChrome ??= chrome;
-                else
-                    return false;
-
-                enumerable = isLeft
-                    ? windowChrome.LeftCaptionButtonRoles
-                    : windowChrome.RightCaptionButtonRoles
-                ;
-                return true;
-            }
-
-
-            ConvertInternal_EvaluateValue evaluateFunc = isValid
-                ? EvaluateValue_ValidPosition
-                : EvaluateValue
-            ;
-
-            */
+            bool isValid = position.Evaluate(out bool left, out bool right);
             enumerable = null;
             foreach (object value in values)
             {
@@ -96,11 +57,14 @@ namespace ReCap.CommonUI.Converters
                 return true;
             else if (windowChrome == null)
                 return false;
+            else if (left)
+                enumerable = windowChrome.LeftCaptionButtonRoles;
+            else if (right)
+                enumerable = windowChrome.RightCaptionButtonRoles;
             else
-                return (enumerable = isLeft
-                    ? windowChrome.LeftCaptionButtonRoles
-                    : windowChrome.RightCaptionButtonRoles
-                ) != null;
+                return false;
+
+            return enumerable != null;
         }
     }
 }

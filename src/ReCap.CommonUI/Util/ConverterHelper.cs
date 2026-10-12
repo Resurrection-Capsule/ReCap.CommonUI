@@ -39,6 +39,32 @@ namespace ReCap.CommonUI.Util
 
 
 
+        public static bool TryGetBool(object value, out bool result)
+        {
+            if (value is bool val)
+                result = val;
+            else if (TryGetString(value, out string valStr) && bool.TryParse(valStr, out val))
+                result = val;
+            else
+            {
+                result = default;
+                return false;
+            }
+
+
+            return true;
+        }
+
+
+        public static bool ObjectToBool(object value, bool fallbackValue = false)
+            => TryGetBool(value, out bool result)
+                ? result
+                : fallbackValue
+            ;
+
+
+
+
         public static bool TryGetDouble(object value, out double result)
         {
             if (value is double val)

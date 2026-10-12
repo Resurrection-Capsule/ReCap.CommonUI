@@ -1,15 +1,14 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
-	<ControlTheme x:Key="{x:Type rcui:CaptionButton}"
-				TargetType="{x:Type rcui:CaptionButton}">
+	<ControlTheme x:Key="CaptionButton.Base"
+				TargetType="{x:Type Button}">
 		<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle}" />
 		<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle}" />
 		<Setter Property="CornerRadius" Value="{DynamicResource CaptionButton.CornerRadius.Right}" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
 		<Setter Property="VerticalContentAlignment" Value="Center" />
-		<Setter Property="Glyphs" Value="{DynamicResource CaptionButton.Glyphs}" />
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Panel x:Name="LayoutRoot">
@@ -29,29 +28,9 @@
 										HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 					</rcui:AngledBorder>
-					<Border x:Name="RoleActivationTest"
-							IsHitTestVisible="False"
-							Background="#40FF00FF" />
 				</Panel>
 			</ControlTemplate>
 		</Setter>
-		<Style Selector="^:not(:roleactive) /template/ Border#RoleActivationTest">
-			<Setter Property="IsVisible" Value="False" />
-		</Style>
-		<Style Selector="^:roleactive /template/ Border#RoleActivationTest">
-			<Setter Property="IsVisible" Value="True" />
-		</Style>
-
-		<!-- Idle (inactive window) -->
-		<Style Selector="^[IsHostWindowActive=False]">
-			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
-				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
-				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
-			</Style>
-			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle.Inactive}" />
-			</Style>
-		</Style>
 
 		<!-- Hover -->
 		<Style Selector="^:pointerover:not(:pressed)">
@@ -66,7 +45,7 @@
 
 
 		<!-- Pressed -->
-		<Style Selector="^:pressed">
+		<Style Selector="^:pressed, ^:checked">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Pressed}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Pressed}" />
@@ -85,6 +64,66 @@
 			</Style>
 			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Disabled}" />
+			</Style>
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButton"
+				TargetType="{x:Type Button}"
+				BasedOn="{StaticResource CaptionButton.Base}">
+		<Setter Property="MinWidth" Value="{DynamicResource CaptionButton.Width}" />
+		<Setter Property="MinHeight" Value="{DynamicResource CaptionButton.Height}" />
+	</ControlTheme>
+	<ControlTheme x:Key="CaptionButton.IsActiveAware"
+				TargetType="{x:Type Button}"
+				BasedOn="{StaticResource CaptionButton}">
+		<Style Selector="^ /template/ :is(Panel)#LayoutRoot">
+			<Setter Property="rcui:ClassBinder.Classes">
+				<MultiBinding Converter="{x:Static rcui:SetClassesConverter.Instance}"
+							ConverterParameter="inactive">
+					<Binding Path="!IsActive"
+							RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+							Mode="OneWay" />
+				</MultiBinding>
+			</Setter>
+
+			<Style Selector="^.inactive">
+				<Style Selector="^ rcui|AngledBorder#BgElement">
+					<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
+					<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
+				</Style>
+				<Style Selector="^ ContentPresenter#PART_ContentPresenter">
+					<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle.Inactive}" />
+				</Style>
+			</Style>
+		</Style>
+	</ControlTheme>
+
+
+
+
+	<ControlTheme x:Key="{x:Type rcui:CaptionButton}"
+				TargetType="{x:Type rcui:CaptionButton}"
+				BasedOn="{StaticResource CaptionButton.Base}">
+		<Setter Property="Glyphs" Value="{DynamicResource CaptionButton.Glyphs}" />
+
+		<Style Selector="^ /template/ :is(Control).inset">
+			<Setter Property="Margin" Value="{TemplateBinding Inset}" />
+		</Style>
+
+		<!--
+		<Style Selector="^:roleactive /template/ :is(Panel)#LayoutRoot">
+			<Setter Property="Background" Value="#FF00FF00" />
+		</Style>
+		-->
+
+		<!-- Idle (inactive window) -->
+		<Style Selector="^:not(:window-active)">
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle.Inactive}" />
 			</Style>
 		</Style>
 	</ControlTheme>

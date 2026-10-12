@@ -1,7 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -9,11 +9,10 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Platform;
 using Avalonia.Styling;
-using SColl = System.Collections;
 
 namespace ReCap.CommonUI.Util
 {
-    public static class Extensions
+    internal static class Extensions
     {
         public static bool TryGetPlatformHandle(this Window window, out IPlatformHandle platformHandle)
         {
@@ -114,7 +113,7 @@ namespace ReCap.CommonUI.Util
 
 
 
-        internal static bool TryFind<T>(this INameScope nameScope, string name, out T result)
+        public static bool TryFind<T>(this INameScope nameScope, string name, out T result)
             where T : class
         {
             result = nameScope.Find<T>(name);
@@ -124,7 +123,7 @@ namespace ReCap.CommonUI.Util
 
 
 
-        internal static IDisposable BindToProperty(this AvaloniaObject o, AvaloniaProperty bindMe, object source, AvaloniaProperty bindTo, BindingMode mode)
+        public static IDisposable BindToProperty(this AvaloniaObject o, AvaloniaProperty bindMe, object source, AvaloniaProperty bindTo, BindingMode mode)
         {
             Binding binding = new(bindTo.Name, mode)
             {
@@ -142,7 +141,7 @@ namespace ReCap.CommonUI.Util
         */
         // https://stevefenton.co.uk/blog/2021/06/counting-a-non-generic-ienumerable/
         // https://reddit.com/r/csharp/comments/f2t0hw/how_can_i_cast_to_generic_type_without_knowing_t/
-        internal static int Count(this SColl.IEnumerable enumerable)
+        public static int Count(this IEnumerable enumerable)
         {
             /*
             Type type = enumerable.GetType();
@@ -158,7 +157,7 @@ namespace ReCap.CommonUI.Util
                 dynamic enumerableG = enumerable;
                 return Enumerable.Count(enumerableG);
             }
-            else */if (enumerable is SColl.ICollection collection)
+            else */if (enumerable is ICollection collection)
             {
                 return collection.Count;
             }
@@ -175,7 +174,7 @@ namespace ReCap.CommonUI.Util
         }
 
 
-        internal static Avalonia.Media.Imaging.Bitmap ToBitmap(this WindowIcon icon, PixelSize pxSize)
+        public static Avalonia.Media.Imaging.Bitmap ToBitmap(this WindowIcon icon, PixelSize pxSize)
         {
             if (icon == null)
                 return null;
@@ -247,7 +246,23 @@ namespace ReCap.CommonUI.Util
             };
 
 
-        public static IEnumerable<double> ToDoubles(this Rect rect, RectToNumbersMode mode)
+        public static void Deconstruct(this Rect rect
+            , RectToNumbersMode mode
+            , out double a
+            , out double b
+            , out double c
+            , out double d
+        )
+        {
+            var doubles = rect.ToDoubles(mode);
+            a = doubles[0];
+            b = doubles[1];
+            c = doubles[2];
+            d = doubles[3];
+        }
+
+
+        public static double[] ToDoubles(this Rect rect, RectToNumbersMode mode)
             => mode switch
             {
                 RectToNumbersMode.LTRB => new[]
@@ -473,34 +488,31 @@ namespace ReCap.CommonUI.Util
         }
 
 
-        internal static T GetService<T>(this IServiceProvider serviceProvider)
+        public static T GetService<T>(this IServiceProvider serviceProvider)
             => (T)serviceProvider.GetService(typeof(T));
 
 
-#if PSEUDOCLASS_HACK
-        static readonly PropertyInfo _PSEUDOCLASSES_PROPERTY = typeof(StyledElement)
-            .GetProperty("PseudoClasses", BindingFlags.NonPublic | BindingFlags.Instance)
-        ;
-        internal static bool TryGetPseudoClasses(this StyledElement element, out IPseudoClasses pseudoClasses)
+
+
+        public static bool TryGetKeyAtIndex(this IDictionary dictionary, int index, out object key)
         {
-            try
+            int i = 0;
+            var keys = dictionary.Keys;
+            foreach (var k in keys)
             {
-                if (_PSEUDOCLASSES_PROPERTY.GetValue(element) is IPseudoClasses ps)
+                if (i == index)
                 {
-                    pseudoClasses = ps;
+                    key = k;
                     return true;
                 }
+                else
+                {
+                    i++;
+                }
             }
-            catch (Exception exception)
-            {
-                // Fail """""gracefully""""" - cursed Reflection can explode without warning
-                Console.WriteLine(exception);
-            }
-
-            pseudoClasses = null;
+            key = null;
             return false;
         }
-#endif
     }
 
 

@@ -5,6 +5,7 @@
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
 		<Setter Property="Content" Value="{Binding $self.Role, Mode=OneWay}" />
+		<Setter Property="Inset" Value="0,8,0,0" />
 		<Style Selector="^ /template/ Panel#LayoutRoot">
 			<Setter Property="Background" Value="#01000000" />
 		</Style>
@@ -20,22 +21,26 @@
 	<ControlTheme x:Key="CaptionButtonCluster.Button.Left"
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource CaptionButtonCluster.Button.Base}">
+		<Setter Property="LeftGap" Value="0" />
+		<Setter Property="RightGap" Value="2" />
 		<Setter Property="CornerRadius" Value="{DynamicResource CaptionButton.CornerRadius.Left}" />
-		<Style Selector="^ /template/ :is(Control).inset">
-			<Setter Property="Margin" Value="0,8,0,0" />
+		<Style Selector="^:nth-child(1)">
+			<Setter Property="Inset" Value="5,8,0,0" />
 		</Style>
-		<Style Selector="^:nth-child(1) /template/ :is(Control).inset">
-			<Setter Property="Margin" Value="5,8,0,0" />
+		<Style Selector="^:nth-last-child(1)">
+			<Setter Property="RightGap" Value="0" />
 		</Style>
 	</ControlTheme>
 	<ControlTheme x:Key="CaptionButtonCluster.Button.Right"
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource CaptionButtonCluster.Button.Base}">
-		<Style Selector="^ /template/ :is(Control).inset">
-			<Setter Property="Margin" Value="0,8,0,0" />
+		<Setter Property="LeftGap" Value="2" />
+		<Setter Property="RightGap" Value="0" />
+		<Style Selector="^:nth-last-child(1)">
+			<Setter Property="Inset" Value="0,8,13,0" />
 		</Style>
-		<Style Selector="^:nth-last-child(1) /template/ :is(Control).inset">
-			<Setter Property="Margin" Value="0,8,13,0" />
+		<Style Selector="^:nth-child(1)">
+			<Setter Property="LeftGap" Value="0" />
 		</Style>
 	</ControlTheme>
 	<DataTemplate x:Key="CaptionButtonCluster.ItemTemplate">
@@ -50,7 +55,7 @@
 	<ControlTheme x:Key="CaptionButtonCluster.Button.WindowMenu.Base"
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource {x:Type rcui:CaptionButton}}">
-		<Setter Property="Background" Value="#40FF00FF" />
+		<Setter Property="Background" Value="#01000000" />
 		<Setter Property="Height" Value="{DynamicResource CaptionButton.Height}" />
 		<Setter Property="Padding" Value="10,3" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -75,12 +80,18 @@
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource CaptionButtonCluster.Button.WindowMenu.Base}">
 		<Style Selector="^:nth-last-child(1)">
-			<Style Selector="^:not(:nth-child(1)) /template/ :is(Control).inset">
-				<Setter Property="Margin" Value="20,0,-58,0" />
+			<Style Selector="^:not(:nth-child(1))">
+				<Setter Property="LeftGap" Value="20" />
 			</Style>
-			<Style Selector="^:not(:roleactive)">
+			<Style Selector="^:window-icon-visible">
+				<Setter Property="RightGap" Value="-58" />
+			</Style>
+			<Style Selector="^:not(:window-icon-visible)">
+				<Style Selector="^:window-leftbuttons-multiple">
+					<Setter Property="LeftGap" Value="-2" />
+				</Style>
+				<Setter Property="RightGap" Value="-36" />
 				<Setter Property="Opacity" Value="0.01" />
-				<Setter Property="Background" Value="#FF000000" />
 			</Style>
 		</Style>
 	</ControlTheme>
@@ -88,12 +99,18 @@
 				TargetType="{x:Type rcui:CaptionButton}"
 				BasedOn="{StaticResource CaptionButtonCluster.Button.WindowMenu.Base}">
 		<Style Selector="^:nth-child(1)">
-			<Style Selector="^:not(:nth-last-child(1)) /template/ :is(Control).inset">
-				<Setter Property="Margin" Value="-58,0,20,0" />
+			<Style Selector="^:not(:nth-last-child(1))">
+				<Setter Property="RightGap" Value="20" />
 			</Style>
-			<Style Selector="^:not(:roleactive)">
+			<Style Selector="^:window-icon-visible">
+				<Setter Property="LeftGap" Value="-58" />
+			</Style>
+			<Style Selector="^:not(:window-icon-visible)">
+				<Style Selector="^:window-rightbuttons-multiple">
+					<Setter Property="RightGap" Value="-2" />
+				</Style>
+				<Setter Property="LeftGap" Value="-36" />
 				<Setter Property="Opacity" Value="0.01" />
-				<Setter Property="Background" Value="#FF000000" />
 			</Style>
 		</Style>
 	</ControlTheme>
@@ -119,17 +136,13 @@
 								ItemsPanel="{TemplateBinding ItemsPanel}" />
 			</ControlTemplate>
 		</Setter>
-		<Setter Property="ItemsPanel">
-			<ItemsPanelTemplate>
-				<StackPanel x:Name="PART_ItemsPanel"
-							Orientation="Horizontal"
-							Spacing="2" />
-			</ItemsPanelTemplate>
-		</Setter>
 
 
 		<Style Selector="^[Position=Left]">
 			<Style Selector="^[IsVisible=True]">
+				<!--
+				<Style Selector="^ /template/ rcui|CaptionButtonClusterPanel#PART_ItemsPanel">
+				-->
 				<Setter Property="ItemsSource">
 					<MultiBinding Converter="{x:Static rcui:WindowChromeToCaptionButtonRolesConverter.Instance}">
 						<Binding Path="(rcui:WindowChrome.Chrome)"
@@ -141,8 +154,6 @@
 					</MultiBinding>
 				</Setter>
 			</Style>
-			<!--
-			-->
 			<Setter Property="ItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.Left}" />
 			<Setter Property="WindowMenuItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.WindowMenu.Left}" />
 		</Style>
@@ -159,8 +170,6 @@
 					</MultiBinding>
 				</Setter>
 			</Style>
-			<!--
-			-->
 			<Setter Property="ItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.Right}" />
 			<Setter Property="WindowMenuItemContainerTheme" Value="{DynamicResource CaptionButtonCluster.Button.WindowMenu.Right}" />
 		</Style>

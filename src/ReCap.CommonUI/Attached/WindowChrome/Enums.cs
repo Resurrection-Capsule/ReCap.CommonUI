@@ -65,6 +65,17 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
+    public enum WindowMenuPresence
+        : byte
+    {
+        Irrelevant = 0x00,
+        Lone = 0x01,
+        Innermost = 0x02,
+    }
+
+
+
+
     internal static class NCHitTestResult
     {
         /// <summary>

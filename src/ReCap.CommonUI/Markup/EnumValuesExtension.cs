@@ -1,13 +1,13 @@
 using System;
 using Avalonia.Markup.Xaml;
 
-namespace ReCap.CommonUI
+namespace ReCap.CommonUI.Markup.Xaml
 {
-    public sealed class EnumValues
+    public sealed class EnumValuesExtension
         : MarkupExtension
     {
         readonly Type _type;
-        public EnumValues(Type type)
+        public EnumValuesExtension(Type type)
         {
             if (!type.IsEnum)
                 throw new ArgumentException($"Bad {nameof(type)}: {type}.{nameof(Type.IsEnum)} must be true!");
