@@ -57,23 +57,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         WeakReference<WindowChrome> _chromeRef;
         public WindowChrome Chrome
         {
-            get
-            {
-                if (_chromeRef == null)
-                    return null;
-                else if (!_chromeRef.TryGetTarget(out WindowChrome chrome))
-                    return null;
-                else
-                    return chrome;
-            }
-            private set
-            {
-                _chromeRef?.SetTarget(null);
-                _chromeRef = value != null
-                    ? new(value)
-                    : null
-                ;
-            }
+            get => WeakReferenceHelper.PropertyGet(ref _chromeRef);
+            private set => WeakReferenceHelper.PropertySet(ref _chromeRef, value);
         }
 
 

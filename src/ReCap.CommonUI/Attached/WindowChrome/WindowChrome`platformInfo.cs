@@ -7,25 +7,25 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     {
         public static bool PlatformCanUseManagedWindowChrome
         {
-            get => PLATFORM_IMPL.CanUseManagedWindowChrome;
+            get => FACTORY.CanUseManagedWindowChrome;
         }
 
 
         public static bool PlatformPrefersManagedWindowChrome
         {
-            get => PlatformCanUseManagedWindowChrome && PLATFORM_IMPL.PrefersManagedWindowChrome;
+            get => PlatformCanUseManagedWindowChrome && FACTORY.PrefersManagedWindowChrome;
         }
 
 
         public static CaptionButtonRolesPair PlatformDefaultCaptionButtonRoles
         {
-            get => PLATFORM_IMPL.DefaultCaptionButtonRoles;
+            get => FACTORY.DefaultCaptionButtonRoles;
         }
 
 
         public static IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
         {
-            get => PLATFORM_IMPL.ValidCaptionButtonRoles;
+            get => FACTORY.ValidCaptionButtonRoles;
         }
     }
 }

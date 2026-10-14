@@ -120,9 +120,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
         void PropagateBridgedWidth()
         {
-            if (_hostWindow == null)
-                return;
-            if (!WindowChrome.TryGetChrome(_hostWindow, out WindowChrome chrome))
+            if (!_hostWindow.TryGetChrome(out WindowChrome chrome))
                 return;
 
             switch (Position)

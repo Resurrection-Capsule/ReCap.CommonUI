@@ -4,15 +4,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
-using ReCap.CommonUI.Util;
 using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
     partial class Win32WindowChromeImpl
     {
-        sealed class WindowData
-        {
             public readonly IntPtr HWnd;
             public Window Window
             {
@@ -21,44 +18,30 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             }
 
 
-            bool _hasWndProc = false;
-            public bool HasWndProc
+            bool _isWndProcAttached = false;
+            public bool IsWndProcAttached
             {
-                get => _hasWndProc;
-                private set => _hasWndProc = value;
-            }
+                get => _isWndProcAttached;
+                private set
+                {
+                    if (_isWndProcAttached == value)
+                        return;
+                    else if (this.TryGetHostWindow(out Window hostWindow))
+                    {
+                        if (value)
+                            Win32Properties.AddWndProcHookCallback(hostWindow, NonClientWndProc);
+                        else
+                            Win32Properties.RemoveWndProcHookCallback(hostWindow, NonClientWndProc);
+                    }
 
-
-            public WindowData(Window window)
-            {
-                Window = window;
-                //Window.Closed += Window_Closed;
-                HWnd = window.GetHWnd();
-            }
-
-
-            public void AddWndProc()
-            {
-                if (HasWndProc)
-                    return;
-
-                Win32Properties.AddWndProcHookCallback(Window, NonClientWndProc);
-                HasWndProc = true;
-            }
-            public void RemoveWndProc()
-            {
-                if (!HasWndProc)
-                    return;
-
-                Win32Properties.RemoveWndProcHookCallback(Window, NonClientWndProc);
-                HasWndProc = false;
+                    _isWndProcAttached = value;
+                }
             }
 
 
             List<Visual> _ncHitTestVisuals = new();
             void ReOrderNonClientHitTestVisuals()
             {
-                var window = Window;
                 _ncHitTestVisuals = _ncHitTestVisuals
                     //.OrderByDescending(c => c.CalculateDistanceFromAncestor(window))
                     .OrderBy(c =>
@@ -70,21 +53,21 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             }
 
 
-            public void AddNonClientHitTestVisual(Visual visual)
+            void AddNonClientHitTestVisual(Visual visual)
             {
                 if (!_ncHitTestVisuals.Contains(visual))
                     _ncHitTestVisuals.Add(visual);
 
                 ReOrderNonClientHitTestVisuals();
             }
-            public void RemoveNonClientHitTestVisual(Visual visual)
+            void RemoveNonClientHitTestVisual(Visual visual)
             {
                 _ncHitTestVisuals.Remove(visual);
                 ReOrderNonClientHitTestVisuals();
             }
 
 
-            public bool TryGetVisualFor(Win32Properties.Win32HitTestValue hitResult, out Visual visual)
+            bool TryGetVisualFor(Win32Properties.Win32HitTestValue hitResult, out Visual visual)
             {
                 foreach (var ncHitTestVisual in _ncHitTestVisuals)
                 {
@@ -100,7 +83,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             }
 
 
-            public bool NonClientHitTest(PixelPoint pxPoint, out Win32Properties.Win32HitTestValue hitResult)
+            bool NonClientHitTest(PixelPoint pxPoint, out Win32Properties.Win32HitTestValue hitResult)
             {
                 foreach (var ncHitTestVisual in _ncHitTestVisuals)
                 {
@@ -121,129 +104,64 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 hitResult = NCHitTestResult.CLIENT;
                 return false;
             }
-        }
 
 
-        static void Window_Closed(object sender, EventArgs e)
+        internal IntPtr NonClientWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            Window window = (Window)sender;
-            if (!TryGetDataForWindow(window, out WindowData data))
-                return;
-
-            UnregisterWindow(window);
-        }
-
-
-
-
-        static readonly List<WindowData> _windows = new(); //ew
-        //static readonly Dictionary<Window, List<Visual>> _ncHitTestVisuals = new(); //ew
-        static void RegisterWindow(Window window)
-        {
-            IntPtr hWnd = window.GetHWnd();
-            if (_windows.Any(x => x.Window == window))
-                return;
-
-            WindowData data = new(window);
-            _windows.Add(data);
-        }
-
-
-        static void UnregisterWindow(Window window)
-        {
-            if (!TryGetDataForWindow(window, out WindowData data))
-                return;
-
-            data.RemoveWndProc();
-            _windows.Remove(data);
-        }
-
-
-        static bool TryGetDataForWindow(Window window, out WindowData data)
-        {
-            data = _windows.FirstOrDefault(x => x.Window == window);
-            return data != null;
-        }
-
-
-        static bool TryGetDataForHWnd(IntPtr hWnd, out WindowData data)
-        {
-            data = _windows.FirstOrDefault(x => x.HWnd == hWnd);
-            return data != null;
-        }
-
-
-        static WindowData GetDataOrRegisterWindow(Window window)
-        {
-            WindowData data = _windows.FirstOrDefault(x => x.Window == window);
-            if (data == null)
+            WindowMessage message = (WindowMessage)msg;
+            switch (message)
             {
-                RegisterWindow(window);
-                data = _windows.First(x => x.Window == window);
+                case WindowMessage.SYSCOMMAND:
+                    return SYSCOMMAND(wParam, lParam, ref handled);
+                case WindowMessage.INITMENU:
+                    return INITMENU(wParam, lParam, ref handled);
+                case WindowMessage.NCCALCSIZE:
+                    return NCCALCSIZE(wParam, lParam, ref handled);
+                /*
+                case WindowMessage.NCHITTEST:
+                    return NCHITTEST(wParam, lParam, ref handled);
+                */
+                case WindowMessage.NCLBUTTONDOWN:
+                    return NCLBUTTONDOWN(wParam, lParam, ref handled);
+                case WindowMessage.NCLBUTTONDBLCLK:
+                    return NCLBUTTONDBLCLK(wParam, lParam, ref handled);
+
+                default:
+                    goto unhandled;
             }
 
-
-            return data;
-        }
-
-
-
-
-
-
-
-
-        static IntPtr NonClientWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            //Console.WriteLine($"{nameof(NonClientWndProc)}({hWnd}, {msg}, {wParam}, {lParam}, {handled})");
-            if (TryGetDataForHWnd(hWnd, out WindowData data))
-            {
-                WindowMessage message = (WindowMessage)msg;
-                bool messageMandled = handled;
-                IntPtr result = NonClientWndProcHandler(hWnd, data, message, wParam, lParam, ref messageMandled);
-                if (messageMandled)
-                {
-                    //Console.WriteLine($"{message} handled!");
-                    return result;
-                }
-            }
-
+            unhandled:
             handled = false;
             return IntPtr.Zero;
         }
 
 
-        static IntPtr NonClientWndProcHandler(IntPtr hWnd, WindowData data, WindowMessage message, IntPtr wParam, IntPtr lParam, ref bool handled)
+        IntPtr INITMENU(IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch (message)
+            /*
+            For some reason, Avalonia disables the close button/menu item. Re-enable it here because we don't want that.
+            (Why was that even a thing in the first place?)
+            */
+            handled = MenuEnableClose(wParam);
+            return IntPtr.Zero;
+        }
+
+
+        IntPtr SYSCOMMAND(IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            SystemCommand command = (SystemCommand)wParam;
+            if (command.HasFlag(SystemCommand.CLOSE))
             {
-                /*
-                case WindowMessage.INITMENU:
-                    return INITMENU(hWnd, data, wParam, lParam, ref handled);
-                */
-                case WindowMessage.NCCALCSIZE:
-                    return NCCALCSIZE(hWnd, data, wParam, lParam, ref handled);
-                /*
-                case WindowMessage.NCHITTEST:
-                    return NCHITTEST(hWnd, data, wParam, lParam, ref handled);
-                */
-                case WindowMessage.NCLBUTTONDOWN:
-                    return NCLBUTTONDOWN(hWnd, data, wParam, lParam, ref handled);
-                case WindowMessage.NCLBUTTONDBLCLK:
-                    return NCLBUTTONDBLCLK(hWnd, data, wParam, lParam, ref handled);
-
-                default:
-                    break;
+                this.GetHostWindow()?.Close();
+                handled = true;
             }
-
-            handled = false;
             return IntPtr.Zero;
         }
 
 
 
         const int _BORDER_WIDTH = 4;
-        static IntPtr NCCALCSIZE(IntPtr hWnd, WindowData data, IntPtr wParam, IntPtr lParam, ref bool handled)
+        IntPtr NCCALCSIZE(IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             //Console.WriteLine($"{nameof(NCCALCSIZE)}({wParam}, {lParam})");
             handled = true;
@@ -275,12 +193,11 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        static readonly Point _POINT_ZERO = new(0d, 0d);
-        static IntPtr NCHITTEST(IntPtr hWnd, WindowData data, IntPtr wParam, IntPtr lParam, ref bool handled)
+        IntPtr NCHITTEST(IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             //Console.WriteLine($"{nameof(NCHITTEST)}({wParam}, {lParam})");
             PixelPoint pxPoint = MakePoint(lParam);
-            if (!data.NonClientHitTest(pxPoint, out Win32Properties.Win32HitTestValue hitResult))
+            if (!NonClientHitTest(pxPoint, out Win32Properties.Win32HitTestValue hitResult))
                 return IntPtr.Zero;
 
             handled = true;
@@ -288,7 +205,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        static IntPtr NCLBUTTONDOWN(IntPtr hWnd, WindowData data, IntPtr wParam, IntPtr lParam, ref bool handled)
+        IntPtr NCLBUTTONDOWN(IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             Win32Properties.Win32HitTestValue hitResult = (Win32Properties.Win32HitTestValue)wParam.ToInt32();
             Console.WriteLine($"{nameof(NCLBUTTONDOWN)}({hitResult}, {lParam})");
@@ -297,12 +214,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 case NCHitTestResult.SYSMENU:
                 {
                     PixelPoint pxPoint;
-                    if (data.TryGetVisualFor(NCHitTestResult.SYSMENU, out Visual visual))
+                    if (TryGetVisualFor(NCHitTestResult.SYSMENU, out Visual visual))
                         pxPoint = visual.PointToScreen(new(0, visual.Bounds.Height));
                     else
                         pxPoint = MakePoint(lParam);
 
-                    ShowWindowMenu(hWnd, pxPoint);
+                    ShowWindowMenu(HWnd, pxPoint);
                     handled = false;
                     break;
                 }
@@ -311,7 +228,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        static IntPtr NCLBUTTONDBLCLK(IntPtr hWnd, WindowData data, IntPtr wParam, IntPtr lParam, ref bool handled)
+        IntPtr NCLBUTTONDBLCLK(IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             Win32Properties.Win32HitTestValue hitResult = (Win32Properties.Win32HitTestValue)wParam.ToInt32();
             Console.WriteLine($"{nameof(NCLBUTTONDBLCLK)}({hitResult}, {lParam})");
@@ -319,14 +236,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             {
                 case NCHitTestResult.SYSMENU:
                 {
-                    ExecuteWindowMenuDefaultItem(hWnd);
+                    User32.PostMessage(HWnd, WindowMessage.SYSCOMMAND, SystemCommand.DEFAULT, IntPtr.Zero);
                     handled = true;
                     break;
                 }
                 /*
                 case NCHitTestResult.CAPTION:
                 {
-                    var window = data.Window;
+                    var window = impl.Window;
                     var state = window.WindowState;
                     if ((state == WindowState.Maximized) || (state == WindowState.FullScreen))
                         state = WindowState.Normal;
@@ -339,7 +256,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 }
                 */
             }
-            return IntPtr.Zero; //new(1);
+            return IntPtr.Zero;
         }
 
 
@@ -353,6 +270,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             int y = (short)((value >> 16) & 0xffff);
             return new(x, y);
         }
+
+
         static IntPtr MakeParam(PixelPoint point)
             => MakeParam(point.X, point.Y);
         static IntPtr MakeParam(int x, int y)

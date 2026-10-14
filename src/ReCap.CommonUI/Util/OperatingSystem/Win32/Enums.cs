@@ -243,7 +243,7 @@ namespace ReCap.CommonUI.Util.OperatingSystem.Win32
 
 
     internal enum SystemCommand
-        : int
+        : uint
     {
         SIZE = 0xF000,
         MOVE = 0xF010,

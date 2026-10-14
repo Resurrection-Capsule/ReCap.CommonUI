@@ -6,57 +6,43 @@ namespace ReCap.CommonUI.Util.OperatingSystem.Win32
     internal static partial class User32
     {
         const string _USER32 = "user32.dll";
+        static readonly bool _INTPTR_SIZE_4 = IntPtr.Size == 4;
 
 
 
 
         [DllImport(_USER32, SetLastError = true)]
-        public static extern uint GetWindowLongPtr(IntPtr hWnd, int nIndex);
+        static extern uint GetWindowLongPtr(IntPtr hWnd, int nIndex);
 
         [DllImport(_USER32, SetLastError = true, EntryPoint = "GetWindowLong")]
-        public static extern uint GetWindowLong32b(IntPtr hWnd, int nIndex);
+        static extern uint GetWindowLong32b(IntPtr hWnd, int nIndex);
 
         public static uint GetWindowLong(IntPtr hWnd, int nIndex)
-        {
-            if (IntPtr.Size == 4)
-            {
-                return GetWindowLong32b(hWnd, nIndex);
-            }
-            else
-            {
-                return GetWindowLongPtr(hWnd, nIndex);
-            }
-        }
+            => _INTPTR_SIZE_4
+                ? GetWindowLong32b(hWnd, nIndex)
+                : GetWindowLongPtr(hWnd, nIndex)
+            ;
+
 
         [DllImport(_USER32, SetLastError = true, EntryPoint = "SetWindowLong")]
-        private static extern uint SetWindowLong32b(IntPtr hWnd, int nIndex, uint value);
+        static extern uint SetWindowLong32b(IntPtr hWnd, int nIndex, uint value);
 
         [DllImport(_USER32, SetLastError = true, EntryPoint = "SetWindowLongPtr")]
-        private static extern IntPtr SetWindowLong64b(IntPtr hWnd, int nIndex, IntPtr value);
+        static extern IntPtr SetWindowLong64b(IntPtr hWnd, int nIndex, IntPtr value);
 
         public static uint SetWindowLong(IntPtr hWnd, int nIndex, uint value)
-        {
-            if (IntPtr.Size == 4)
-            {
-                return SetWindowLong32b(hWnd, nIndex, value);
-            }
-            else
-            {
-                return (uint)SetWindowLong64b(hWnd, nIndex, new IntPtr((uint)value)).ToInt32();
-            }
-        }
+            => _INTPTR_SIZE_4
+                ? SetWindowLong32b(hWnd, nIndex, value)
+                : (uint)SetWindowLong64b(hWnd, nIndex, new IntPtr((uint)value)).ToInt32()
+            ;
+
 
         public static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr handle)
-        {
-            if (IntPtr.Size == 4)
-            {
-                return new IntPtr(SetWindowLong32b(hWnd, nIndex, (uint)handle.ToInt32()));
-            }
-            else
-            {
-                return SetWindowLong64b(hWnd, nIndex, handle);
-            }
-        }
+            => _INTPTR_SIZE_4
+                ? new(SetWindowLong32b(hWnd, nIndex, (uint)handle.ToInt32()))
+                : SetWindowLong64b(hWnd, nIndex, handle)
+            ;
+
 
         [DllImport(_USER32, EntryPoint = "DefWindowProcW")]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
@@ -72,6 +58,8 @@ namespace ReCap.CommonUI.Util.OperatingSystem.Win32
 
         [DllImport(_USER32)]
         public static extern IntPtr PostMessage(IntPtr hWnd, WindowMessage msg, IntPtr wParam, IntPtr lParam);
+        [DllImport(_USER32)]
+        public static extern IntPtr PostMessage(IntPtr hWnd, WindowMessage msg, SystemCommand wParam, IntPtr lParam);
 
 
         [DllImport(_USER32)]
@@ -121,7 +109,7 @@ namespace ReCap.CommonUI.Util.OperatingSystem.Win32
         [DllImport(_USER32)]
         public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
         [DllImport(_USER32)]
-        public static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, MenuItemEnablementFlags uEnable);
+        public static extern bool EnableMenuItem(IntPtr hMenu, SystemCommand uIDEnableItem, MenuItemEnablementFlags uEnable);
 
         [DllImport(_USER32)]
         public static extern int TrackPopupMenu(IntPtr hMenu, TrackPopupMenuFlags uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);

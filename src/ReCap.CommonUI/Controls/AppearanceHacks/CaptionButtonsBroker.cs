@@ -131,7 +131,9 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         public override void Detach()
         {
             base.Detach();
-            if (TryGetHostWindow(out Window hostWindow) && WindowChrome.TryGetChrome(hostWindow, out WindowChrome chrome))
+            if (!TryGetHostWindow(out Window hostWindow))
+                return;
+            else if (hostWindow.TryGetChrome(out WindowChrome chrome))
                 chrome.DetachElement(this);
         }
 
@@ -146,10 +148,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             if (!_roleActions.TryGetValue(button.Role, out Action roleAction))
                 roleAction = null;
 
-            if (e.PointerArgs.RoutedEvent == Button.ClickEvent)
+            if (hostWindow.TryGetChrome(out WindowChrome chrome) && chrome.PlatformImpl.ExecuteButton(e, roleAction))
+                return;
+            else if (e.PointerArgs.RoutedEvent == Button.ClickEvent)
                 roleAction?.Invoke();
-            else
-                WindowChrome.PLATFORM_IMPL.ExecuteButton(hostWindow, e, roleAction);
         }
 
 

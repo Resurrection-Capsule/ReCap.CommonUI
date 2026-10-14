@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Platform;
 
@@ -8,53 +7,20 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     internal sealed class MacOSWindowChromeImpl
         : WindowChromeImplBase
     {
-        public override bool DefaultShowCaptionIcon
+        public MacOSWindowChromeImpl(WindowChrome chrome)
+            : base(chrome)
+        {}
+
+
+
+
+        public override void ApplyDesiredManagedChrome(bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
         {
-            get => false;
-        }
-
-
-        public override bool CanUseManagedWindowChrome
-        {
-            get => true;
-        }
-
-
-        public override bool PrefersManagedWindowChrome
-        {
-            get => true;
-        }
-
-
-        protected override IEnumerable<CaptionButtonRole> InitValidButtonRoles()
-            => new List<CaptionButtonRole>()
-            {
-                CaptionButtonRole.Minimize,
-                CaptionButtonRole.Maximize,
-                CaptionButtonRole.FullScreen,
-                CaptionButtonRole.Close,
-                CaptionButtonRole.WindowMenu,
-            };
-
-
-        protected override CaptionButtonRolesPair InitDefaultButtonRoles()
-            => new(
-                new[]
-                {
-                    CaptionButtonRole.Close,
-                    CaptionButtonRole.Minimize,
-                    CaptionButtonRole.Maximize,
-                },
-                Array.Empty<CaptionButtonRole>()
-            );
-
-
-        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
-        {
-            window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
+            Window hostWindow = this.GetHostWindow();
+            hostWindow.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
             bool useManagedChrome = default;
-            DEFAULT_IWindowChromeImpl.ApplyDesiredManagedChrome_IMPL(
-                this, window, desiredManagedChrome
+            WindowChromeImplHelper.ApplyDesiredManagedChrome(
+                this, desiredManagedChrome
                 , fallbackToSystemDecorationsProperty: true
                 , value =>
                 {
@@ -63,7 +29,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 }
             );
 
-            window.ExtendClientAreaChromeHints = useManagedChrome
+            hostWindow.ExtendClientAreaChromeHints = useManagedChrome
                 ? ExtendClientAreaChromeHints.NoChrome
                 : ExtendClientAreaChromeHints.Default
             ;

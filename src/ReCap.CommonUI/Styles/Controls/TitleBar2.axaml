@@ -31,7 +31,8 @@
 						</DockPanel>
 						<DockPanel x:Name="TitleContainer"
 								DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}"
-								IsVisible="{Binding (rcui:WindowChrome.Chrome).IsTitleVisible, Mode=OneWay}">
+								IsVisible="{Binding (rcui:WindowChrome.Chrome).IsTitleVisible, Mode=OneWay}"
+								IsHitTestVisible="False">
 							<Control Classes="insetter outer left" />
 							<Control Classes="insetter outer right" />
 
@@ -57,10 +58,7 @@
 		<Style Selector="^ /template/ DockPanel#TitleContainer > Control.insetter">
 			<Setter Property="Focusable" Value="False" />
 			<Setter Property="IsTabStop" Value="False" />
-			<Setter Property="IsHitTestVisible" Value="False" />
 			<Setter Property="DataContext" Value="{Binding (rcui:WindowChrome.Chrome), Mode=OneWay}" />
-		</Style>
-		<Style Selector="^ /template/ :is(Panel)#TitleContainer > Control.insetter">
 			<Style Selector="^.left">
 				<Setter Property="Grid.Column" Value="0" />
 				<Setter Property="DockPanel.Dock" Value="Left" />
@@ -70,7 +68,7 @@
 				<Setter Property="DockPanel.Dock" Value="Right" />
 			</Style>
 		</Style>
-		<Style Selector="^:window-icon-visible /template/ :is(Panel)#TitleContainer > Control.insetter.outer">
+		<Style Selector="^:window-icon-visible /template/ DockPanel#TitleContainer > Control.insetter.outer">
 			<Style Selector="^.left">
 				<Setter Property="Width" Value="{Binding LeftCaptionButtonsWidth, Mode=OneWay}" />
 			</Style>
@@ -78,7 +76,7 @@
 				<Setter Property="Width" Value="{Binding RightCaptionButtonsWidth, Mode=OneWay}" />
 			</Style>
 		</Style>
-		<Style Selector="^:not(:window-icon-visible) /template/ :is(Panel)#TitleContainer > Control.insetter.outer">
+		<Style Selector="^:not(:window-icon-visible) /template/ DockPanel#TitleContainer > Control.insetter.outer">
 			<Style Selector="^.left">
 				<Setter Property="Width" Value="{Binding CosmeticLeftCaptionButtonsWidth, Mode=OneWay}" />
 			</Style>
@@ -90,7 +88,7 @@
 
 
 
-		<Style Selector="^ /template/ :is(Panel)#ClustersContainer > Control[Width=0]">
+		<Style Selector="^ /template/ DockPanel#ClustersContainer > Control[Width=0]">
 			<Setter Property="IsVisible" Value="False" />
 		</Style>
 

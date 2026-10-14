@@ -36,7 +36,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 }
             }
 
-            IsVisible = WindowChrome.GetChrome(window).IsChromeManaged;
+            IsVisible = window.GetChrome().IsChromeManaged;
         }
 
 
@@ -65,7 +65,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
             _hostWindow = hostWindow;
 
-            var chrome = WindowChrome.GetChrome(_hostWindow);
+            var chrome = _hostWindow.GetChrome();
             chrome.AttachElement(this);
             _disposables = new CompositeDisposable(6)
             {
@@ -73,12 +73,28 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                     .GetObservable(Window.WindowDecorationMarginProperty)
                     .Subscribe(HostWindow_PropertyChanged)
                 ,
-                chrome
-                    .GetObservable(WindowChrome.IsChromeManagedProperty)
+                _hostWindow
+                    .GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.OffScreenMarginProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.ExtendClientAreaChromeHintsProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                _hostWindow
+                    .GetObservable(Window.WindowStateProperty)
                     .Subscribe(HostWindow_PropertyChanged)
                 ,
                 _hostWindow
                     .GetObservable(Window.IsExtendedIntoWindowDecorationsProperty)
+                    .Subscribe(HostWindow_PropertyChanged)
+                ,
+                chrome
+                    .GetObservable(WindowChrome.IsChromeManagedProperty)
                     .Subscribe(HostWindow_PropertyChanged)
                 ,
             };

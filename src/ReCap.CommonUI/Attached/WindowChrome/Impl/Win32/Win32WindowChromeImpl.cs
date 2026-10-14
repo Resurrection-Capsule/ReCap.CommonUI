@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using ReCap.CommonUI.Controls.AppearanceHacks;
 using ReCap.CommonUI.Util;
 using ReCap.CommonUI.Util.OperatingSystem.Win32;
@@ -14,120 +12,62 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     internal sealed partial class Win32WindowChromeImpl
         : WindowChromeImplBase
     {
-        public override bool CanUseManagedWindowChrome
+        static readonly Point _POINT_ZERO = new(0d, 0d);
+
+
+
+
+        CompositeDisposable _disposable = null;
+        public Win32WindowChromeImpl(WindowChrome chrome)
+            : base(chrome)
         {
-            get => true;
-        }
+            Window hostWindow = chrome.HostWindow;
+            HWnd = hostWindow.GetHWnd();
+            hostWindow.Opened += HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed;
 
-
-        public override bool PrefersManagedWindowChrome
-        {
-            get => true;
-        }
-
-
-        public override bool DefaultShowCaptionIcon
-        {
-            get => true;
-        }
-
-
-        public override bool DefaultShowCaptionText
-        {
-            get => true;
-        }
-
-        
-        protected override IEnumerable<CaptionButtonRole> InitValidButtonRoles()
-            => new[]
+            _disposable = new()
             {
-                CaptionButtonRole.WindowMenu,
-                CaptionButtonRole.Minimize,
-                CaptionButtonRole.Maximize,
-                CaptionButtonRole.FullScreen,
-                CaptionButtonRole.Close,
-                CaptionButtonRole.KeepAbove,
+                hostWindow
+                    .GetObservable(Window.WindowStateProperty)
+                    .Subscribe(HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed)
+                ,
+                hostWindow
+                    .GetObservable(Window.ExtendClientAreaToDecorationsHintProperty)
+                    .Subscribe(HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed)
+                ,
+                hostWindow
+                    .GetObservable(Window.ExtendClientAreaChromeHintsProperty)
+                    .Subscribe(HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed)
+                ,
+                hostWindow
+                    .GetObservable(Window.ExtendClientAreaTitleBarHeightHintProperty)
+                    .Subscribe(HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed)
+                ,
+                Disposable.Create(() => hostWindow.Opened -= HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed),
             };
-
-
-        public override void Init()
-        {
-            Win32Properties.NonClientHitTestResultProperty.Changed.AddClassHandler<Visual>(NonClientHitTestVisual_ResultChanged);
         }
-
-
-        void NonClientHitTestVisual_ResultChanged(Visual visual, AvaloniaPropertyChangedEventArgs args)
+        void HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed<T>(object sender, T _)
+            where T
+                : EventArgs
+            => HandlePropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea();
+        void HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed<T>(T _)
+            => HandlePropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea();
+        void HandlePropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea()
         {
-            if (visual.IsAttachedToVisualTree() && (visual.GetVisualRoot() is Window window))
-            {
-                WindowData data = GetDataOrRegisterWindow(window);
-                data.AddNonClientHitTestVisual(visual);
-            }
-
-            visual.DetachedFromVisualTree += NonClientHitTestVisual_DetachedFromVisualTree;
-            visual.AttachedToVisualTree += NonClientHitTestVisual_AttachedToVisualTree;
-        }
-
-
-
-        public override bool GetDesiredManagedChrome(Window window, ManagedChromeHint chromeMode)
-            => DEFAULT_IWindowChromeImpl.GetDesiredManagedChrome_IMPL(this, window, chromeMode);
-
-
-
-        protected override bool ExecuteWindowMenu(Window window, CaptionButtonClickEventArgs e)
-        {
-            goto end;
             /*
-            https://stackoverflow.com/questions/73927623/how-to-show-the-windows-system-menu-programmatically-when-formborderstyle-is-no
-            https://stackoverflow.com/a/73928532
-            https://stackoverflow.com/questions/73927623/how-to-show-the-windows-system-menu-programmatically-when-formborderstyle-is-no/73928532#73928532
+            For some reason, Avalonia disables the close button/menu item. Re-enable it here because we don't want that.
+            (Why was that even a thing in the first place?)
             */
-            if (!window.TryGetHWnd(out IntPtr hWnd))
-                goto end;
-            if (e.MouseButton != MouseButton.Left)
-                goto end;
-
-
-            if (e.ClickCount > 1)
-            {
-                if (e.Pressed)
-                    goto end;
-
-                ExecuteWindowMenuDefaultItem(hWnd);
-            }
-            else
-            {
-                if (!e.Pressed)
-                    goto end;
-
-                var visual = e.Visual;
-                /*
-                var pt = e.Visual.Bounds.BottomLeft;
-                var pxPoint = new(Helpers.RoundToInt(pt.X), Helpers.RoundToInt(pt.Y))
-                */
-                PixelPoint bottomLeft = visual.PointToScreen(new(0d, visual.Bounds.Height));
-                ShowWindowMenu(hWnd, bottomLeft);
-            }
-            end:
-            return true;
+            IntPtr hMenu = User32.GetSystemMenu(HWnd, false);
+            MenuEnableClose(hMenu);
         }
 
 
 
-
-        static void ExecuteWindowMenuDefaultItem(IntPtr hWnd)
-        {
-            //GetWindowMenu(hWnd);
-            User32.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)SystemCommand.DEFAULT, IntPtr.Zero);
-        }
 
         static IntPtr GetWindowMenu(IntPtr hWnd)
         {
             IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
-            /*
-            User32.EnableMenuItem(hMenu, 5, MenuItemEnablementFlags.BYPOSITION | MenuItemEnablementFlags.ENABLED);
-            */
             return hMenu;
         }
 
@@ -151,108 +91,43 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         }
 
 
-        /*
-        public override void ExecuteExtendedCaptionButton(Window window, CaptionButtonClickEventArgs e)
+
+
+        internal void OnNonClientHitTestVisualResultChanged(Visual visual, AvaloniaPropertyChangedEventArgs e)
         {
-            var visBounds = e.Visual.Bounds;
-            var role = e.Role;
-            switch (role)
-            {
-                case CaptionButtonRole.WindowMenu:
-                {
-                    / *
-                    https://stackoverflow.com/questions/73927623/how-to-show-the-windows-system-menu-programmatically-when-formborderstyle-is-no
-                    https://stackoverflow.com/a/73928532
-                    https://stackoverflow.com/questions/73927623/how-to-show-the-windows-system-menu-programmatically-when-formborderstyle-is-no/73928532#73928532
-                    * /
-                    if (!window.TryGetHWnd(out IntPtr hWnd))
-                        break;
+            var impl = this.GetHostWindow().GetChromePlatformImpl<Win32WindowChromeImpl>();
+            impl.AddNonClientHitTestVisual(visual);
 
-                    if (input == CaptionButtonInputAction.DoubleClick)
-                    {
-                        //[TODO: not working?]
-                        Win32Methods.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)SystemCommand.DEFAULT, IntPtr.Zero);
-                    }
-                    else if (input == CaptionButtonInputAction.LeftClick)
-                    {
-                        PixelPoint bottomLeft = visual.PointToScreen(new(0d, visBounds.Height));
-                        IntPtr hMenu = Win32Methods.GetSystemMenu(hWnd, false);
-                        int menuIdentifier = Win32Methods.TrackPopupMenu(hMenu, _MENU_FLAGS, bottomLeft.X, bottomLeft.Y, 0, hWnd, IntPtr.Zero);
-
-                        if (menuIdentifier != 0)
-                            Win32Methods.PostMessage(hWnd, WindowMessage.SYSCOMMAND, (IntPtr)menuIdentifier, IntPtr.Zero);
-                    }
-                    break;
-                }
-                default:
-                {
-                    base.ExecuteExtendedCaptionButton(window, visual, role, input);
-                    break;
-                }
-            }
+            visual.DetachedFromVisualTree += impl.NonClientHitTestVisual_DetachedFromVisualTree;
+            visual.AttachedToVisualTree += impl.NonClientHitTestVisual_AttachedToVisualTree;
         }
-        */
+
+
+
+        protected override bool ExecuteWindowMenu(CaptionButtonClickEventArgs e)
+            => true; //Handled via WndProc
 
 
         void NonClientHitTestVisual_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             Visual visual = (Visual)sender;
-            if (e.Root is Window window)
-                GetDataOrRegisterWindow(window).AddNonClientHitTestVisual(visual);
-
+            AddNonClientHitTestVisual(visual);
         }
 
         void NonClientHitTestVisual_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
         {
             Visual visual = (Visual)sender;
-            if (e.Root is not Window window)
-                return;
-            else if (TryGetDataForWindow(window, out WindowData data))
-                data.RemoveNonClientHitTestVisual(visual);
+            RemoveNonClientHitTestVisual(visual);
         }
 
-        /*
-        void AddNonClientHitTestVisual(Window window, Visual visual)
+
+        public override void ApplyDesiredManagedChrome(bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
         {
-            if (Win32Properties.GetNonClientHitTestResult(visual) == Win32Properties.Win32HitTestValue.Client)
-            {
-                RemoveNonClientHitTestVisual(window, visual);
-                return;
-            }
-
-            if (!_ncHitTestVisuals.TryGetValue(window, out List<Visual> ncHitTestVisuals))
-                ncHitTestVisuals = new();
-
-            if (!ncHitTestVisuals.Contains(visual))
-                ncHitTestVisuals.Add(visual);
-
-            ncHitTestVisuals = ncHitTestVisuals.OrderByDescending(c => c.CalculateDistanceFromAncestor(window)).ToList();
-            _ncHitTestVisuals[window] = ncHitTestVisuals;
-        }
-
-        void RemoveNonClientHitTestVisual(Window window, Visual visual)
-        {
-            if (!_ncHitTestVisuals.TryGetValue(window, out List<Visual> ncHitTestVisuals))
-                return;
-
-            ncHitTestVisuals.Remove(visual);
-            _ncHitTestVisuals[window] = ncHitTestVisuals;
-        }
-        */
-
-
-        public override void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome)
-        {
-            window.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
-            /*
-            DefaultWindowChromeImpl.ApplyDesiredManagedChrome_Default(
-                this, window, desiredManagedChrome, ref useManagedChrome
-                , fallbackToSystemDecorationsProperty: false
-            );
-            */
+            Window hostWindow = this.GetHostWindow();
+            hostWindow.ExtendClientAreaToDecorationsHint = desiredManagedChrome;
             bool useManagedChrome = default;
-            DEFAULT_IWindowChromeImpl.ApplyDesiredManagedChrome_IMPL(
-                this, window, desiredManagedChrome
+            WindowChromeImplHelper.ApplyDesiredManagedChrome(
+                this, desiredManagedChrome
                 , fallbackToSystemDecorationsProperty: false
                 , value =>
                 {
@@ -261,41 +136,32 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 }
             );
 
-            if (useManagedChrome)
-            {
-                WindowData data = GetDataOrRegisterWindow(window);
-                data.AddWndProc();
-            }
-            else
-            {
-                if (TryGetDataForWindow(window, out WindowData data))
-                    data.RemoveWndProc();
-            }
-
-            Dispatcher.UIThread.Post(() => Dispatcher.UIThread.Post(() => {
-                VisualPositionHack(window);
-            }));
+            IsWndProcAttached = useManagedChrome;
+            Dispatcher.UIThread.Post(() => Dispatcher.UIThread.Post(() => VisualPositionHack()));
         }
+        static bool MenuEnableClose(IntPtr hMenu)
+            => User32.EnableMenuItem(hMenu, SystemCommand.CLOSE, MenuItemEnablementFlags.BYCOMMAND | MenuItemEnablementFlags.ENABLED);
 
 
         /// <summary>
         /// Workaround for improper positioning of window visual after change (possible Avalonia bug?)
         /// </remarks>
-        void VisualPositionHack(Window window)
+        void VisualPositionHack()
         {
+            Window hostWindow = this.GetHostWindow();
 #if WINDOWCHROME_WINDOWS_LESS_HACKY
-            window.InvalidateMeasure();
-            window.InvalidateArrange();
-            window.InvalidateVisual();
+            hostWindow.InvalidateMeasure();
+            hostWindow.InvalidateArrange();
+            hostWindow.InvalidateVisual();
 #else
-            var winState = window.WindowState;
+            var winState = hostWindow.WindowState;
             Dispatcher.UIThread.Post(() => 
             {
                 Action after;
                 if ((winState == WindowState.Maximized) || (winState == WindowState.FullScreen))
-                    after = Maximized(window, winState);
+                    after = Maximized(hostWindow, winState);
                 else
-                    after = Restored(window, winState);
+                    after = Restored(hostWindow, winState);
 
                 Dispatcher.UIThread.Post(after);
             });
@@ -350,7 +216,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         public override void Prepare(CaptionButton button)
         {
-            DEFAULT_IWindowChromeImpl.Prepare_IMPL(this, button);
+            base.Prepare(button);
             Win32Properties.Win32HitTestValue hitTestValue;
             switch (button.Role)
             {
@@ -378,6 +244,17 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     return;
             }
             Win32Properties.SetNonClientHitTestResult(button, hitTestValue);
+        }
+
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            if (_disposable == null)
+                return;
+
+            _disposable.Dispose();
+            _disposable = null;
         }
     }
 }

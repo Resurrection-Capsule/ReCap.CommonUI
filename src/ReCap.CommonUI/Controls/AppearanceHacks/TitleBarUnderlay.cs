@@ -138,12 +138,12 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             double height = _hostWindow.ExtendClientAreaTitleBarHeightHint;
 
             /*
-            if (!WindowChrome.GetIsChromeManaged(_window))
+            if (!_window.GetIsChromeManaged())
                 height -= WindowChrome.GetReservedCaptionHeight(_window);
             else if (height < 0d)
                 height = _hostTitleBar.Bounds.Height;
             */
-            if (WindowChrome.GetChrome(_hostWindow).IsChromeManaged)
+            if (_hostWindow.GetIsChromeManaged())
             {
                 if (height < 0d)
                     height = _hostTitleBar.Bounds.Height;

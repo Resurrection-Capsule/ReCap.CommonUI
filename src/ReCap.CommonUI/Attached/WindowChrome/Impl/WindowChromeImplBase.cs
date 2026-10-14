@@ -1,170 +1,110 @@
 using System;
-using System.Collections.Generic;
 using Avalonia.Controls;
 using ReCap.CommonUI.Controls.AppearanceHacks;
+using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    internal abstract class WindowChromeImplBaseBase
+    internal abstract class WindowChromeImplBase
         : IWindowChromeImpl
     {
-        public abstract bool CanUseManagedWindowChrome
+        WeakReference<WindowChrome> _chromeRef = null;
+        public WindowChrome Chrome
         {
-            get;
-        }
-
-
-        public abstract bool PrefersManagedWindowChrome
-        {
-            get;
-        }
-
-
-        public virtual bool DefaultShowCaptionIcon
-        {
-            get => true;
-        }
-
-
-        public virtual bool DefaultShowCaptionText
-        {
-            get => true;
-        }
-
-
-        public abstract CaptionButtonRolesPair DefaultCaptionButtonRoles
-        {
-            get;
-        }
-
-
-        public abstract IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
-        {
-            get;
+            get => WeakReferenceHelper.PropertyGet(ref _chromeRef);
+            private set => WeakReferenceHelper.PropertySet(ref _chromeRef, value);
         }
 
 
 
 
-        public virtual void Init()
+        public WindowChromeImplBase(WindowChrome chrome)
+            : base()
         {
+            Chrome = chrome;
         }
 
 
-        public virtual void OnWindowAttached(Window window)
-        {}
 
 
-        public virtual void OnWindowDetached(Window window)
-        {}
-
-
-
-
-        public virtual bool GetDesiredManagedChrome(Window window, ManagedChromeHint chromeMode)
-            => DEFAULT_IWindowChromeImpl.GetDesiredManagedChrome_IMPL(this, window, chromeMode);
-
-
-        public abstract void ApplyDesiredManagedChrome(Window window, bool desiredManagedChrome, Action<bool> applyUseManagedChrome);
-
-
-
-
-        public virtual bool ExecuteButton(Window window, CaptionButtonClickEventArgs e, Action roleAction)
-        {
-            bool handled = e.Role switch
+        public virtual bool GetDesiredManagedChrome(ManagedChromeHint chromeMode)
+            => chromeMode switch
             {
-                CaptionButtonRole.WindowMenu => ExecuteWindowMenu(window, e),
-#if CAPTIONBUTTONROLES_NYI
-                CaptionButtonRole.ApplicationMenu => ExecuteApplicationMenu(window, e),
-                CaptionButtonRole.ShowOnAllDesktops => ExecuteShowOnAllDesktops(window, e),
-                CaptionButtonRole.ContextHelp => ExecuteContextHelp(window, e),
-                CaptionButtonRole.Shade => ExecuteShade(window, e),
-                CaptionButtonRole.KeepBelow => ExecuteKeepBelow(window, e),
-#endif
-                CaptionButtonRole.KeepAbove => ExecuteKeepAbove(window, e),
+                ManagedChromeHint.WheneverPossible => WindowChrome.FACTORY.CanUseManagedWindowChrome,
+                ManagedChromeHint.Auto => WindowChrome.FACTORY.PrefersManagedWindowChrome,
                 _ => false,
             };
 
 
-            if (handled)
-                return true;
-            else
-                return DEFAULT_IWindowChromeImpl.ExecuteButton_IMPL(this, window, e, roleAction);
+        public abstract void ApplyDesiredManagedChrome(bool desiredManagedChrome, Action<bool> applyUseManagedChrome);
+
+
+
+
+        public virtual bool ExecuteButton(CaptionButtonClickEventArgs e, Action roleAction)
+        {
+            CaptionButtonRole role = e.Role;
+            bool handled = role switch
+            {
+                CaptionButtonRole.Minimize => ExecuteMinimize(e),
+                CaptionButtonRole.Maximize => ExecuteMaximize(e),
+                CaptionButtonRole.FullScreen => ExecuteFullScreen(e),
+                CaptionButtonRole.Close => ExecuteClose(e),
+                CaptionButtonRole.WindowMenu => ExecuteWindowMenu(e),
+#if CAPTIONBUTTONROLES_NYI
+                CaptionButtonRole.ApplicationMenu => ExecuteApplicationMenu(e),
+                CaptionButtonRole.ShowOnAllDesktops => ExecuteShowOnAllDesktops(e),
+                CaptionButtonRole.ContextHelp => ExecuteContextHelp(e),
+                CaptionButtonRole.Shade => ExecuteShade(e),
+                CaptionButtonRole.KeepBelow => ExecuteKeepBelow(e),
+#endif
+                CaptionButtonRole.KeepAbove => ExecuteKeepAbove(e),
+                _ => false,
+            };
+
+
+            return handled;
         }
 
-        protected virtual bool ExecuteWindowMenu(Window window, CaptionButtonClickEventArgs e)
+
+        protected virtual bool ExecuteMinimize(CaptionButtonClickEventArgs e)
+            => false;
+        protected virtual bool ExecuteMaximize(CaptionButtonClickEventArgs e)
+            => false;
+        protected virtual bool ExecuteFullScreen(CaptionButtonClickEventArgs e)
+            => false;
+        protected virtual bool ExecuteClose(CaptionButtonClickEventArgs e)
+            => false;
+        protected virtual bool ExecuteWindowMenu(CaptionButtonClickEventArgs e)
             => false;
 #if CAPTIONBUTTONROLES_NYI
-        protected virtual bool ExecuteApplicationMenu(Window window, CaptionButtonClickEventArgs e)
+        protected virtual bool ExecuteApplicationMenu(CaptionButtonClickEventArgs e)
             => false;
-        protected virtual bool ExecuteShowOnAllDesktops(Window window, CaptionButtonClickEventArgs e)
+        protected virtual bool ExecuteShowOnAllDesktops(CaptionButtonClickEventArgs e)
             => false;
-        protected virtual bool ExecuteContextHelp(Window window, CaptionButtonClickEventArgs e)
+        protected virtual bool ExecuteContextHelp(CaptionButtonClickEventArgs e)
             => false;
-        protected virtual bool ExecuteShade(Window window, CaptionButtonClickEventArgs e)
+        protected virtual bool ExecuteShade(CaptionButtonClickEventArgs e)
             => false;
-        protected virtual bool ExecuteKeepBelow(Window window, CaptionButtonClickEventArgs e)
+        protected virtual bool ExecuteKeepBelow(CaptionButtonClickEventArgs e)
             => false;
 #endif
-        protected virtual bool ExecuteKeepAbove(Window window, CaptionButtonClickEventArgs e)
+        protected virtual bool ExecuteKeepAbove(CaptionButtonClickEventArgs e)
         {
-            window.Topmost = !window.Topmost;
+            if (this.TryGetHostWindow(out Window window))
+                window.Topmost = !window.Topmost;
+
             return true;
         }
 
 
         public virtual void Prepare(CaptionButton button)
-            => DEFAULT_IWindowChromeImpl.Prepare_IMPL(this, button);
-    }
+            => button.UseManagedToolTip = button.Role != CaptionButtonRole.WindowMenu;
 
 
 
 
-    internal abstract class WindowChromeImplBase
-        : WindowChromeImplBaseBase
-    {
-#region Properties
-        readonly CaptionButtonRolesPair _defaultButtonRoles;
-        public sealed override CaptionButtonRolesPair DefaultCaptionButtonRoles
-        {
-            get => _defaultButtonRoles;
-        }
-
-
-        readonly IEnumerable<CaptionButtonRole> _validButtonRoles;
-        public sealed override IEnumerable<CaptionButtonRole> ValidCaptionButtonRoles
-        {
-            get => _validButtonRoles;
-        }
-#endregion
-
-
-
-
-        public WindowChromeImplBase()
-            : base()
-        {
-            _defaultButtonRoles = InitDefaultButtonRoles();
-            _validButtonRoles = InitValidButtonRoles();
-        }
-
-
-
-
-        protected virtual CaptionButtonRolesPair InitDefaultButtonRoles()
-            => new(
-                new[]
-                {
-                    CaptionButtonRole.WindowMenu,
-                },
-                new[]
-                {
-                    CaptionButtonRole.Minimize,
-                    CaptionButtonRole.Maximize,
-                    CaptionButtonRole.Close,
-                }
-            );
-        protected abstract IEnumerable<CaptionButtonRole> InitValidButtonRoles();
+        public virtual void Dispose()
+            => Chrome = null;
     }
 }

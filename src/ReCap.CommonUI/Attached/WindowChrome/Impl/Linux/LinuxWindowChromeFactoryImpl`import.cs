@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration.Ini;
-using ReCap.CommonUI.Util;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
-    partial class LinuxWindowChromeImpl
+    partial class LinuxWindowChromeFactoryImpl
     {
         static bool TryParseRoleGTK3(string gtkCaptionButton, out CaptionButtonRole role)
         {

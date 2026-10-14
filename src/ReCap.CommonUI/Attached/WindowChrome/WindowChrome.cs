@@ -15,7 +15,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         : Layoutable
         , IDisposable
     {
-        internal static readonly IWindowChromeImpl PLATFORM_IMPL = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeImpl>();
+        internal static readonly IWindowChromeFactoryImpl FACTORY = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeFactoryImpl>();
         static readonly List<Window> AttachedWindows = new();
 
 
@@ -88,20 +88,8 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         WeakReference<Window> _hostWindowRef = null;
         internal Window HostWindow
         {
-            get
-            {
-                _hostWindowRef.TryGetTarget(out Window hostWindow);
-                return hostWindow;
-            }
-            private set
-            {
-                _hostWindowRef?.SetTarget(null);
-                
-                _hostWindowRef = value != null
-                    ? new(value)
-                    : null
-                ;
-            }
+            get => WeakReferenceHelper.PropertyGet(ref _hostWindowRef);
+            private set => WeakReferenceHelper.PropertySet(ref _hostWindowRef, value);
         }
 
 
@@ -112,21 +100,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             private set => _elements = value;
         }
 #endregion
-
-
-        internal static bool TryGetChrome(Window window, out WindowChrome chrome)
-        {
-            if (window != null)
-            {
-                chrome = GetChrome(window);
-                return chrome != null;
-            }
-            else
-            {
-                chrome = null;
-                return false;
-            }
-        }
 
 
 
@@ -290,6 +263,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             private set => SetAndRaise(CaptionAreaHeightProperty, ref _captionAreaHeight, value);
         }
 #endregion
+        IWindowChromeImpl _platformImpl;
+        internal IWindowChromeImpl PlatformImpl
+        {
+            get => _platformImpl;
+            private set => _platformImpl = value;
+        }
 
 
 
@@ -298,8 +277,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         static readonly IEnumerable<AvaloniaProperty> _WINDOWCHROME_OBSERVE_PROPERTIES;
         static WindowChrome()
         {
-            PLATFORM_IMPL.Init();
-
             AffectsAll(new AvaloniaProperty[]
             {
                 LeftCaptionButtonRolesProperty,
@@ -335,12 +312,19 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             ShowTitleHintProperty.Changed.AddClassHandler<Window>((s, e) => GetChrome(s)?.RefreshShowTitle());
             HintProperty.Changed.AddClassHandler<Window>((s, e) => RefreshHint(s, e.GetNewValue<ManagedChromeHint>()));
 
-            AffectsAll(new[]
+            AffectsAll(new AvaloniaProperty[]
             {
                 ShowIconHintProperty,
                 ShowTitleHintProperty,
+                IsChromeManagedProperty,
+                IsTitleVisibleProperty,
+                IsIconVisibleProperty,
+                ReserveCaptionAreaProperty,
+                LeftCaptionButtonsWidthProperty,
+                CosmeticLeftCaptionButtonsWidthProperty,
+                RightCaptionButtonsWidthProperty,
+                CosmeticRightCaptionButtonsWidthProperty,
             });
-            StateInit();
 
             AffectsAll(UpdateHackProperty);
             MakeAvailableProperty.Changed.AddClassHandler<Window>((s, e) =>
@@ -398,7 +382,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         static void RefreshShowIconAndTitle(Window window)
         {
-            if (!TryGetChrome(window, out WindowChrome chrome))
+            if (!window.TryGetChrome(out WindowChrome chrome))
                 return;
 
             chrome.RefreshShowIcon();
@@ -420,7 +404,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             if (GetChrome(window) != null)
                 return;
             SetChrome(window, new(window));
-            PLATFORM_IMPL.OnWindowAttached(window);
             window.Closed += Window_Closed;
             RefreshShowIconAndTitle(window);
             RefreshHint(window);
@@ -440,7 +423,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         {
             GetChrome(window)?.Dispose();
             SetChrome(window, null);
-            PLATFORM_IMPL.OnWindowDetached(window);
             window.Closed -= Window_Closed;
         }
 
@@ -454,10 +436,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         internal static void RefreshHint(Window window, ManagedChromeHint? hint = null)
         {
-            bool useManagedChrome = PLATFORM_IMPL.GetDesiredManagedChrome(window, hint ?? GetHint(window));
-            PLATFORM_IMPL.ApplyDesiredManagedChrome(window
-                , useManagedChrome
-                , v => GetChrome(window).IsChromeManaged = v
+            WindowChrome chrome = GetChrome(window);
+            bool useManagedChrome = chrome.PlatformImpl.GetDesiredManagedChrome(hint ?? GetHint(window));
+            chrome.PlatformImpl.ApplyDesiredManagedChrome(useManagedChrome
+                , v => chrome.IsChromeManaged = v
             );
 
             //RefreshShowIconAndTitle(window);
@@ -476,6 +458,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         {
             HostWindow = window;
             Elements ??= new(this);
+            PlatformImpl = FACTORY.CreateImpl(this);
             Dispatcher.UIThread.Post(() =>
             {
                 _disposables = new(BuildDisposables(this));
@@ -547,6 +530,9 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
             Elements.Dispose();
             Elements = null;
+
+            PlatformImpl?.Dispose();
+            PlatformImpl = null;
         }
     }
 }

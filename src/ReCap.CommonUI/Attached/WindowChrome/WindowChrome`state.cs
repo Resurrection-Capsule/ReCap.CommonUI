@@ -142,20 +142,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        static void StateInit()
-            => AffectsAll(new AvaloniaProperty[]
-            {
-                IsChromeManagedProperty,
-                IsTitleVisibleProperty,
-                IsIconVisibleProperty,
-                ReserveCaptionAreaProperty,
-                LeftCaptionButtonsWidthProperty,
-                CosmeticLeftCaptionButtonsWidthProperty,
-                RightCaptionButtonsWidthProperty,
-                CosmeticRightCaptionButtonsWidthProperty,
-            });
-
-
         static void AffectsPseudoClasses_Window(params AvaloniaProperty[] properties)
         {
             foreach (var property in properties)
@@ -183,13 +169,13 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         internal void RefreshShowIcon()
             => RefreshShowIcon(GetShowIconHint(HostWindow));
         internal void RefreshShowIcon(ManagedChromeElementHint hint)
-            => IsIconVisible = hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionIcon);
+            => IsIconVisible = hint.ResolveVisibility(FACTORY.DefaultShowCaptionIcon);
 
 
         internal void RefreshShowTitle()
             => RefreshShowTitle(GetShowTitleHint(HostWindow));
         internal void RefreshShowTitle(ManagedChromeElementHint hint)
-            => IsTitleVisible = hint.ResolveVisibility(PLATFORM_IMPL.DefaultShowCaptionText);
+            => IsTitleVisible = hint.ResolveVisibility(FACTORY.DefaultShowCaptionText);
 
 
         internal void RefreshShowIconAndTitle()
