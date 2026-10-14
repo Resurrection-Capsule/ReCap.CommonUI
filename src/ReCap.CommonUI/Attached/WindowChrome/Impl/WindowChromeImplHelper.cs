@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using ReCap.CommonUI.Controls.AppearanceHacks;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -30,5 +31,19 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 Dispatcher.UIThread.Invoke(() => applyUseManagedChrome(window.IsExtendedIntoWindowDecorations || desiredManagedChrome));
             });
         }
+
+
+
+        public static void MakeFruity(this CaptionButton button)
+            => button.MakeFruityIf(button.Role switch
+            {
+                CaptionButtonRole.Minimize or CaptionButtonRole.Maximize or CaptionButtonRole.Close => true,
+                _ => false,
+            });
+        public static void MakeFruityIf(this CaptionButton button, bool condition)
+            => ((IPseudoClassesProvider)button)
+                .GetPseudoClasses()
+                .Set(":traffic-light", condition)
+            ;
     }
 }

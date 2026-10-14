@@ -17,6 +17,150 @@
 			<Setter Property="MaxHeight" Value="{DynamicResource CaptionButton.Height}" />
 			<Setter Property="VerticalAlignment" Value="Top" />
 		</Style>
+
+
+		<Style Selector="^:traffic-light">
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="IsVisible" Value="{Binding IsPointerOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type rcui:CaptionButtonCluster}}, Mode=OneWay}" />
+			</Style>
+
+
+			<!-- Maximize -->
+			<Style Selector="^[Role=Maximize]">
+				<!-- Idle -->
+				<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+					<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Background.Idle}" />
+					<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.BorderBrush.Idle}" />
+				</Style>
+				<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+					<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Foreground.Idle}" />
+				</Style>
+
+
+				<!-- Idle (inactive window) -->
+				<Style Selector="^:not(:window-active)">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Background.Idle.Inactive}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.BorderBrush.Idle.Inactive}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Foreground.Idle.Inactive}" />
+					</Style>
+				</Style>
+
+
+				<!-- Hover -->
+				<Style Selector="^:pointerover:not(:pressed)">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Background.Hover}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.BorderBrush.Hover}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Foreground.Hover}" />
+					</Style>
+				</Style>
+
+
+				<!-- Pressed -->
+				<Style Selector="^:pressed, ^:checked">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Background.Pressed}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.BorderBrush.Pressed}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Maximize.Foreground.Pressed}" />
+					</Style>
+				</Style>
+			</Style>
+
+
+			<!-- Minimize -->
+			<Style Selector="^[Role=Minimize]">
+				<!-- Idle -->
+				<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+					<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Background.Idle}" />
+					<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.BorderBrush.Idle}" />
+				</Style>
+				<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+					<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Foreground.Idle}" />
+				</Style>
+
+
+				<!-- Idle (inactive window) -->
+				<Style Selector="^:not(:window-active)">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Background.Idle.Inactive}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.BorderBrush.Idle.Inactive}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Foreground.Idle.Inactive}" />
+					</Style>
+				</Style>
+
+
+				<!-- Hover -->
+				<Style Selector="^:pointerover:not(:pressed)">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Background.Hover}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.BorderBrush.Hover}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Foreground.Hover}" />
+					</Style>
+				</Style>
+
+
+				<!-- Pressed -->
+				<Style Selector="^:pressed, ^:checked">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Background.Pressed}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.BorderBrush.Pressed}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Minimize.Foreground.Pressed}" />
+					</Style>
+				</Style>
+			</Style>
+
+
+			<!-- Close -->
+			<Style Selector="^[Role=Close]">
+				<!-- Idle (inactive window) -->
+				<Style Selector="^:not(:window-active)">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Idle.Inactive}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Idle.Inactive}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Idle.Inactive}" />
+					</Style>
+				</Style>
+
+
+				<!-- Hover -->
+				<Style Selector="^:pointerover:not(:pressed)">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Hover}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Hover}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Foreground.Hover}" />
+					</Style>
+				</Style>
+
+
+				<!-- Pressed -->
+				<Style Selector="^:pressed, ^:checked">
+					<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+						<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Pressed}" />
+						<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Pressed}" />
+					</Style>
+					<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Foreground" Value="{DynamicResource CaptionButton.TrafficLight.Foreground.Pressed}" />
+					</Style>
+				</Style>
+			</Style>
+		</Style>
 	</ControlTheme>
 	<ControlTheme x:Key="CaptionButtonCluster.Button.Left"
 				TargetType="{x:Type rcui:CaptionButton}"
@@ -46,7 +190,8 @@
 	<DataTemplate x:Key="CaptionButtonCluster.ItemTemplate">
 		<Path Data="{Binding CurrentGlyph, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type rcui:CaptionButton}}, Mode=OneWay}"
 			Stretch="None"
-			Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}" />
+			Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWay}"
+			IsHitTestVisible="False" />
 	</DataTemplate>
 
 

@@ -18,7 +18,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         : Button
         , IPseudoClassesProvider
     {
-        const string _PSEUD_ROLE_ACTIVE = ":roleactive";
+        const string _PSEUD_ROLE_ACTIVE = ":role-active";
 
 
         internal const CaptionButtonRole DEFAULT_Role = (CaptionButtonRole)(-1);

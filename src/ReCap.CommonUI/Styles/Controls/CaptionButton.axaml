@@ -111,7 +111,7 @@
 		</Style>
 
 		<!--
-		<Style Selector="^:roleactive /template/ :is(Panel)#LayoutRoot">
+		<Style Selector="^:role-active /template/ :is(Panel)#LayoutRoot">
 			<Setter Property="Background" Value="#FF00FF00" />
 		</Style>
 		-->
