@@ -9,9 +9,9 @@
                 "build",
                 "${workspaceFolder}/ReCap.CommonUI.sln",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
         },
         {
             "label": "build_testhelixwindow",
@@ -21,9 +21,22 @@
                 "build",
                 "${workspaceFolder}/samples/TestHelixWindow/TestHelixWindow.csproj",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "build_X11AtomsGeneratorHack",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/ReCap.CommonUI/ReCap.CommonUI.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "-p:X11AtomsGeneratorHack=true",
+            ],
+            "problemMatcher": "$msCompile",
         },
         {
             "label": "publish",
@@ -33,9 +46,9 @@
                 "publish",
                 "${workspaceFolder}/ReCap.CommonUI.sln",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
         },
         {
             "label": "watch",
@@ -45,9 +58,9 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/ReCap.CommonUI.sln"
+                "${workspaceFolder}/ReCap.CommonUI.sln",
             ],
-            "problemMatcher": "$msCompile"
-        }
-    ]
+            "problemMatcher": "$msCompile",
+        },
+    ],
 }

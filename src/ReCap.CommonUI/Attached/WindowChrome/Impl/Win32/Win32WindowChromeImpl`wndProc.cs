@@ -10,7 +10,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 {
     partial class Win32WindowChromeImpl
     {
-            public readonly IntPtr HWnd;
             public Window Window
             {
                 get;
@@ -219,7 +218,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     else
                         pxPoint = MakePoint(lParam);
 
-                    ShowWindowMenu(HWnd, pxPoint);
+                    ShowWindowMenu(Handle, pxPoint);
                     handled = false;
                     break;
                 }
@@ -236,7 +235,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             {
                 case NCHitTestResult.SYSMENU:
                 {
-                    User32.PostMessage(HWnd, WindowMessage.SYSCOMMAND, SystemCommand.DEFAULT, IntPtr.Zero);
+                    User32.PostMessage(Handle, WindowMessage.SYSCOMMAND, SystemCommand.DEFAULT, IntPtr.Zero);
                     handled = true;
                     break;
                 }

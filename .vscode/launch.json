@@ -15,7 +15,7 @@
             "cwd": "${workspaceFolder}/samples/ReCap.CommonUI.Demo",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
         },
         {
             "name": "Test Helix Window",
@@ -26,12 +26,23 @@
             "args": [],
             "cwd": "${workspaceFolder}/samples/TestHelixWindow",
             "console": "internalConsole",
+            "stopAtEntry": false,
+        },
+        {
+            "name": "X11AtomsGeneratorHack",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build_X11AtomsGeneratorHack",
+            "program": "${workspaceFolder}/src/ReCap.CommonUI/bin/Debug/net5.0/ReCap.CommonUI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/ReCap.CommonUI",
+            "console": "internalConsole",
             "stopAtEntry": false
         },
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
-            "request": "attach"
-        }
-    ]
+            "request": "attach",
+        },
+    ],
 }

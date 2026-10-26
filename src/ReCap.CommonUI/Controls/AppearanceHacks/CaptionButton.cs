@@ -98,6 +98,20 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
+        const bool _DEFAULT_IsRoleActivationVisible = false;
+        internal static readonly DirectProperty<CaptionButton, bool> IsRoleActivationVisibleProperty
+            = AvaloniaProperty.RegisterDirect<CaptionButton, bool>(nameof(IsRoleActivationVisible)
+                , getter: o => o.IsRoleActivationVisible
+                , unsetValue: _DEFAULT_IsRoleActivationVisible
+            );
+        bool _isRoleActivationVisible = _DEFAULT_IsRoleActivationVisible;
+        internal bool IsRoleActivationVisible
+        {
+            get => _isRoleActivationVisible;
+            private set => SetAndRaise(IsRoleActivationVisibleProperty, ref _isRoleActivationVisible, value);
+        }
+
+
         internal static readonly StyledProperty<bool> IsRoleActiveProperty
             = AvaloniaProperty.Register<CaptionButton, bool>(nameof(IsRoleActive), false, coerce: IsRoleActiveProperty_Coerce);
         static bool IsRoleActiveProperty_Coerce(AvaloniaObject o, bool value)
@@ -155,6 +169,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             IsTabStopProperty.OverrideDefaultValue<CaptionButton>(false);
 
             IsRoleActivatableProperty.Changed.AddClassHandler<CaptionButton>(IsRoleActivatableProperty_Changed);
+            IsRoleActivationVisibleProperty.Changed.AddClassHandler<CaptionButton>(IsRoleActivationVisibleProperty_Changed);
             IsRoleActiveProperty.Changed.AddClassHandler<CaptionButton>(IsRoleActiveProperty_Changed);
             RoleProperty.Changed.AddClassHandler<CaptionButton>(RoleProperty_Changed);
             GlyphsProperty.Changed.AddClassHandler<CaptionButton>(GlyphsProperty_Changed);
@@ -168,6 +183,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 InsetProperty,
                 LeftGapProperty,
                 RightGapProperty,
+                IsRoleActivationVisibleProperty,
             };
 
             AffectsArrange<CaptionButton>(props);
@@ -185,6 +201,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
+        static void IsRoleActivationVisibleProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs e)
+            => button.RefreshPseudoClasses(button.IsRoleActive, e.GetNewValue<bool>());
+
+
         static void IsRoleActiveProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs e)
         {
             bool value = e.GetNewValue<bool>();
@@ -194,8 +214,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             else if (value)
                 button.IsRoleActive = false;
 
-            button.PseudoClasses.Set(_PSEUD_ROLE_ACTIVE, button.IsRoleActive);
+            button.RefreshPseudoClasses(value, button.IsRoleActivationVisible);
         }
+        void RefreshPseudoClasses(bool isRoleActive, bool isRoleActivationVisible)
+            => PseudoClasses.Set(_PSEUD_ROLE_ACTIVE, IsRoleActivatable && isRoleActive && isRoleActivationVisible);
 
 
         static void GlyphsProperty_Changed(CaptionButton button, AvaloniaPropertyChangedEventArgs args)
@@ -244,7 +266,9 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             _contentBindingDisposable = null;
 
             RefreshGlyph(role, roleActive);
-            IsRoleActivatable = WindowChromeEnumsHelper.ACTIVATABLE_ROLES.Contains(role);
+            bool isActivatable = WindowChromeEnumsHelper.ACTIVATABLE_ROLES.Contains(role);
+            IsRoleActivatable = isActivatable;
+            IsRoleActivationVisible = isActivatable && !WindowChromeEnumsHelper.HIDE_ACTIVATION_ROLES.Contains(role);
 
             if (!role.TryGetCaptionButtonRoleTitleDynamicResource(roleActive, out DynamicResourceExtension roleTitleDynamicResource))
                 return;
@@ -320,11 +344,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 
         protected override void OnClick()
         {
-            if (IsExtended)
-            {
-                base.OnClick();
-                return;
-            }
+            base.OnClick();
 
             PointerPointProperties ptProps = new(RawInputModifiers.LeftMouseButton, PointerUpdateKind.LeftButtonPressed);
             PointerEventArgs e = new(ClickEvent, this, null, VisualRoot as Visual, Bounds.Center, default, ptProps, KeyModifiers.None);
@@ -332,24 +352,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         }
 
 
-        protected override void OnPointerPressed(PointerPressedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            Execute(true, e);
-        }
-
-
-        protected override void OnPointerReleased(PointerReleasedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            Execute(false, e);
-        }
-
-
-        void Execute(bool pressed, PointerEventArgs baseArgs)
-            => Execute(new(this, Role, pressed, baseArgs));
-        void Execute(CaptionButtonClickEventArgs e)
-            => Execute(e, () => Executed?.Invoke(this, e));
         void Execute(CaptionButtonClickEventArgs e, Action fallback)
         {
             if (_hostCluster != null)
@@ -357,28 +359,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             else
                 fallback?.Invoke();
         }
-
-
-        bool IsExtended
-        {
-            get
-            {
-                var role = Role;
-                if (role == CaptionButtonRole.Minimize)
-                    return false;
-                else if (role == CaptionButtonRole.Maximize)
-                    return false;
-                else if (role == CaptionButtonRole.FullScreen)
-                    return false;
-                else if (role == CaptionButtonRole.Close)
-                    return false;
-                else
-                    return true;
-            }
-        }
-
-
-        internal event EventHandler<CaptionButtonClickEventArgs> Executed;
 
 
 

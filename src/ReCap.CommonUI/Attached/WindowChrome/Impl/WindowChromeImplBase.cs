@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using ReCap.CommonUI.Controls.AppearanceHacks;
 using ReCap.CommonUI.Util;
@@ -8,6 +10,14 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     internal abstract class WindowChromeImplBase
         : IWindowChromeImpl
     {
+        IntPtr _handle = IntPtr.Zero;
+        public IntPtr Handle
+        {
+            get => _handle;
+            private set => _handle = value;
+        }
+
+
         WeakReference<WindowChrome> _chromeRef = null;
         public WindowChrome Chrome
         {
@@ -22,7 +32,12 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             : base()
         {
             Chrome = chrome;
+            Handle = InitHandle(chrome);
         }
+
+
+        protected virtual IntPtr InitHandle(WindowChrome chrome)
+            => chrome.HostWindow.GetHWnd();
 
 
 
@@ -53,11 +68,17 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                 CaptionButtonRole.WindowMenu => ExecuteWindowMenu(e),
 #if CAPTIONBUTTONROLES_NYI
                 CaptionButtonRole.ApplicationMenu => ExecuteApplicationMenu(e),
-                CaptionButtonRole.ShowOnAllDesktops => ExecuteShowOnAllDesktops(e),
-                CaptionButtonRole.ContextHelp => ExecuteContextHelp(e),
-                CaptionButtonRole.Shade => ExecuteShade(e),
-                CaptionButtonRole.KeepBelow => ExecuteKeepBelow(e),
 #endif
+#if CAPTIONBUTTONROLES_WIP
+                CaptionButtonRole.ShowOnAllDesktops => ExecuteShowOnAllDesktops(e),
+#endif
+#if CAPTIONBUTTONROLES_NYI
+                CaptionButtonRole.ContextHelp => ExecuteContextHelp(e),
+#endif
+#if CAPTIONBUTTONROLES_WIP
+                CaptionButtonRole.Shade => ExecuteShade(e),
+#endif
+                CaptionButtonRole.KeepBelow => ExecuteKeepBelow(e),
                 CaptionButtonRole.KeepAbove => ExecuteKeepAbove(e),
                 _ => false,
             };
@@ -80,20 +101,27 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 #if CAPTIONBUTTONROLES_NYI
         protected virtual bool ExecuteApplicationMenu(CaptionButtonClickEventArgs e)
             => false;
+#endif
+#if CAPTIONBUTTONROLES_WIP
         protected virtual bool ExecuteShowOnAllDesktops(CaptionButtonClickEventArgs e)
             => false;
+#endif
+#if CAPTIONBUTTONROLES_NYI
         protected virtual bool ExecuteContextHelp(CaptionButtonClickEventArgs e)
             => false;
+#endif
+#if CAPTIONBUTTONROLES_WIP
         protected virtual bool ExecuteShade(CaptionButtonClickEventArgs e)
             => false;
+#endif
         protected virtual bool ExecuteKeepBelow(CaptionButtonClickEventArgs e)
             => false;
-#endif
         protected virtual bool ExecuteKeepAbove(CaptionButtonClickEventArgs e)
         {
-            if (this.TryGetHostWindow(out Window window))
-                window.Topmost = !window.Topmost;
+            if (!TryEnsureEventAndTryGetHostWindow(e, out Window window))
+                return false;
 
+            window.Topmost = !window.Topmost;
             return true;
         }
 
@@ -104,7 +132,35 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
+        protected bool TryEnsureEventAndTryGetHostWindow(CaptionButtonClickEventArgs e, out Window window, [CallerMemberName] string methodName = null)
+        {
+            if (!this.TryGetHostWindow(out window))
+                return false;
+
+            bool isClick = e.PointerArgs.RoutedEvent == Button.ClickEvent;
+            Debug.WriteLine($"{methodName}({e}) => {isClick}");
+            return isClick;
+        }
+
+
+#if CAPTIONBUTTONROLES_WIP
+        public virtual bool CoerceShowOnAllDesktops(bool proposedValue)
+            => false;
+
+        public virtual bool CoerceShaded(bool proposedValue)
+            => false;
+#endif
+
+        public virtual bool CoerceBottommost(bool proposedValue)
+            => false;
+
+
+
+
         public virtual void Dispose()
-            => Chrome = null;
+        {
+            Chrome = null;
+            Handle = IntPtr.Zero;
+        }
     }
 }

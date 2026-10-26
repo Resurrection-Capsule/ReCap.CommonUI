@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using Avalonia;
+using Avalonia.Media;
+using Avalonia.Media.Transformation;
 
 namespace ReCap.CommonUI.Util
 {
@@ -145,5 +149,62 @@ namespace ReCap.CommonUI.Util
             return inVal;
         }
         */
+
+
+
+
+        static readonly IEnumerable<Func<string, Matrix>> _MATRIX_PARSERS = new Func<string, Matrix>[]
+        {
+            s => Matrix.Parse(s),
+            s => TransformOperations.Parse(s).Value,
+        };
+        static readonly IEnumerable<Func<string, Transform>> _TRANSFORM_PARSERS = new Func<string, Transform>[]
+        {
+            s => Transform.Parse(s),
+        };
+        static bool TryEach<T>(string value, out T result, IEnumerable<Func<string, T>> parsers, T fallbackValue = default)
+        {
+            result = fallbackValue;
+            foreach (var parser in parsers)
+            {
+                try
+                {
+                    result = parser(value);
+                    return true;
+                }
+                catch
+                {}
+            }
+            result = fallbackValue;
+            return false;
+        }
+        public static bool TryGetTransform(object value, out Transform result)
+        {
+            if (value is Transform val)
+                result = val;
+            else if (value is ITransform iVal)
+                result = new MatrixTransform(iVal.Value);
+            else if (!TryGetString(value, out string valStr))
+                goto fail;
+            else if (TryEach(valStr, out val, _TRANSFORM_PARSERS))
+                result = val;
+            else if (TryEach(valStr, out Matrix matrix, _MATRIX_PARSERS))
+                result = new MatrixTransform(matrix);
+            else
+                goto fail;
+
+            return true;
+
+            fail:
+            result = default;
+            return false;
+        }
+
+
+        public static Transform ObjectToTransform(object value, Transform fallbackValue = null)
+            => TryGetTransform(value, out Transform result)
+                ? result
+                : fallbackValue
+            ;
     }
 }

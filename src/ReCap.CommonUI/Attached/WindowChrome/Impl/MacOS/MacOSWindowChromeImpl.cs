@@ -40,7 +40,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         public override void Prepare(CaptionButton button)
         {
             base.Prepare(button);
-            button.MakeFruity();
+            button.AutoSetTrafficLight();
         }
     }
 }

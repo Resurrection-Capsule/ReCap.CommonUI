@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -14,57 +15,22 @@ namespace ReCap.CommonUI.Util
 {
     internal static class Extensions
     {
-        public static bool TryGetPlatformHandle(this Window window, out IPlatformHandle platformHandle)
-        {
-            var platHandle = window.TryGetPlatformHandle();
-            if (platHandle != null)
-            {
-                platformHandle = platHandle;
-                return true;
-            }
-            else
-            {
-                platformHandle = default;
-                return false;
-            }
-        }
-
-
-        public static IntPtr GetHWnd(this Window window)
-        {
-            if (window.TryGetHWnd(out IntPtr hWnd))
-                return hWnd;
-            else
-                throw new Exception($"{nameof(window)} hWndn't!??");
-        }
-        public static bool TryGetHWnd(this Window window, out IntPtr hWnd)
-        {
-            if (window == null)
-                goto fail;
-
-            if (!window.TryGetPlatformHandle(out IPlatformHandle platHandle))
-                goto fail;
-            
-            IntPtr? hWndMaybe = platHandle.Handle;
-            if (!hWndMaybe.HasValue)
-                goto fail;
-
-
-            hWnd = hWndMaybe.Value;
-            return true;
-
-
-            fail:
-            hWnd = IntPtr.Zero;
-            return false;
-        }
-
         public static void MakeControlTypeNonInteractive<T>()
             where T : AvaloniaObject
         {
             InputElement.FocusableProperty.OverrideDefaultValue<T>(false);
             InputElement.IsTabStopProperty.OverrideDefaultValue<T>(false);
             ContentPresenter.RecognizesAccessKeyProperty.OverrideDefaultValue<T>(false);
+        }
+
+        public static IEnumerable<T> PrependRange<T>(this IEnumerable<T> prependTo, IEnumerable<T> prependFrom)
+            => prependTo.PrependRange(prependFrom.ToArray());
+
+        public static IEnumerable<T> PrependRange<T>(this IEnumerable<T> prependTo, params T[] prependFrom)
+        {
+            var ret = prependTo.ToList();
+            ret.InsertRange(0, prependFrom);
+            return ret;
         }
 
         public static IEnumerable<T> AppendRange<T>(this IEnumerable<T> appendTo, IEnumerable<T> appendFrom)

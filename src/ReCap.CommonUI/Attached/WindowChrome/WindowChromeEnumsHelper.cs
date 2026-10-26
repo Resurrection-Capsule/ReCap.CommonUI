@@ -18,16 +18,22 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     {
         const string _CAPTIONBUTTONROLE_TITLE_KEY_FORMAT = "CaptionButton.RoleTitle.{0}";
         internal static readonly IEnumerable<CaptionButtonRole> ALL_ROLES;
+        internal static readonly IEnumerable<CaptionButtonRole> HIDE_ACTIVATION_ROLES = new[]
+        {
+            CaptionButtonRole.Maximize,
+            CaptionButtonRole.FullScreen,
+            CaptionButtonRole.WindowMenu,
+        };
         internal static readonly IEnumerable<CaptionButtonRole> ACTIVATABLE_ROLES = new[]
         {
             CaptionButtonRole.Minimize,
             CaptionButtonRole.Maximize,
             CaptionButtonRole.FullScreen,
-#if CAPTIONBUTTONROLES_NYI
+#if CAPTIONBUTTONROLES_WIP
             CaptionButtonRole.ShowOnAllDesktops,
             CaptionButtonRole.Shade,
-            CaptionButtonRole.KeepBelow,
 #endif
+            CaptionButtonRole.KeepBelow,
             CaptionButtonRole.KeepAbove,
         };
         internal static readonly IEnumerable<CaptionButtonRole> NON_ACTIVATABLE_ROLES;
@@ -120,29 +126,40 @@ namespace ReCap.CommonUI.Attached.WindowChrome
                     isEnabledBinding = null;
                     break;
 
-#if CAPTIONBUTTONROLES_NYI
+#if CAPTIONBUTTONROLES_WIP
                 case CaptionButtonRole.ShowOnAllDesktops:
-                    isActiveBinding = //[TODO: ]
-                    isEnabledBinding = //[TODO: ]
+                    isActiveBinding = hostWindow
+                        .GetObservable(WindowChrome.ShowOnAllDesktopsProperty)
+                        .ToBinding()
+                    ;
+                    isEnabledBinding = null;
                     break;
 
                 case CaptionButtonRole.Shade:
-                    isActiveBinding = //[TODO: ]
-                    isEnabledBinding = //[TODO: ]
+                    isActiveBinding = hostWindow
+                        .GetObservable(WindowChrome.ShadedProperty)
+                        .ToBinding()
+                    ;
+                    isEnabledBinding = hostWindow
+                        .GetObservable(Window.CanResizeProperty)
+                        .ToBinding()
+                    ;
                     break;
+#endif
 
                 case CaptionButtonRole.KeepBelow:
-                    isActiveBinding = //[TODO: ]
-                    isEnabledBinding = //[TODO: ]
+                    isActiveBinding = hostWindow
+                        .GetObservable(WindowChrome.BottommostProperty)
+                        .ToBinding()
+                    ;
+                    isEnabledBinding = null;
                     break;
 
-#endif
                 case CaptionButtonRole.KeepAbove:
                     isActiveBinding = hostWindow
                         .GetObservable(WindowBase.TopmostProperty)
                         .ToBinding()
                     ;
-
                     isEnabledBinding = null;
                     break;
 

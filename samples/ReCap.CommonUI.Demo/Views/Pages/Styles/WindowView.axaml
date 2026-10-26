@@ -10,6 +10,8 @@
 	</UserControl.Styles>
 	<StackPanel Orientation="Vertical"
 				Spacing="8">
+		<CheckBox IsChecked="{Binding $parent[Window].(rcui:WindowChrome.Bottommost), Mode=TwoWay}"
+				Content="Bottommost" />
 		<UniformGrid Rows="1"
 					ColumnSpacing="8"
 					RowSpacing="8">

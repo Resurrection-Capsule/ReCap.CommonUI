@@ -1,5 +1,6 @@
 using System;
 using Avalonia.Controls;
+using Avalonia.Platform;
 
 namespace ReCap.CommonUI.Attached.WindowChrome
 {
@@ -69,6 +70,32 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => (T)chrome.PlatformImpl;
 
 
+#if CAPTIONBUTTONROLES_WIP
+        /// <inheritdoc cref="WindowChrome.GetShowOnAllDesktops" />
+        public static bool GetShowOnAllDesktops(this Window window)
+            => WindowChrome.GetShowOnAllDesktops(window);
+        /// <inheritdoc cref="WindowChrome.SetShowOnAllDesktops" />
+        public static void SetShowOnAllDesktops(this Window window, bool value)
+            => WindowChrome.SetShowOnAllDesktops(window, value);
+
+
+        /// <inheritdoc cref="WindowChrome.GetShaded" />
+        public static bool GetShaded(this Window window)
+            => WindowChrome.GetShaded(window);
+        /// <inheritdoc cref="WindowChrome.SetShaded" />
+        public static void SetShaded(this Window window, bool value)
+            => WindowChrome.SetShaded(window, value);
+#endif
+
+
+        /// <inheritdoc cref="WindowChrome.GetBottommost" />
+        public static bool GetBottommost(this Window window)
+            => WindowChrome.GetBottommost(window);
+        /// <inheritdoc cref="WindowChrome.SetBottommost" />
+        public static void SetBottommost(this Window window, bool value)
+            => WindowChrome.SetBottommost(window, value);
+
+
         /// <inheritdoc cref="WindowChrome.GetHint" />
         public static ManagedChromeHint GetHint(this Window window)
             => WindowChrome.GetHint(window);
@@ -107,5 +134,53 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             => window.GetChrome().IsTitleVisible;
         public static bool GetIsIconVisible(this Window window)
             => window.GetChrome().IsIconVisible;
+
+
+
+
+        internal static bool TryGetPlatformHandle(this Window window, out IPlatformHandle platformHandle)
+        {
+            var platHandle = window.TryGetPlatformHandle();
+            if (platHandle != null)
+            {
+                platformHandle = platHandle;
+                return true;
+            }
+            else
+            {
+                platformHandle = default;
+                return false;
+            }
+        }
+
+
+        internal static IntPtr GetHWnd(this Window window)
+        {
+            if (window.TryGetHWnd(out IntPtr hWnd))
+                return hWnd;
+            else
+                throw new Exception($"{nameof(window)} hWndn't!??");
+        }
+        internal static bool TryGetHWnd(this Window window, out IntPtr hWnd)
+        {
+            if (window == null)
+                goto fail;
+
+            if (!window.TryGetPlatformHandle(out IPlatformHandle platHandle))
+                goto fail;
+            
+            IntPtr? hWndMaybe = platHandle.Handle;
+            if (!hWndMaybe.HasValue)
+                goto fail;
+
+
+            hWnd = hWndMaybe.Value;
+            return true;
+
+
+            fail:
+            hWnd = IntPtr.Zero;
+            return false;
+        }
     }
 }

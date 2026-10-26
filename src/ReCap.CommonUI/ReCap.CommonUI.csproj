@@ -5,6 +5,15 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(X11AtomsGeneratorHack)' == 'true' ">
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<DefineConstants>$(DefineConstants);X11ATOMS_GENERATOR_HACK</DefineConstants>
+	</PropertyGroup>
+
+	<!--
+	<PropertyGroup Condition=" '$(X11AtomsGeneratorHack)' != 'true' ">
+	-->
 	<PropertyGroup>
 		<IsPackable>true</IsPackable>
 		<PackageId>ReCap.CommonUI</PackageId>

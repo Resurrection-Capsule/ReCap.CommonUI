@@ -16,5 +16,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         void ApplyDesiredManagedChrome(bool desiredManagedChrome, Action<bool> applyUseManagedChrome);
         bool ExecuteButton(CaptionButtonClickEventArgs e, Action roleAction);
         void Prepare(CaptionButton button);
+#if CAPTIONBUTTONROLES_WIP
+        bool CoerceShowOnAllDesktops(bool proposedValue);
+        bool CoerceShaded(bool proposedValue);
+#endif
+        bool CoerceBottommost(bool proposedValue);
     }
 }

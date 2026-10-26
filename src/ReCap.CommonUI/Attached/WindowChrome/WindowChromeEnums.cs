@@ -12,11 +12,17 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         WindowMenu = 11,
 #if CAPTIONBUTTONROLES_NYI
         ApplicationMenu = 12,
-        ShowOnAllDesktops = 13,
-        ContextHelp = 14,
-        Shade = 15,
-        KeepBelow = 16,
 #endif
+#if CAPTIONBUTTONROLES_WIP
+        ShowOnAllDesktops = 13,
+#endif
+#if CAPTIONBUTTONROLES_NYI
+        ContextHelp = 14,
+#endif
+#if CAPTIONBUTTONROLES_WIP
+        Shade = 15,
+#endif
+        KeepBelow = 16,
         KeepAbove = 17,
     }
 

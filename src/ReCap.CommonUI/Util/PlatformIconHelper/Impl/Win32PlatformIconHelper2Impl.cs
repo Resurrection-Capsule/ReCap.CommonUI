@@ -5,9 +5,10 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Linq;
-using Avalonia.Controls;
-using ReCap.CommonUI.Util.OperatingSystem.Win32;
 using Avalonia;
+using Avalonia.Controls;
+using ReCap.CommonUI.Attached.WindowChrome;
+using ReCap.CommonUI.Util.OperatingSystem.Win32;
 
 using AvBitmap = Avalonia.Media.Imaging.Bitmap;
 using IAvBitmapsEnumerable = System.Collections.Generic.IEnumerable<Avalonia.Media.Imaging.Bitmap>;

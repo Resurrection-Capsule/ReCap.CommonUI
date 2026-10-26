@@ -47,6 +47,25 @@ namespace ReCap.CommonUI.Demo.ViewModels.Pages.Styles
         readonly ObservableCollection<KeyValuePair<string, CaptionButtonRolesPair?>> _captionButtonPresets = new()
         {
             _PLATFORM_DEFAULTS,
+#if DEBUG
+            new("Test", new(
+                new[]
+                {
+#if CAPTIONBUTTONROLES_WIP
+                    CaptionButtonRole.ShowOnAllDesktops,
+                    CaptionButtonRole.Shade,
+#endif
+                    CaptionButtonRole.KeepBelow,
+                    CaptionButtonRole.KeepAbove,
+                },
+                new[]
+                {
+                    CaptionButtonRole.Minimize,
+                    CaptionButtonRole.Maximize,
+                    CaptionButtonRole.Close,
+                }
+            )),
+#endif
             new("Lone WindowMenus", new(
                 new[]
                 {

@@ -23,11 +23,25 @@ namespace ReCap.CommonUI.Util.OperatingSystem.Linux
     public sealed class LinuxDetails
         : PlatformDetailsBase
     {
+        readonly LinuxSubPlatformDetailsBase _displayServerDetails;
+        internal T GetDisplayServerDetails<T>()
+            where T
+                : LinuxSubPlatformDetailsBase
+            => (T)_displayServerDetails;
+
+
         internal LinuxDetails()
             : base()
         {
             CurrentDisplayServer = InitDisplayServerInfo(out XDGSessionType);
             CurrentDesktopEnvironment = InitDesktopEnvironmentInfo(out XDGCurrentDesktop, out XDGSessionDesktop, out DesktopSession);
+
+
+            _displayServerDetails = CurrentDisplayServer switch
+            {
+                KnownDisplayServer.X11 => new X11Details(),
+                _ => null,
+            };
 
 
             string gtkCsd = Environment.GetEnvironmentVariable("GTK_CSD");

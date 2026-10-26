@@ -32,6 +32,7 @@
 			</ControlTemplate>
 		</Setter>
 
+
 		<!-- Hover -->
 		<Style Selector="^:pointerover:not(:pressed)">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
@@ -45,7 +46,7 @@
 
 
 		<!-- Pressed -->
-		<Style Selector="^:pressed, ^:checked">
+		<Style Selector="^:pressed">
 			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
 				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Pressed}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CaptionButton.BorderBrush.Pressed}" />
@@ -54,6 +55,17 @@
 				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Pressed}" />
 			</Style>
 		</Style>
+
+
+		<!-- Checked -->
+		<Style Selector="^:not(:pointerover):not(:pressed)"><Style Selector="^:checked, ^:role-active">
+			<Style Selector="^ /template/ rcui|AngledBorder#BgElement">
+				<Setter Property="Background" Value="{DynamicResource CaptionButton.Background.Checked}" />
+			</Style>
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource CaptionButton.Foreground.Checked}" />
+			</Style>
+		</Style></Style>
 
 
 		<!-- Disabled -->
@@ -109,12 +121,6 @@
 		<Style Selector="^ /template/ :is(Control).inset">
 			<Setter Property="Margin" Value="{TemplateBinding Inset}" />
 		</Style>
-
-		<!--
-		<Style Selector="^:role-active /template/ :is(Panel)#LayoutRoot">
-			<Setter Property="Background" Value="#FF00FF00" />
-		</Style>
-		-->
 
 		<!-- Idle (inactive window) -->
 		<Style Selector="^:not(:window-active)">

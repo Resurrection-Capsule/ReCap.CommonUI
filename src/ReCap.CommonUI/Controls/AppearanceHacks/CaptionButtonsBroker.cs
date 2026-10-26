@@ -79,12 +79,20 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         {
             _roleActions = new Dictionary<CaptionButtonRole, Action>()
             {
-                [CaptionButtonRole.Close] = OnClose,
-                [CaptionButtonRole.Maximize] = OnRestore,
-                [CaptionButtonRole.Minimize] = OnMinimize,
-                [CaptionButtonRole.FullScreen] = OnToggleFullScreen,
+                [CaptionButtonRole.Close] = base.OnClose,
+                [CaptionButtonRole.Maximize] = base.OnRestore,
+                [CaptionButtonRole.Minimize] = base.OnMinimize,
+                [CaptionButtonRole.FullScreen] = base.OnToggleFullScreen,
             };
         }
+        protected override void OnClose()
+        {}
+        protected override void OnRestore()
+        {}
+        protected override void OnMinimize()
+        {}
+        protected override void OnToggleFullScreen()
+        {}
 
 
         void OnCaptionButtonClusterChanged(CaptionButtonCluster oldCluster, CaptionButtonCluster newCluster, CaptionButtonClusterPosition position)

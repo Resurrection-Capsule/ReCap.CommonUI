@@ -89,8 +89,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             get => GetValue(ApplicationMenuGlyphProperty);
             set => SetValue(ApplicationMenuGlyphProperty, value);
         }
+#endif
 
 
+#if CAPTIONBUTTONROLES_WIP
         public static readonly StyledProperty<Geometry> ShowOnAllDesktopsGlyphProperty =
             AvaloniaProperty.Register<CaptionButton, Geometry>(nameof(ShowOnAllDesktopsGlyph), null);
         public Geometry ShowOnAllDesktopsGlyph
@@ -107,8 +109,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             get => GetValue(UnShowOnAllDesktopsGlyphProperty);
             set => SetValue(UnShowOnAllDesktopsGlyphProperty, value);
         }
+#endif
 
 
+#if CAPTIONBUTTONROLES_NYI
         public static readonly StyledProperty<Geometry> ContextHelpGlyphProperty =
             AvaloniaProperty.Register<CaptionButton, Geometry>(nameof(ContextHelpGlyph), null);
         public Geometry ContextHelpGlyph
@@ -116,8 +120,10 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             get => GetValue(ContextHelpGlyphProperty);
             set => SetValue(ContextHelpGlyphProperty, value);
         }
+#endif
 
 
+#if CAPTIONBUTTONROLES_WIP
         public static readonly StyledProperty<Geometry> ShadeGlyphProperty =
             AvaloniaProperty.Register<CaptionButton, Geometry>(nameof(ShadeGlyph), null);
         public Geometry ShadeGlyph
@@ -134,6 +140,7 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             get => GetValue(UnShadeGlyphProperty);
             set => SetValue(UnShadeGlyphProperty, value);
         }
+#endif
 
 
         public static readonly StyledProperty<Geometry> KeepBelowGlyphProperty =
@@ -152,7 +159,6 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
             get => GetValue(UnKeepBelowGlyphProperty);
             set => SetValue(UnKeepBelowGlyphProperty, value);
         }
-#endif
 
 
         public static readonly StyledProperty<Geometry> KeepAboveGlyphProperty =
@@ -178,18 +184,31 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
         static readonly IEnumerable<AvaloniaProperty<Geometry>> _GLYPH_PROPERTIES = new[]
         {
             MinimizeGlyphProperty,
+            UnMinimizeGlyphProperty,
             MaximizeGlyphProperty,
+            UnMaximizeGlyphProperty,
             FullScreenGlyphProperty,
+            UnFullScreenGlyphProperty,
             CloseGlyphProperty,
             WindowMenuGlyphProperty,
 #if CAPTIONBUTTONROLES_NYI
             ApplicationMenuGlyphProperty,
-            ShowOnAllDesktopsGlyphProperty,
-            ContextHelpGlyphProperty,
-            ShadeGlyphProperty,
-            KeepBelowGlyphProperty,
 #endif
+#if CAPTIONBUTTONROLES_WIP
+            ShowOnAllDesktopsGlyphProperty,
+            UnShowOnAllDesktopsGlyphProperty,
+#endif
+#if CAPTIONBUTTONROLES_NYI
+            ContextHelpGlyphProperty,
+#endif
+#if CAPTIONBUTTONROLES_WIP
+            ShadeGlyphProperty,
+            UnShadeGlyphProperty,
+#endif
+            KeepBelowGlyphProperty,
+            UnKeepBelowGlyphProperty,
             KeepAboveGlyphProperty,
+            UnKeepAboveGlyphProperty,
         };
         static CaptionButtonGlyphs()
         {
@@ -233,21 +252,27 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
 #if CAPTIONBUTTONROLES_NYI
             else if (property == ApplicationMenuGlyphProperty)
                 return CaptionButtonRole.ApplicationMenu;
+#endif
+#if CAPTIONBUTTONROLES_WIP
             else if (property == ShowOnAllDesktopsGlyphProperty)
                 return CaptionButtonRole.ShowOnAllDesktops;
             else if (property == UnShowOnAllDesktopsGlyphProperty)
                 return CaptionButtonRole.ShowOnAllDesktops;
+#endif
+#if CAPTIONBUTTONROLES_NYI
             else if (property == ContextHelpGlyphProperty)
                 return CaptionButtonRole.ContextHelp;
+#endif
+#if CAPTIONBUTTONROLES_WIP
             else if (property == ShadeGlyphProperty)
                 return CaptionButtonRole.Shade;
             else if (property == UnShadeGlyphProperty)
                 return CaptionButtonRole.Shade;
+#endif
             else if (property == KeepBelowGlyphProperty)
                 return CaptionButtonRole.KeepBelow;
             else if (property == UnKeepBelowGlyphProperty)
                 return CaptionButtonRole.KeepBelow;
-#endif
             else if (property == KeepAboveGlyphProperty)
                 return CaptionButtonRole.KeepAbove;
             else if (property == UnKeepAboveGlyphProperty)
@@ -276,20 +301,26 @@ namespace ReCap.CommonUI.Controls.AppearanceHacks
                 CaptionButtonRole.WindowMenu => WindowMenuGlyph,
 #if CAPTIONBUTTONROLES_NYI
                 CaptionButtonRole.ApplicationMenu => ApplicationMenuGlyph,
+#endif
+#if CAPTIONBUTTONROLES_WIP
                 CaptionButtonRole.ShowOnAllDesktops => roleActive
                     ? UnShowOnAllDesktopsGlyph
                     : ShowOnAllDesktopsGlyph
                 ,
+#endif
+#if CAPTIONBUTTONROLES_NYI
                 CaptionButtonRole.ContextHelp => ContextHelpGlyph,
+#endif
+#if CAPTIONBUTTONROLES_WIP
                 CaptionButtonRole.Shade => roleActive
                     ? UnShadeGlyph
                     : ShadeGlyph
                 ,
+#endif
                 CaptionButtonRole.KeepBelow => roleActive
                     ? UnKeepBelowGlyph
                     : KeepBelowGlyph
                 ,
-#endif
                 CaptionButtonRole.KeepAbove => roleActive
                     ? UnKeepAboveGlyph
                     : KeepAboveGlyph

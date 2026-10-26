@@ -34,16 +34,24 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 
-        public static void MakeFruity(this CaptionButton button)
-            => button.MakeFruityIf(button.Role switch
+        public delegate bool TrafficLightCondition(CaptionButton button);
+        static bool DEFAULT_PrepareTrafficLight_condition(CaptionButton button)
+            => button.Role switch
             {
-                CaptionButtonRole.Minimize or CaptionButtonRole.Maximize or CaptionButtonRole.Close => true,
+                CaptionButtonRole.Minimize => true,
+                CaptionButtonRole.Maximize => true,
+                CaptionButtonRole.Close => true,
                 _ => false,
-            });
-        public static void MakeFruityIf(this CaptionButton button, bool condition)
+            };
+
+        public static void AutoSetTrafficLight(this CaptionButton button)
+            => button.SetTrafficLight(DEFAULT_PrepareTrafficLight_condition);
+        public static void SetTrafficLight(this CaptionButton button, TrafficLightCondition condition)
+            => button.SetTrafficLight(condition(button));
+        public static void SetTrafficLight(this CaptionButton button, bool isTrafficLight)
             => ((IPseudoClassesProvider)button)
                 .GetPseudoClasses()
-                .Set(":traffic-light", condition)
+                .Set(":traffic-light", isTrafficLight)
             ;
     }
 }

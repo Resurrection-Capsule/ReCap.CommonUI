@@ -16,6 +16,10 @@ namespace ReCap.CommonUI.Attached.WindowChrome
         , IDisposable
     {
         internal static readonly IWindowChromeFactoryImpl FACTORY = PlatformUtils.GetForPlatformByNameMatch<IWindowChromeFactoryImpl>();
+        internal static T GetFactory<T>()
+            where T
+                : IWindowChromeFactoryImpl
+            => (T)FACTORY;
         static readonly List<Window> AttachedWindows = new();
 
 
@@ -189,6 +193,68 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
 
 #region Attached Properties
+#if CAPTIONBUTTONROLES_WIP
+        public static readonly AttachedProperty<bool> ShowOnAllDesktopsProperty =
+            AvaloniaProperty.RegisterAttached<WindowChrome, Window, bool>("ShowOnAllDesktops", false, coerce: ShowOnAllDesktopsProperty_Coerce);
+        static bool ShowOnAllDesktopsProperty_Coerce(AvaloniaObject o, bool proposedValue)
+        {
+            if (o is not Window window)
+                goto fail;
+            else if (!window.TryGetChrome(out WindowChrome chrome))
+                goto fail;
+            else
+                return chrome.PlatformImpl.CoerceShowOnAllDesktops(proposedValue);
+
+            fail:
+            return false;
+        }
+        public static bool GetShowOnAllDesktops(Window window)
+            => window.GetValue(ShowOnAllDesktopsProperty);
+        public static void SetShowOnAllDesktops(Window window, bool value)
+            => window.SetValue(ShowOnAllDesktopsProperty, value);
+
+
+        public static readonly AttachedProperty<bool> ShadedProperty =
+            AvaloniaProperty.RegisterAttached<WindowChrome, Window, bool>("Shaded", false, coerce: ShadedProperty_Coerce);
+        static bool ShadedProperty_Coerce(AvaloniaObject o, bool proposedValue)
+        {
+            if (o is not Window window)
+                goto fail;
+            else if (!window.TryGetChrome(out WindowChrome chrome))
+                goto fail;
+            else
+                return chrome.PlatformImpl.CoerceShaded(proposedValue);
+
+            fail:
+            return false;
+        }
+        public static bool GetShaded(Window window)
+            => window.GetValue(ShadedProperty);
+        public static void SetShaded(Window window, bool value)
+            => window.SetValue(ShadedProperty, value);
+#endif
+
+
+        public static readonly AttachedProperty<bool> BottommostProperty =
+            AvaloniaProperty.RegisterAttached<WindowChrome, Window, bool>("Bottommost", false, coerce: BottommostProperty_Coerce);
+        static bool BottommostProperty_Coerce(AvaloniaObject o, bool proposedValue)
+        {
+            if (o is not Window window)
+                goto fail;
+            else if (!window.TryGetChrome(out WindowChrome chrome))
+                goto fail;
+            else
+                return chrome.PlatformImpl.CoerceBottommost(proposedValue);
+
+            fail:
+            return false;
+        }
+        public static bool GetBottommost(Window window)
+            => window.GetValue(BottommostProperty);
+        public static void SetBottommost(Window window, bool value)
+            => window.SetValue(BottommostProperty, value);
+
+
         public static readonly AttachedProperty<CaptionButtonRolesPair?> OverrideCaptionButtonRolesProperty =
             AvaloniaProperty.RegisterAttached<WindowChrome, Window, CaptionButtonRolesPair?>("OverrideCaptionButtonRoles", null);
         public static CaptionButtonRolesPair? GetOverrideCaptionButtonRoles(Window window)

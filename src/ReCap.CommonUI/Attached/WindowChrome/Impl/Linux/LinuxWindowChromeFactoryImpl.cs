@@ -9,7 +9,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
     internal sealed partial class LinuxWindowChromeFactoryImpl
         : WindowChromeFactoryImplBase
     {
-        static readonly LinuxDetails DETAILS = OSInfo.GetOSDetails<LinuxDetails>();
+        static readonly LinuxDetails _DETAILS = OSInfo.GetOSDetails<LinuxDetails>();
 
 
 
@@ -23,7 +23,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
 
         public override bool PrefersManagedWindowChrome
         {
-            get => DETAILS.GTKClientSideDecorations;
+            get => _DETAILS.GTKClientSideDecorations;
         }
 #endregion
 

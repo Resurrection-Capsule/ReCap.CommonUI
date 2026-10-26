@@ -1,0 +1,161 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:rcui="https://github.com/Resurrection-Capsule/ReCap.CommonUI">
+	<RelativeScalar x:Key="CaptionButtonCluster.TrafficLight.Background.RadiusX">37.5%</RelativeScalar>
+	<RelativeScalar x:Key="CaptionButtonCluster.TrafficLight.Background.RadiusY">68.75%</RelativeScalar>
+
+
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Foreground.Hover">#FF000000</Color>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Foreground.Pressed">#FFFFFFFF</Color>
+
+
+	<!-- Minimize -->
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Minimize.Background.Idle"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF979700" />
+		<GradientStop Offset="1" Color="#FF595900" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Minimize.BorderBrush.Idle">#FFDEDECC</Color>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Minimize.Foreground.Idle">#FFDEDE00</Color>
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Minimize.Background.Idle.Inactive"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF6C6C4D" />
+		<GradientStop Offset="1" Color="#FF555543" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Minimize.BorderBrush.Idle.Inactive">#FFDDDDD9</Color>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Minimize.Foreground.Idle.Inactive">#FFDDDD6E</Color>
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Minimize.Background.Hover"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FFFFFF00" />
+		<GradientStop Offset="1" Color="#FFFDFD0E" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Minimize.BorderBrush.Hover">#FFFFFFCC</Color>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Minimize.Foreground.Hover"
+					ResourceKey="CaptionButtonCluster.TrafficLight.Foreground.Hover" />
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Minimize.Background.Pressed"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF949400" />
+		<GradientStop Offset="1" Color="#FF565600" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Minimize.BorderBrush.Pressed">#FFA0A000</Color>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Minimize.Foreground.Pressed"
+					ResourceKey="CaptionButtonCluster.TrafficLight.Foreground.Pressed" />
+
+
+	<!-- Maximize -->
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Maximize.Background.Idle"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF009700" />
+		<GradientStop Offset="1" Color="#FF005900" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Maximize.BorderBrush.Idle">#FFCCDECC</Color>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Maximize.Foreground.Idle">#FF00DE00</Color>
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Maximize.Background.Idle.Inactive"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF4D6C4D" />
+		<GradientStop Offset="1" Color="#FF435543" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Maximize.BorderBrush.Idle.Inactive">#FFD9DDD9</Color>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Maximize.Foreground.Idle.Inactive">#FF6EDD6E</Color>
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Maximize.Background.Hover"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF00FF00" />
+		<GradientStop Offset="1" Color="#FF0EFD0E" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Maximize.BorderBrush.Hover">#FFCCFFCC</Color>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Maximize.Foreground.Hover"
+					ResourceKey="CaptionButtonCluster.TrafficLight.Foreground.Hover" />
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Maximize.Background.Pressed"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF009400" />
+		<GradientStop Offset="1" Color="#FF005600" />
+	</RadialGradientBrush>
+	<Color x:Key="CaptionButtonCluster.TrafficLight.Maximize.BorderBrush.Pressed">#FF00A000</Color>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Maximize.Foreground.Pressed"
+					ResourceKey="CaptionButtonCluster.TrafficLight.Foreground.Pressed" />
+
+
+	<!-- Close -->
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Close.Background.Idle"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF970000" />
+		<GradientStop Offset="1" Color="#FF590000" />
+	</RadialGradientBrush>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.BorderBrush.Idle" ResourceKey="CaptionButton.BorderBrush.Idle" />
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.Foreground.Idle" ResourceKey="CaptionButton.Foreground.Idle" />
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Close.Background.Idle.Inactive"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF6C4D4D" />
+		<GradientStop Offset="1" Color="#FF554343" />
+	</RadialGradientBrush>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.BorderBrush.Idle.Inactive" ResourceKey="CaptionButton.BorderBrush.Idle.Inactive" />
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.Foreground.Idle.Inactive" ResourceKey="CaptionButton.Foreground.Idle.Inactive" />
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Close.Background.Hover"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FFFF0000" />
+		<GradientStop Offset="1" Color="#FFFD0E0E" />
+	</RadialGradientBrush>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.BorderBrush.Hover" ResourceKey="CaptionButton.BorderBrush.Hover" />
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.Foreground.Hover" ResourceKey="CaptionButton.Foreground.Hover" />
+
+
+	<RadialGradientBrush x:Key="CaptionButtonCluster.TrafficLight.Close.Background.Pressed"
+						Center="50%,50%"
+						GradientOrigin="50%,50%"
+						RadiusX="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusX}"
+						RadiusY="{StaticResource CaptionButtonCluster.TrafficLight.Background.RadiusY}">
+		<GradientStop Offset="0.125" Color="#FF940000" />
+		<GradientStop Offset="1" Color="#FF560000" />
+	</RadialGradientBrush>
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.BorderBrush.Pressed" ResourceKey="CaptionButton.BorderBrush.Pressed" />
+	<StaticResource x:Key="CaptionButtonCluster.TrafficLight.Close.Foreground.Pressed" ResourceKey="CaptionButton.Foreground.Pressed" />
+</ResourceDictionary>

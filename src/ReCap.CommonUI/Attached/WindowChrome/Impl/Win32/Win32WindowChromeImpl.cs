@@ -22,7 +22,6 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             : base(chrome)
         {
             Window hostWindow = chrome.HostWindow;
-            HWnd = hostWindow.GetHWnd();
             hostWindow.Opened += HostWindow_PropertyThatCallsAvalonia_Win32_WindowImpl_ExtendClientArea_Changed;
 
             _disposable = new()
@@ -58,7 +57,7 @@ namespace ReCap.CommonUI.Attached.WindowChrome
             For some reason, Avalonia disables the close button/menu item. Re-enable it here because we don't want that.
             (Why was that even a thing in the first place?)
             */
-            IntPtr hMenu = User32.GetSystemMenu(HWnd, false);
+            IntPtr hMenu = User32.GetSystemMenu(Handle, false);
             MenuEnableClose(hMenu);
         }
 
